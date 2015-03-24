@@ -15,6 +15,8 @@
 \usepackage{lipsum}
 \usepackage{listings}
 
+\usepackage{titlesec}
+
 % keep our graphics nice and neat
 \graphicspath{{img/}}
 
@@ -26,6 +28,22 @@
 \newcommand{\subsubsubsection}[1]{%
   \paragraph{#1}
 }
+
+\usetikzlibrary{shapes.misc}
+\newcommand\titlebar{%
+\tikz[baseline,trim left=3.1cm,trim right=3cm] {
+    \fill [cyan!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
+    \node [
+        fill=cyan!60!white,
+        anchor= base east,
+        rounded rectangle,
+        minimum height=3.5ex] at (3cm,0) {
+        \textbf{\thesection}
+    };
+}%
+}
+\titleformat{\section}{\bfseries\Large}{\titlebar}{0.1cm}{}
+\renewcommand*{\thesection}{\arabic{section}}
 
 % header and footer
 \definecolor{CommentGreen}{rgb}{0,0.6,0}
