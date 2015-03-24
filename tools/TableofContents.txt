@@ -1,0 +1,137 @@
+﻿1. Executive Summary
+2. Project Description
+   1. Project Motivation and Goals
+   2. Objectives
+      1. Voice Control
+      2. Light Activation
+      3. Outlet Activation
+      4. Door Access
+      5. Data Collection
+   1. Requirements and Specifications
+   2. Research of Related Products
+      1. Z-Wave
+      2. Belkin
+      3. Apple HomeKit
+      4. Nest Labs
+1. Realistic Design Constraints
+   1. Economic Factors
+   2. Time Limitations
+      1. Project Ramp-up
+      2. Summer Semester
+   1. Safety and Security
+   2. Spectrum Considerations
+1. System Design
+   1. Base Station
+   2. Control Module
+   3. BlueTooth Capable Phone
+1. Hardware and Software Design
+   1. Radio Transceiver
+      1. Operating Principles and Usability
+      2. Driver Class Diagram
+      3. Driver Use Case
+      4. Network Library
+   1. Microcontrollers
+      1. Development Environment
+      2. Programming
+      3. Control Module
+      4. Base Station
+      5. External Oscillator
+   1. BlueTooth Chip
+      1. RN-41
+      2. HC-05
+   1. LCD
+      1. Capabilities (i.e Speed, Medium)
+      2. Driver
+      3. Touchscreen
+      4. UI Library
+   1. Android Application
+      1. Development Environment
+      2. Speech Recognition
+      3. BlueTooth Library
+      4. GUI Philosophy
+      5. Use Case Diagram
+      6. BlueTooth Listener Class
+      7. Creating Endpoint Groups
+   1. Power Hardware
+      1. Design Summary
+      2. Regulators vs DC to DC Converters
+      3. Backup Battery Configuration
+      4. Transformer Choice 
+      5. Power Consumption
+      6. Isolation
+      7. Power Through Hole Board
+      8. Schematic
+   1. Base Station
+      1. Software Flowchart
+      2. Control Module Data Structures
+      3. Networking State Machine
+      4. Associating With Base Station
+      5. Schematic Breakdown
+   1. Control Module
+      1. Software Flowchart
+      2. Schematic Breakdown
+      3. High-Voltage Control
+      4. Electronic Strike
+         1. Normally Open or Normally Closed
+         2. Strike vs Deadbolt
+      1. Sensor Collection
+      2. Light Control
+1. Printed Circuit Board
+   1. Software Considerations
+      1. KiCad
+      2. EAGLE
+   1. Layout
+      1. Base Station 
+      2. Control Modules
+1. Prototyping
+   1. Point-To-Point Transmission
+   2. Rogers Board Etching Prototyping
+   3. WHCS Proto-Panel
+      1. Materials
+      2. Dimensions
+      3. Sketch
+1. Manufacturing
+   1. PCB House
+      1. OSH Park
+      2. Seeed Studio
+      3. 4PCB
+   1. Parts
+      1. Footprint (SMD vs Through-Hole)
+   1. Construction
+      1. Soldering
+      2. Reflow Oven
+      3. Proto-Panel
+1. Testing
+   1. Power Supply
+      1. 5v Line Integrity
+      2. 120v Line Integrity
+      3. 3.3v Line Integrity
+      4. Battery Backup
+   1. Base Station
+      1. LCD Control
+      2. LCD and NRF Simultaneous
+   1. Control Module
+      1. Voltage Level Correct
+      2. UART chip debugging
+      3. Receive Commands
+   1. Door Access
+   2. Android To Base Station Communication
+      1. BlueTerm
+      2. BlueToothListener
+      3. LED activation test
+   1. Base Station to Control Module Communication
+      1. LED Toggle
+      2. UART to Hyperterm
+1. Demos
+   1. Voice Controlled Light Activation
+   2. LCD Light Activation
+   3. Sensor Query
+   4. Fault Recovery (Loss of Power)
+1. Project Management
+   1. Budget 
+   2. Parts Acquisition
+   3. Milestones
+1. Appendix
+   1. Appendix A - Figures
+   2. Appendix B - Tables
+   3. Appendix C - Complete Schematics

@@ -1,0 +1,93 @@
+\documentclass[letterpaper,11pt]{article}
+\usepackage[margin=1in, lmargin=1.5in]{geometry}
+\usepackage{parskip}
+\usepackage{import}
+%\usepackage{setspace}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+%\usepackage{fancyhdr}
+%\usepackage{wrapfig}
+\usepackage[hidelinks]{hyperref} % for URL linking
+
+\usepackage{caption}
+\usepackage{tikz}
+\usepackage[binary-units]{siunitx}
+\usepackage{authblk}
+\usepackage{lipsum}
+\usepackage{listings}
+
+% keep our graphics nice and neat
+\graphicspath{{img/}}
+
+% customize hyperref
+\urlstyle{same} % remove monospaced links
+\hypersetup{pdfnewwindow=true % prevent the user from leaving the paper
+}
+
+\newcommand{\subsubsubsection}[1]{%
+  \paragraph{#1}
+}
+
+% header and footer
+\definecolor{CommentGreen}{rgb}{0,0.6,0}
+\definecolor{numbering}{gray}{0.5}
+\definecolor{keywordc}{rgb}{.63,0,.42}
+
+\lstdefinestyle{phpcode}{%
+  basicstyle=\ttfamily\small,
+  language=php,
+  numbers=left,
+  numberstyle=\footnotesize\color{numbering},
+  fontadjust=true,
+  basewidth=0.5em,
+  % flexiblecolumns=true,
+  keywordstyle={\bfseries\color{magenta}},
+  commentstyle=\color{CommentGreen},
+  stringstyle=\color{red},
+  showstringspaces=false,
+  tabsize=4,
+  %xleftmargin=\MaxSizeOfLineNumbers
+}
+
+% We want this depth for our TOC
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\begin{document}
+
+% BEGIN COVER PAGE
+\begin{titlepage}
+\begin{center}
+{\bf Title} \\
+\vspace{0.1in}
+\begin{tabular}{c}
+{Authors}  \\
+{}\\
+{} \\
+{University of Central Florida}  \\
+\end{tabular}
+\end{center}
+\end{titlepage}
+
+% BEGIN TOC,LOF,LOT
+\begingroup
+\tableofcontents \addcontentsline{toc}{section}{Table of Contents}
+\let\clearpage\relax
+\listoffigures \addcontentsline{toc}{section}{List of Figures}
+\listoftables \addcontentsline{toc}{section}{List of Tables}
+\endgroup
+
+% BEGIN SECTION LISTING
+% \onehalfspacing
+\input{toc.tex}
+
+% BEGIN BIBLIOGRAPHY
+\newpage
+\clearpage
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\renewcommand{\refname}{\centerline{\Large\bf References Cited}}
+\bibliographystyle{simple}
+\bibliography{./ref}
+
+\end{document}
