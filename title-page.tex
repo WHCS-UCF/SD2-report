@@ -1,22 +1,28 @@
 \begin{titlepage}
 \centering  \sffamily
 \begin{tikzpicture}[remember picture,overlay]
-  \node [shift={(-4cm, 0cm)},rotate=20] at (current page.west)
+  \def\rotamt{20}
+  \node [shift={(-4cm, 0cm)},rotate=\rotamt] at (current page.west)
   {%
     \begin{tikzpicture}[remember picture, overlay]
       % parameters
       \def\lwidth{0.6cm}
-      \pgfmathsetlengthmacro\lskip{\lwidth*0.8}
+      \pgfmathsetlengthmacro\lskip{\lwidth*0.8pt}
+      \pgfmathsetlengthmacro\lstride{\lwidth*0.8pt}
 
       % define our colors for the underlines
       \def\colorPallete{{"FF2A2A", "FF6600", "FFD42A", "2AFF2A"}}%
+      \def\colorPalleteMod{{"222222", "444444", "666666", "888888"}}%
       %\def\colorPallete{{"red!70", "orange!70", "yellow!70", "green!70"}}%
 
       % Draw the WHCS underline
       \foreach \s in {3,2,...,0} {%
         \pgfmathparse{\colorPallete[\s]}
         \definecolor{currentColor}{HTML}{\pgfmathresult}
-        \draw[line cap=round, line width=\lwidth, currentColor] (0,-\lskip*\s) -- (24-\s,-\lskip*\s);
+        \pgfmathparse{\colorPalleteMod[\s]}
+        \definecolor{currentColor2}{HTML}{\pgfmathresult}
+        \draw[line cap=round, line width=\lwidth, currentColor2] (0,-\lskip*\s) -- (35,-\lskip*\s);
+        \draw[line cap=round, line width=\lwidth, currentColor] (0,-\lskip*\s) -- (15cm+\s*\lwidth*5pt,-\lskip*\s) -- (30cm+\lwidth*\s*5pt, {-tan(\rotamt)*15-0.5*\s});
       };
 
       % Draw WHCS LogoText
