@@ -10,6 +10,7 @@
 
       % define our colors for the underlines
       \def\colorPallete{{"FF2A2A", "FF6600", "FFD42A", "2AFF2A"}}%
+      %\def\colorPallete{{"red!70", "orange!70", "yellow!70", "green!70"}}%
 
       % Draw the WHCS underline
       \foreach \s in {3,2,...,0} {%
@@ -27,7 +28,7 @@
     \end{tikzpicture}
   };
   %\shade [top color=red,bottom color=blue, rotate=20, shift={(0cm, -2cm)}] (current page.south west) rectangle (current page.east); 
-  \draw [] (current page.center) node [shift={(2.5cm, 1.3cm)}, scale=1.2] {\color{whcs-accent} \emph{\Huge``Reimagine your home''}};
+  \draw [] (current page.center) node [shift={(2.5cm, 1.3cm)}, scale=1.2] {\color{whcs-accent} \emph{\Huge``Reimagine your home''} \footnotesize \texttrademark};
   \node at (current page.south west) {%
     \begin{tikzpicture}[remember picture, overlay]
       \coordinate (bottomLeft) at (0,0);
