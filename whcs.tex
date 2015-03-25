@@ -11,6 +11,7 @@
 
 \usepackage{caption}
 \usepackage{tikz}
+\usetikzlibrary{shapes.misc}
 \usepackage[binary-units]{siunitx}
 \usepackage{authblk}
 \usepackage{lipsum}
@@ -30,12 +31,20 @@
   \paragraph{#1}
 }
 
-\usetikzlibrary{shapes.misc}
+% Code Colors
+\definecolor{CommentGreen}{rgb}{0,0.6,0}
+\definecolor{numbering}{gray}{0.5}
+\definecolor{keywordc}{rgb}{.63,0,.42}
+
+% Title page
+\definecolor{whcs-accent}{HTML}{7F2AFF}
+\definecolor{whcs-muted}{HTML}{555555}
+
 \newcommand\titlebar{%
 \tikz[baseline,trim left=3.1cm,trim right=3cm] {
-    \fill [cyan!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
+    \fill [whcs-accent!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
     \node [
-        fill=cyan!60!white,
+        fill=whcs-accent!60!white,
         anchor= base east,
         rounded rectangle,
         minimum height=3.5ex] at (3cm,0) {
@@ -46,14 +55,6 @@
 \titleformat{\section}{\bfseries\Large}{\titlebar}{0.1cm}{}
 \renewcommand*{\thesection}{\arabic{section}}
 
-% Code Colors
-\definecolor{CommentGreen}{rgb}{0,0.6,0}
-\definecolor{numbering}{gray}{0.5}
-\definecolor{keywordc}{rgb}{.63,0,.42}
-
-% Title page
-\definecolor{whcs-accent}{HTML}{7F2AFF}
-\definecolor{whcs-muted}{HTML}{555555}
 
 \lstdefinestyle{somecode}{%
   basicstyle=\ttfamily\small,
