@@ -1,5 +1,6 @@
 \documentclass[letterpaper,11pt]{article}
 \usepackage[margin=1in, lmargin=1.5in]{geometry}
+\usepackage[usenames,svgnames]{xcolor}
 \usepackage{parskip}
 \usepackage{import}
 %\usepackage{setspace}
@@ -50,6 +51,10 @@
 \definecolor{numbering}{gray}{0.5}
 \definecolor{keywordc}{rgb}{.63,0,.42}
 
+% Title page
+\definecolor{whcs-accent}{HTML}{7F2AFF}
+\definecolor{whcs-muted}{HTML}{555555}
+
 \lstdefinestyle{phpcode}{%
   basicstyle=\ttfamily\small,
   language=php,
@@ -73,18 +78,7 @@
 \begin{document}
 
 % BEGIN COVER PAGE
-\begin{titlepage}
-\begin{center}
-{\bf Title} \\
-\vspace{0.1in}
-\begin{tabular}{c}
-{Authors}  \\
-{}\\
-{} \\
-{University of Central Florida}  \\
-\end{tabular}
-\end{center}
-\end{titlepage}
+\input{title-page.tex}
 
 % BEGIN TOC,LOF,LOT
 \begingroup

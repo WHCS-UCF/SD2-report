@@ -1,0 +1,49 @@
+\begin{titlepage}
+\centering  \sffamily
+\begin{tikzpicture}[remember picture,overlay]
+  \node [shift={(-4cm, 0cm)},rotate=20] at (current page.west)
+  {%
+    \begin{tikzpicture}[remember picture, overlay]
+      % parameters
+      \def\lwidth{0.5cm}
+      \pgfmathsetlengthmacro\lskip{\lwidth*0.8}
+
+      % define our colors for the underlines
+      \def\colorPallete{{"FF2A2A", "FF6600", "FFD42A", "2AFF2A"}}%
+
+      % Draw the WHCS underline
+      \foreach \s in {3,2,...,0} {%
+        \pgfmathparse{\colorPallete[\s]}
+        \definecolor{currentColor}{HTML}{\pgfmathresult}
+        \draw[line cap=round, line width=\lwidth, currentColor] (0,-\lskip*\s) -- (24-\s,-\lskip*\s);
+      };
+
+      % Draw WHCS LogoText
+      \node at (13, 0.75) {%
+      \begingroup
+      {\Huge \color{whcs-muted} {\Huge \bfseries \color{whcs-accent} W}ireless {\Huge \bfseries \color{whcs-accent}H}ome {\Huge \bfseries \color{whcs-accent}C}ontrol {\Huge \bfseries \color{whcs-accent}S}ystem}
+      \endgroup
+      };
+    \end{tikzpicture}
+  };
+  %\shade [top color=red,bottom color=blue, rotate=20, shift={(0cm, -2cm)}] (current page.south west) rectangle (current page.east); 
+  \draw [] (current page.center) node [shift={(2.5cm, 1.3cm)}, scale=1.2] {\color{whcs-accent} \emph{\Huge``Reimagine your home''}};
+  \node at (current page.south west) {%
+    \begin{tikzpicture}[remember picture, overlay]
+      \coordinate (bottomLeft) at (0,0);
+      \coordinate (topRight) at (\paperwidth,9.5);
+      \coordinate (bottomRight) at (current page.south east);
+
+      % draw dog ear
+      \draw [fill=whcs-accent!40] (bottomLeft) -- (topRight) -- (bottomRight) -- cycle;
+
+      % draw names
+      \path (7.4, 1.4) node [align=center] {\huge Grant Hernandez\\\Large\emph{Computer Engineer}} 
+      ++ (\paperwidth/4, 2.25) node [align=center] {\huge Joseph Love\\\Large\emph{Electrical Engineer}}
+      ++ (\paperwidth/4, 2.25) node [align=center] {\huge Jimmy Campbell\\\Large\emph{Computer Engineer}};
+    \end{tikzpicture}
+  };
+  \node [shift={(-4cm, 0.8cm)}, align=right] (testwow) at (current page.south east) {\huge Senior Design Group \#5};
+  \draw (testwow);
+\end{tikzpicture}
+\end{titlepage}
