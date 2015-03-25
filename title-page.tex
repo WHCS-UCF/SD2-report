@@ -5,7 +5,7 @@
   {%
     \begin{tikzpicture}[remember picture, overlay]
       % parameters
-      \def\lwidth{0.5cm}
+      \def\lwidth{0.6cm}
       \pgfmathsetlengthmacro\lskip{\lwidth*0.8}
 
       % define our colors for the underlines
@@ -20,7 +20,7 @@
       };
 
       % Draw WHCS LogoText
-      \node at (13, 0.75) {%
+      \node [scale=1.2] at (13, 1.0) {%
       \begingroup
       {\Huge \color{whcs-muted} {\Huge \bfseries \color{whcs-accent} W}ireless {\Huge \bfseries \color{whcs-accent}H}ome {\Huge \bfseries \color{whcs-accent}C}ontrol {\Huge \bfseries \color{whcs-accent}S}ystem}
       \endgroup
