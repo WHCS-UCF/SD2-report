@@ -46,7 +46,7 @@
 \titleformat{\section}{\bfseries\Large}{\titlebar}{0.1cm}{}
 \renewcommand*{\thesection}{\arabic{section}}
 
-% header and footer
+% Code Colors
 \definecolor{CommentGreen}{rgb}{0,0.6,0}
 \definecolor{numbering}{gray}{0.5}
 \definecolor{keywordc}{rgb}{.63,0,.42}
@@ -55,7 +55,7 @@
 \definecolor{whcs-accent}{HTML}{7F2AFF}
 \definecolor{whcs-muted}{HTML}{555555}
 
-\lstdefinestyle{phpcode}{%
+\lstdefinestyle{somecode}{%
   basicstyle=\ttfamily\small,
   language=php,
   numbers=left,
@@ -75,21 +75,26 @@
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
+% Start roman numerals as per the spec
+\pagenumbering{roman}
 \begin{document}
 
 % BEGIN COVER PAGE
 \input{title-page.tex}
 
 % BEGIN TOC,LOF,LOT
-\begingroup
-\tableofcontents \addcontentsline{toc}{section}{Table of Contents}
-\let\clearpage\relax
-\listoffigures \addcontentsline{toc}{section}{List of Figures}
-\listoftables \addcontentsline{toc}{section}{List of Tables}
-\endgroup
+\tableofcontents% \addcontentsline{toc}{section}{Table of Contents}
+%\let\clearpage\relax
+\listoffigures% \addcontentsline{toc}{section}{List of Figures}
+\listoftables% \addcontentsline{toc}{section}{List of Tables}
+\clearpage
+% \endgroup
+
+% Resume usage of arabic numerals
+\pagenumbering{arabic}
 
 % BEGIN SECTION LISTING
-% \onehalfspacing
+%\onehalfspacing
 \input{toc.tex}
 
 % BEGIN BIBLIOGRAPHY
