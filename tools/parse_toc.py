@@ -236,7 +236,9 @@ def main(argv):
     # make all of the subsections
     for s in topLevel:
         name = nameMap[s.position]
-        tocTop.write("\import{./}{%s.tex}\n" % name)
+        tocTop.write(s.getComment() + "\n")
+        tocTop.write(s.toLatex() + "\n")
+        tocTop.write("\import{./}{%s.tex}\n\n" % name)
         makeSectionFile(name , s, subchildren[s.position-1])
     
     tocTop.close()
