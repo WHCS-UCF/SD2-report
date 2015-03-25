@@ -127,6 +127,7 @@
    2. LCD Light Activation
    3. Sensor Query
    4. Fault Recovery (Loss of Power)
+   5. Remote Door Access
 1. Project Management
    1. Budget 
    2. Parts Acquisition

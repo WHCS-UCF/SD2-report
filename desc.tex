@@ -3,6 +3,8 @@
 % Section 2.1
 \subsection{Project Motivation and Goals}
 
+%\includegraphics[]{"Interaction With System.pdf"}
+
 % Section 2.2
 \subsection{Objectives}
 \todo{3 pages}
@@ -53,6 +55,24 @@ hyping up how much power you lose to leeches}.
 
 % Section 2.2.4
 \subsubsection{Door Access}
+In addition to controlling home lights and various appliances, giving users
+remote control of their doors is  a goal of WHCS. Through the use of an
+\emph{electronic door strike}, we would provide specific control module the
+capability of locking and unlocking a door. This functionality would be
+demonstrated in Demo \ref{sec:demo-door}. WHCS sees door access as important
+for a home automation system to support because remote access, like a garage
+door, is simple and easy. We want to make opening \emph{any} door simple and
+easy.
+
+Unlike controlling appliances and reading sensors, correctly managing the
+operation of a safety-critical door must be handled with great care. Any flaw
+in the implementation of the WHCS network would leave a user's home vulnerable
+to outside attack. This is why any control module whose purpose is to control
+doors will support additional security features. These additional features will
+include mechanisms to prevent replay attacks (which garage doors are vulnerable
+to) and also prevent outside attackers from engaging the door opening mechanism
+just by sniffing traffic. For additional details on the security considerations
+of WHCS, please refer to Section \ref{sec:safety-sec}.
 
 % Section 2.2.5
 \subsubsection{Data Collection}
@@ -73,7 +93,9 @@ would include \textbf{connection status} and \textbf{power status}. See Section
 \ref{sec:network-library} for a more detailed description of the supported
 network packets and the type of fields they support.
 
-All of this raw data being collected could be displayed to the user in the form of graphs and tables. It would serve as the basis for a set of statistics for display to the user.
+All of this raw data being collected could be displayed to the user in the form
+of graphs and tables. It would also serve as the basis for a set of descriptive
+statistics for display to the user.
 
 % Section 2.3
 \subsection{Requirements and Specifications}
