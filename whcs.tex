@@ -1,35 +1,48 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% WHCS Senior design 1 document
+%   Written at UCF in 2015 
+%   Typeset by Grant Hernandez
+%   For authors, see the title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \documentclass[letterpaper,11pt]{article}
 \usepackage[margin=1in, lmargin=1.5in]{geometry}
-\usepackage[usenames,svgnames]{xcolor}
-\usepackage{parskip}
-\usepackage{import}
-%\usepackage{setspace}
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
-%\usepackage{fancyhdr}
-%\usepackage{wrapfig}
-\usepackage[hidelinks]{hyperref} % for URL linking
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Common color names
+\usepackage[usenames,svgnames]{xcolor}
+% For meeting senior design specifications
+\usepackage{parskip}
+% For easy importing of documents
+\usepackage{import}
+% Advanced captions
 \usepackage{caption}
+% TODO tracking
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+% Document jumping and linkage
+\usepackage[hidelinks]{hyperref} % for URL linking
+% Fancy section headings
+\usepackage{titlesec}
+% TikZ madness
 \usepackage{tikz}
 \usetikzlibrary{shapes.misc}
-\usepackage[binary-units]{siunitx}
-\usepackage{authblk}
+% Filler text
 \usepackage{lipsum}
+% For pretty code listings
 \usepackage{listings}
 
-\usepackage{titlesec}
+% Probably not needed for now
+%\usepackage{setspace}
+%\usepackage{fancyhdr}
+%\usepackage{wrapfig}
+%\usepackage[binary-units]{siunitx}
 
-% keep our graphics nice and neat
-\graphicspath{{img/}}
-
-% customize hyperref
-\urlstyle{same} % remove monospaced links
-\hypersetup{pdfnewwindow=true % prevent the user from leaving the paper
-}
-
-\newcommand{\subsubsubsection}[1]{%
-  \paragraph{#1}
-}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Color Palette
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Code Colors
 \definecolor{CommentGreen}{rgb}{0,0.6,0}
@@ -40,6 +53,35 @@
 \definecolor{whcs-accent}{HTML}{7F2AFF}
 \definecolor{whcs-muted}{HTML}{555555}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% LaTeX Configuration & Macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Keep our graphics nice and neat
+\graphicspath{{img/}}
+
+% Customize hyperref
+\urlstyle{same} % remove monospaced links
+\hypersetup{pdfnewwindow=true % prevent the user from leaving the paper
+}
+
+% Custom figure macro for quick and easy changes across the document
+%   \ucfgfx
+%     Param 1: label
+%     Param 2: graphics path
+%     Param 3: caption
+% TODO: provide optional includegraphics input as #4
+\newcommand{\ucfgfx}[3]{
+\begin{figure}
+\centering
+\includegraphics[]{#2}
+
+\caption{#3}
+\label{#1}
+\end{figure}
+}
+
+% Section Heading Customization 
 \newcommand\titlebar{%
 \tikz[baseline,trim left=3.1cm,trim right=3cm] {
     \fill [whcs-accent!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
@@ -55,8 +97,8 @@
 \titleformat{\section}{\bfseries\Large}{\titlebar}{0.1cm}{}
 \renewcommand*{\thesection}{\arabic{section}}
 
-
-\lstdefinestyle{somecode}{%
+% A custom listing format
+\lstdefinestyle{code}{%
   basicstyle=\ttfamily\small,
   language=php,
   numbers=left,
@@ -78,6 +120,10 @@
 
 % Start roman numerals as per the spec
 \pagenumbering{roman}
+
+%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%
+% BEGIN DOCUMENT
+%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%
 \begin{document}
 
 % BEGIN COVER PAGE
@@ -104,6 +150,7 @@
 \thispagestyle{empty}
 \pagestyle{empty}
 
+% Actual References
 \renewcommand{\refname}{\centerline{\Large\bf References Cited}}
 \bibliographystyle{simple}
 \bibliography{./ref}
