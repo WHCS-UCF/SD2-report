@@ -19,6 +19,41 @@
 \label{sec:safety-sec}
 \todo{0.5 pages}
 
+The safety and security of WHCS is primary constraint of the project. Due to
+the integration with home, especially access control systems, WHCS must not
+negatively affect home security. Additionally, as WHCS is in control of large
+currents involving light control and outlet control, great care must be taken
+to design circuits and software to prevent fires and misbehavior. If for
+instance, we decided to control a light that exceeded the rating of one of the
+control relays, then this could be a fire hazard. Also, in terms of door
+control, if the mechanism for controlling the door were to fall in to the hands
+of a burglar or fail completely this would present a critical safety and
+security issue.
+
+For example, there is a trade-off that needs to be made for controlling a door
+with an electronic strike. Electronic strikes come in two main flavors:
+normally opened (NO) and normally closed (NC). NO favors security by
+\emph{failing-secure}, meaning the lock will not be openable if in the event of
+a power loss. NC on the other hand will \emph{fail-safe}, meaning the lock will
+be openable without power applied. This consideration should be based around
+local fire code and depending on the type of door and handle used. We explain
+our decision to go with a NO type electronic strike in
+\autoref{sec:electronic-strike}.
+
+In general, some principals for making sure that safety and security problems
+are taken in to consideration are
+
+\begin{enumerate} \item Analyze potential problem areas \item Develop solutions
+for problem areas \item Anticipate failures and handle them accordingly
+\end{enumerate}
+
+Through premptive \emph{analysis}, we may determine problem areas. We will
+\emph{develop} solutions for these problems, consisting of a description of the
+problem, its potential impact, what area does it impact, and what we plan to do
+to address it. Finally, we will \emph{anticipate} failures and build in the
+developed solutions directly in to our design. These solutions may be in the
+form of warning labels (Ex. NO NOT EXCEED 12V 10A) and software checks.
+
 % Section 3.4
 \subsection{Spectrum Considerations}
 
