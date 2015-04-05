@@ -34,23 +34,23 @@
     \end{tikzpicture}
   };
   %\shade [top color=red,bottom color=blue, rotate=20, shift={(0cm, -2cm)}] (current page.south west) rectangle (current page.east); 
-  \draw [] (current page.center) node [shift={(2.5cm, 1.3cm)}, scale=1.2] {\color{whcs-accent} \emph{\Huge``Reimagine your home''} \footnotesize \texttrademark};
+  \draw [] (current page.center) node [shift={(2.5cm, 1.3cm)}, scale=1.2] {\color{whcs-accent} \emph{\Huge~Reimagine your home} \footnotesize \texttrademark};
   \node at (current page.south west) {%
     \begin{tikzpicture}[remember picture, overlay]
       \coordinate (bottomLeft) at (0,0);
       \coordinate (topRight) at (\paperwidth,9.5);
       \coordinate (bottomRight) at (current page.south east);
 
-      % draw dog ear
-      \draw [fill=whcs-accent!40] (bottomLeft) -- (topRight) -- (bottomRight) -- cycle;
+      % draw horizontal names
+      \path (1\paperwidth/6, 0.15\paperheight) node [align=center] {\huge Grant Hernandez\\\Large\emph{Computer Engineer}}
+      ++ (2\paperwidth/6, 0) node [align=center] {\huge Joseph Love\\\Large\emph{Electrical Engineer}}
+      ++ (2\paperwidth/6, 0) node [align=center] {\huge Jimmy Campbell\\\Large\emph{Computer Engineer}};
 
-      % draw names
-      \path (7.4, 1.4) node [align=center] {\huge Grant Hernandez\\\Large\emph{Computer Engineer}} 
-      ++ (\paperwidth/4, 2.25) node [align=center] {\huge Joseph Love\\\Large\emph{Electrical Engineer}}
-      ++ (\paperwidth/4, 2.25) node [align=center] {\huge Jimmy Campbell\\\Large\emph{Computer Engineer}};
+      % draw school banner
+      \path (\paperwidth/6, 0.05\paperheight) node [shift={(1.5cm, 0cm)}] {\huge University of Central Florida}
+      ++ (2\paperwidth/6, 0) node {\includegraphics[height=0.65in]{ucf-pegasus-bw}}
+      ++ (2\paperwidth/6, 0) node [shift={(-1.9cm, 0)}] {\huge Senior Design Group \#5};
     \end{tikzpicture}
   };
-  \node [shift={(-4cm, 0.8cm)}, align=right] (testwow) at (current page.south east) {\huge Senior Design Group \#5};
-  \draw (testwow);
 \end{tikzpicture}
 \end{titlepage}
