@@ -22,8 +22,6 @@
 \usepackage{caption}
 % TODO tracking
 \usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
-% Document jumping and linkage
-\usepackage[hidelinks]{hyperref} % for URL linking
 % Fancy section headings
 \usepackage{titlesec}
 % TikZ madness
@@ -33,6 +31,8 @@
 \usepackage{lipsum}
 % For pretty code listings
 \usepackage{listings}
+% Document jumping and linkage
+\usepackage{hyperref} % for URL linking
 
 % Probably not needed for now
 %\usepackage{setspace}
@@ -62,8 +62,22 @@
 
 % Customize hyperref
 \urlstyle{same} % remove monospaced links
-\hypersetup{pdfnewwindow=true % prevent the user from leaving the paper
+\hypersetup{pdfnewwindow=true, % prevent the user from leaving the paper
+colorlinks,
+linkcolor={whcs-accent!80!black},
+citecolor={blue!50!black},
+urlcolor={blue!80!black},
+% PDF Meta
+pdftitle={Wireless Home Control System - UCF Senior Design I},
+pdfsubject={University of Central Florida Senior Design 2015},
+pdfauthor={Grant Hernandez},
 }
+
+% Customize autoref names
+% See page 16 of hyperref manual
+\renewcommand\sectionautorefname{Section}
+\renewcommand\subsubsectionautorefname{Section}
+\renewcommand\subsectionautorefname{Section}
 
 % Custom figure macro for quick and easy changes across the document
 %   \ucfgfx
@@ -74,14 +88,14 @@
 \newcommand{\ucfgfx}[3]{
 \begin{figure}
 \centering
-\includegraphics[]{#2}
+\includegraphics[width=0.8\linewidth]{#2}
 
 \caption{#3}
 \label{#1}
 \end{figure}
 }
 
-% Section Heading Customization 
+% Section Heading Customization
 \newcommand\titlebar{%
 \tikz[baseline,trim left=3.1cm,trim right=3cm] {
     \fill [whcs-accent!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);

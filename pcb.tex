@@ -2,7 +2,7 @@
 
 % Section 6.1
 \subsection{Software Considerations}
-\todo{2 pages}
+\todo{1 more page if possible}
 Before designing any of our Printed Circuit Boards, we decided to analyze which
 software would allow us to do the job the quickest and easiest. Nearly all of
 the team was familiar with EAGLE as it's one of the most talked about board
@@ -10,12 +10,32 @@ design software due to its EAGLE Lite version. Instead of going with the most
 common solution, we decided to compare EAGLE CAD to another open source
 solution: KiCad.
 
-% Section 6.1.1
-\subsubsection{KiCad}
-One of the benefits of KiCad versus
-
 % Section 6.1.2
 \subsubsection{EAGLE}
+EAGLE PCB is commercial software for schematic capture and board layout. It
+supports a wide variety of features that would help us make our board. The only
+issue is that the normal software costs money. Luckily they offer a free
+evaluation version that can only be used for non-commercial purposes.
+
+This freeware version of EAGLE has strict limitations in the size of the board
+that can be designed and how many signal layers there may be. The size of any
+board is limited to 4 x 3.2
+inches\footnote{\url{http://www.cadsoftusa.com/download-eagle/freeware/}} and
+there may only be a top and bottom copper layer. These limitations would be a
+show stopper for a moderately complex board, but considering our project
+requirements, it would be suitable.  If we are to consider future board designs
+for WHCS, we may want a more flexible solution.
+
+% Section 6.1.1
+\subsubsection{KiCad}
+As an alternative to EAGLE PCB, KiCad performs admirably well. It has all of
+the primary features of EAGLE and yet, is completely free and open source. The benefit of this is that the whole suite of tools is cross platform, allowing group members to easily work together despite different operating systems.
+
+One issue with KiCad is the lack of a built in Autorouter. KiCad provides an external router, FreeRouting\footnote{\url{http://www.freerouting.net/}}, but it has experienced recent legal trouble due to one of the developers previous employers.
+
+Another nifty feature that KiCad has is its 3D board view. Figure~\ref{fig:kicad-3D} shows the 3D view of an example board by Orlando Arias\footnote{A 3$^{rd}$ year Computer Engineering student at UCF}. This feature is great for getting a sense of your board layout in relation to the selected footprints.
+
+\ucfgfx{fig:kicad-3D}{kicad-3D}{an ATtiny development board displayed in KiCad's 3D board view}
 
 % Section 6.2
 \subsection{Layout}
