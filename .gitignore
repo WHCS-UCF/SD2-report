@@ -8,6 +8,7 @@
 *.toc
 
 whcs.pdf
+integrate/
 
 ## Vim
 *.swp
