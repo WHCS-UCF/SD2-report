@@ -295,28 +295,307 @@ X+, X-, Y+, Y-
 \todo{2 page}
 
 % Section 5.5
-\subsection{Android Application}
+\subsection{Android Application} For most WHCS users the mobile application
+will be the only physical interaction they have with the application. When we
+set out for development we wanted to make an easy to use application that would
+attract users to stick with our system.  Operability and usability were
+emphasized in our design process. We wanted an appealing U.I. without
+complexity, after all we are targeting a simple solution to home automation.
 
 % Section 5.5.1
-\subsubsection{Development Environment}
+\subsubsection{Development Environment} Android is the mobile operating system
+that we chose to utilize for our BlueTooth enabled phone. The Android operating
+system is accessed through the Java language, which is a staple in the UCF
+curriculum therefore everyone in our group is versed in it. Developing on
+Android is also a free endeavour where as developing on an iPhone requires
+enrolling in the Apple Developer Program. These programs actually cost a good
+amount of money that is unnecessary to spend. The Windows Phone platform is
+another option for the BlueTooth enabled phone, but they are very unpopular so
+we chose not to target this platform. With our target narrowed down to the
+Android operating system, we had to research what the best environment for
+developing our application would be. There were three options that we
+considered for managing the Android project each with their own perks: command
+line tools, Eclipse, and Android Studio.
 
-% Section 5.5.2
-\subsubsection{Speech Recognition}
+The first development environment we considered for our Android project was
+creating our own project structure and using command line build tools. There
+are also debug tools available on the command line for Android projects. These
+tools would be necessary in order to do our testing on Android Virtual Machines
+running on our computers. This approach favors people who are command line or
+terminal oriented. Linux is popular within our group and the ability to do
+things from the terminal is appealing so this approach seemed like a good one.
+We realized that with the design we had in mind for our project, it would
+become quite large and it might be difficult to handle without a dedicated IDE
+(Interactive Development Environment). This led us to looking into using
+Eclipse for developing our Android application. Eclipse seemed like a natural
+choice because it is what is recommended for using in the Java oriented UCF
+programming classes.  The Android SDK provides an add{}-on for Eclipse that
+makes it a viable Android development environment. We were able to get this
+running and create sample Android applications. Inside of Eclipse the project
+structure for Android applications is laid out nicely. The debug tools are all
+organized at the top of the screen resulting in an easier development
+experience than debugging from the command line. The problem with using Eclipse
+as our IDE is that Eclipse is notorious for being slow and unwieldy.
 
-% Section 5.5.3
-\subsubsection{BlueTooth Library}
+\color{black} Recently Google released a development environment named Android
+Studio that is made specifically for developing Android Applications. No one in
+our group had any prior experience using this IDE, however we realized that due
+to it being tailored specifically for Android it was probably better than
+anything else. This turned out to be correct, because it was much easier for us
+to create an Android project and navigate our code from within this IDE. We
+also decided to use Android Studio because it has built in Git support for
+source control. \autoref{fig:git-scm} shows the important feature offered by
+Android Studio that we use for collaboration. This meant that as we were
+writing our code we could easily submit our changes to a remote Git repository.
+
+\ucfgfx{fig:git-scm}{a55-img001.png}{Git source control in Android Studio}
+
+\subsubsection{Use Case Diagram} The central use cases for WHCS are toggling
+the state of certain devices within the home and monitoring certain states.
+For example a user of WHCS will spend most of the time turning on lights,
+checking whether a light is on, or checking the temperature reading of a
+certain sensor. There are certain other use cases that are necessary in order
+for WHCS to be a functioning application, as well as to make it have a robust
+feel. Features like speech activation and creating endpoint groups are
+usability features that are not necessary in order to accomplish the central
+goals of WHCS.  Connecting to the base station the first time you use the
+application is a necessary use case that must be incorporated into the
+application. \autoref{fig:android-usecase} shows the use case diagram for the
+WHCS application.
+
+The design for the WHCS application involves making sure that performing the
+common use cases such as checking status and toggling endpoints are very fast.
+The user should be able to perform these tasks without having any knowledge of
+how the application works. Speech recognition will be a supporting feature so
+it does not need to be a central focus like the area that will visualize the
+control modules. When the user wants to perform speech activation it will
+involve pressing a button to prompt the speech recognizer, and then giving a
+command to the WHCS. In order to make the speech activation feature more
+promising, the user will have the ability to rename endpoints for activation.
+Creating endpoint groups will be a feature that is not used frequently but adds
+a lot of value to the application. Users will only have to create an endpoint
+group once for it to last in the application. Creating an endpoint group will
+be a simple task involving assigning a group number to endpoints. That number
+will be the endpoint group, then that endpoint groups state can be toggled.
+
+\ucfgfx{fig:android-usecase}{a55-img002.png}{Android App Use-case diagram}
+
+\subsubsection{Speech Recognition} The Android application for WHCS will offer
+speech activation capabilities. These will be on top of GUI activation
+capabilities. The speech activation sequence begins with the press of a button
+to start the speech recognition. The user will be prompted with a microphone
+and can then give his command. The commands will be formatted like {}``light
+one on.'' When the user gives commands using the speech method, a notification
+will be given indicating the success of interpreting the speech into a known
+command. If the user{}'s speech does not match a known command, the speech will
+be shown back to the user to show what went wrong. We are predicting that the
+most frequent cause of this will be the Android phone mishearing the user. In
+the event that the speech matches a command, the application will display the
+command to the user and then perform it. The following flow chart in
+\autoref{fig:android-speech} displays the sequence of events happening when a
+user performs speech activation.
+
+\ucfgfx{fig:android-speech}{a55-img003.png}{Android app speech activation
+chart}
+
+The goal of the speech activation feature is to be easy to use. In order to
+promote the usage of this feature we will add the ability for users to rename
+the endpoints that the speech commands will target. For example the user could
+change {}``light 1'' into {}``living room light.'' This way the user could say
+{}``living room light on{}'' to the application in order to turn on the living
+room light. To do this data structures will need to be stored in the
+application which hold the preferred name of each type of endpoint. Endpoints
+can be distinguished by the type they are, their individual identifier number
+and their preferred name. The preferred name should be stored when the
+application is closed so a permanent source of storage is needed to do this.
+The file system can be used or possibly a sqlite database.
+
+In the code for our application we will be using the Android speech recognition
+API (Application Program Interface).  Android has a speech recognition service
+that can be started by requesting it within an application. We will request
+this service to be run by using an Android construct called an intent,
+specifically the recognizer intent. Once the request the service to be run it
+gives us the text that it produced from listening to the user{}'s speech. The
+code that performs this process ends up bloating up the application so we
+sought to develop a wrapper class in order to perform the request for the
+speech service and simply hand back the text. However because of the Android
+design philosophy, creating a wrapper class to start the speech recognition
+service was not easy enough to make it a worthwhile endeavour. Thus we
+concluded the best approach is to keep the calls to the Android speech
+recognition API within the class we use for our main activity.
+
+\subsubsection{BlueTooth Software Design} BlueTooth will be the technology that
+allows WHCS users to interact with the base station from the mobile phone. This
+means that proper functioning BlueTooth software must be written to ensure that
+users can interact with WHCS. From the user{}'s standpoint the only knowledge
+of BlueTooth required will be the ability to perform an initial connection to
+the base station. Once a user has connected to the base station once through
+the WHCS app we will be able to cache the base station device and allow for
+automatic reconnection every time the application is launched. This is an
+important abstraction for the user because the user should not have to spend
+time handling BlueTooth connections every time they open the application.
+\autoref{fig:android-bluetooth-start} shows what the BlueTooth software will be
+doing whenever the user opens the Android application.
+
+\ucfgfx{fig:android-bluetooth-start}{a55-img004.png}{Android BlueTooth Startup
+Flowchart}
+
+In \autoref{fig:android-bluetooth-start} we see that the first check that is
+made is to ensure that BlueTooth is enabled. The Android operating system
+requires applications to ask the user whether they want to activate BlueTooth
+or not. It cannot just be turned on. If the WHCS application is opened and
+BlueTooth is off we will prompt to the user to turn it on and if they refuse we
+will exit the application. When it has confirmed that BlueTooth is on, the
+application can check to see if it knows the base station device. If the base
+station device is known then the application can skip asking the user what to
+connect to and can perform the connection automatically. This is what should be
+happening most of the time. If the base station is not stored in the
+applications data then the application will have to prompt the user to connect
+to a base station. When connecting to a device there are two possibilities for
+connection, paired devices and non{}-paired devices. The application will first
+show the user all devices that their phone has paired with previously, in case
+the application somehow forgot the base station. If the base station does not
+show up in the paired devices list, the user will be able to search for active
+BlueTooth devices and select the base station. At the end of this start up
+cycle the WHCS application will have an active BlueTooth connection with the
+base station that can be used for full duplex communication.
+
+Our application will be leveraging the API and design guideline for using
+BlueTooth from Android phones. The underlying driver for BlueTooth
+communication utilizes sockets similar to network sockets in other languages.
+Android offers a class named BluetoothDevice which contains all the address
+information necessary for opening a socket. When our application scans for
+devices or asks the user to pick an option from the list of paired devices this
+will be to get the BluetoothDevice to open a socket from. Once we have obtained
+that BluetoothDevice we can create a BluetoothSocket through one of its
+methods. Once a BluetoothSocket has been opened through calling connect, an
+input and output stream become available that allow us to send and receive raw
+byte data. This is a primitive form of communication but it is also exactly
+what we want. All data that we send or receive from the base station over
+BlueTooth will be in the form of a byte array. This form of primitive data
+transmission allows us to implement certain communication protocols between the
+Android base station.
+
+Once a BluetoothSocket has been opened on the Android device the application
+can begin communicating with the base station. We will use a communication
+protocol between the Android device to ensure the base station can properly
+interact with the application. This protocol will allow the Android application
+to give commands to the base station such as inquire about the state of the
+control modules or to toggle state within the system. Whenever the Android
+application wants to send a message to the base station the software will
+create a packet with a certain structure. The packet will contain a byte for
+letting the base station know that a command is being given, the command
+itself, any variables for the command, and then a byte for finishing the
+command. The base station will receive one byte at a time due to the serial
+nature of BlueTooth communication but it will be able to parse the packets it
+receives in order to figure out what action the application is trying to
+perform. \autoref{fig:android-comm} shows a visual representation of the
+communication between the aplication and the base station.
+
+\ucfgfx{fig:android-comm}{a55-img005.png}{Visual of Communication Between
+Android Device and Base Station}
 
 % Section 5.5.4
-\subsubsection{GUI Philosophy}
+\subsubsection{GUI Philosophy} Our goal for the development of the user
+interface was to make something simple that users could navigate quickly and
+efficiently. There is no need for the UI to be deep or hold the user{}'s
+attention. The only purpose of the GUI is to provide intuitive visuals for
+interacting with WHCS. When we developed the GUI we wanted to minimize the time
+it took for the user to open the application and make a change within the
+system. For example the user should be able to open the application and turn a
+light on or off in the shortest time possible. This means opening up to a
+screen that lists all possible end points in the system that can be targeted by
+a command. The top right layout in \autoref{fig:android-gui} shows the view
+that would list all of the accessible control modules in the system.
 
-% Section 5.5.5
-\subsubsection{Use Case Diagram}
+\ucfgfx{fig:android-gui}{a55-img006.png}{Android GUI Layout}
+
+As shown in \autoref{fig:android-gui} there are layouts that provide support
+around the main list layout. The first two layouts in the upper left and upper
+middle are the what the user would see when the base station is not known to
+the application yet. The user would need to select the base station from a list
+of paired devices or perform a BlueTooth scan for active devices. Once the user
+has selected a base station then the base station can be saved in the
+application and the user should be able to avoid seeing these screens again.
+The user would be viewing the main list layout at this point. From the main
+list layout the user can navigate to the individual control module viewer. This
+will be achievable by clicking on the name of a control module or by clicking
+the edit button. The individual detail viewer will allow the user to toggle the
+state of the control module, change the speech recognition name of the control
+module, and assign the control module to a group. The detail viewer will also
+list the current state of the control module.
+
+In Android different aspects of a GUI can be created in two different ways,
+fragments and activities. Typically fragments are used when two different
+screens serve very similar purposes or are trying to accomplish a shared goal.
+Fragments are typically used when exchanges are meant to be done very fast
+between screens. In the case of our application we will be using separate
+activities for each of the screens. This is a logical approach because the
+layouts in our application are independent of one another. The main list layout
+will serve as the root activity and any other screen will be an activity that
+is placed upon it. For example when the application opens up the first time it
+will try to open the list activity but will notice that it is not connected to
+the base station. This will cause the paired devices activity to stack on top
+of the list activity. When the base station is selected the paired devices
+activity can return the result of the selection to the list activity and the
+list activity can function normally. When the detail viewer activity is called
+it stacks on top of the list activity and when the user is done with it, it
+will be removed off of the stack.
+
+To make our list activity look clean and function effectively we will create a
+custom adapter. In Android, adapters are the classes that allow objects to be
+transformed into data that a listview can turn into list items to be displayed
+to the user. The name of the adapter will be cmAdapter. The cmAdapter that we
+create will have an array of control modules as one of its fields, as well as a
+function named getRow that it inherits from its base class Adapter. The
+cmAdapter will know how to get the data from a control module object necessary
+to populate the main list. The main list activity will constantly call the
+getRow method that will be present in our adapter to fill the list. This
+creates a nice object oriented design for listing all of our control modules.
+If we want to display different data for control modules, we can simply alter
+the getRow method that is implemented in cmAdapter.
+\autoref{fig:android-class-diagram} shows the class diagram for the cmAdapter.
+The class is simple but provides important functionality for the Android
+application.
+
+\ucfgfx{fig:android-class-diagram}{a55-img007.png}{\texttt{cmAdapter} Class
+Diagram}
 
 % Section 5.5.6
-\subsubsection{BlueTooth Listener Class}
+\subsubsection{BlueTooth Listener Class} When the WHCS application is
+communicating with the base station it is easy for the base station to be
+interrupted and start parsing communication using the UART interrupt vectors on
+the microcontroller. We want our application to possess the same event driven
+capability so we created the BlueToothListener class. This class handles
+listening for any incoming BlueTooth communication aimed at the phone. The
+class must be initialized by telling it what BlueTooth device it should be
+listening for. Once this happens it can create a thread and constantly check to
+see if the BluetoothSocket{}'s input stream contains any data from the target
+device. If the inputstream contains data then we know that the target device
+has transmitted to the application. The BlueToothListener class raises an event
+whenever receipt of data has been confirmed. This allows the application to
+conform to event{}-driven Android philosophy. We can design around the
+BlueToothListener class and subscribe to the event it raises whenever data has
+been received. This is one of the core classes for communicating with the base
+station. \autoref{fig:bluetooth-listener} shows the class diagram for the
+BlueToothListener class as well as the classes associated with it.
 
-% Section 5.5.7
-\subsubsection{Creating Endpoint Groups}
+\ucfgfx{fig:bluetooth-listener}{a55-img008.png}{\texttt{BlueToothListener}
+Class Along With Supporting Data Structures}
+
+The BlueToothListener allows the application to directly hook up a parser for
+the incoming data. We can create a custom class that parses incoming byte
+arrays and transforms them into an understandable format for the application.
+This class would implement the interface for handling the data received event
+and could dictate what happens when certain data sequences are received. For
+example when the application asks the base station what control modules are
+currently known and active the base station would respond raising the data
+received event. The parser would begin working on the data received because it
+would have been subscribed to the event. The parser would realize that the data
+received is an indication of the state of the system and would have a case for
+handling what to do when this type of information is received. This would be
+how the communication protocol for receipt is implemented on the Android
+application.
 
 % Section 5.6
 \subsection{Power Hardware}
