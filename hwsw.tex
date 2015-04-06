@@ -145,12 +145,111 @@ NRF. The hardware interactions with the chip are all abstracted away.
 
 % Section 5.3
 \subsection{BlueTooth Chip}
+The BlueTooth device for WHCS will enable the base station to communicate with
+the mobile phone controller. Our guidelines for choosing a BlueTooth device
+included ease of use, reliability, size, cost, availability, and documentation.
+There were a multitude of BlueTooth devices to choose from. Special attention
+was paid to how well the BlueTooth device could connect to a microcontroller
+UART. Two BlueTooth devices, the HC{}-05 and the RN{}-41, showed the most
+promise. Our research of the two devices showed that they both had their
+advantages and either one could be implemented in our design. After careful
+consideration we chose to utilize the HC{}-05 in our design, however the
+RN{}-41 could still replace the HC{}-05 if necessary.
+
+An important factor for considering the BlueTooth devices was if the internal
+settings of the BlueTooth devices could be changed and if possible how. Such
+internal settings include things such as the device{}'s BlueTooth name, baud
+rate, and passcode. These things need to be changed from their default settings
+or else many BlueTooth devices would have similar names, and they would all
+have default passcodes. We want to implement good security into WHCS so we need
+to be able to change the default passcode for the BlueTooth device. Also the
+baud rate is usually low in BlueTooth devices by default, which can be bumped
+up depending on the microcontroller being used. A BlueTooth device that could
+not be programmed manageably was not an option.
 
 % Section 5.3.1
 \subsubsection{RN-41}
+The RN{}-41 is a BlueTooth module designed by Microchip. This module is
+designed to be an all inclusive solution for embedded BlueTooth. It is clear
+that a lot of design went into this chip because it is very high quality and
+the data sheet is very thorough. Along with the high quality of the module
+comes the high cost. Of the two considered BlueTooth modules the RN{}-41 was
+much more expensive with a price of \$21.74 from Microchip. The high price tag
+makes it a less appealing option out of the BlueTooth devices because they are
+effectively accomplishing the same thing. The module itself appears well
+designed visually and it has dimensions of 25.8x13.2mm so it is not obtrusive
+and could fit well onto a PCB. There are 24 pins on this device and the
+datasheet gives the dimensions down to the pin spacing allowing for easy PCB
+layout design. The RN{}-41 makes communicating with microcontroller UARTs easy
+by simplifying RS{}-232 down to the Rx and Tx wires. This means the only
+connections necessary for using the RN{}-41 with a microcontroller are power,
+ground, Rx, and Tx. The microcontroller{}'s that we have decided to use include
+Rx and Tx pins that hook up directly to the RN{}-41. From the
+microcontroller{}'s point of view the BlueTooth device does not even exist. The
+RN{}-41 acts as a transparent man{}-in{}-the middle and simply relays messages
+from a BlueTooth device to the microcontroller and vice versa. This is perfect
+for our design because the RN{}-41 could just be plug and play. With an
+advertised 100 meter transmission range the RN{}-41 meets the requirements we
+set for distance of BlueTooth reception.  According to the datasheet the
+RN{}-41 has a maximum baud rate of 921K which means it goes above and beyond
+the transmission rates necessary for communicating between the mobile device
+and the base station. The picture in \autoref{fig:bluetooth-rn41} shows the RN{}-41 BlueTooth
+module.
+
+\ucfgfx{fig:bluetooth-rn41}{a53expected2pages-img001.png}{RN-41 chip}
+
+The RN{}-41 has a manageable means of programming the internal settings. When
+the RN{}-41 is on, sending {}``\$\$\$'' over the UART lines puts the chip into
+command mode. From here there are a list of commands that can be passed in
+order to inquire or manipulate the state of the module. There are advantages
+and disadvantages to this approach. It is great that it is easy to program the
+RN{}-41 just by passing certain data while it is wired normally, however in the
+event that the sequence {}``\$\$\$'' was ever passed during operation it could
+throw off the whole system. This is not a terrible thing but it is worthy of
+consideration.
 
 % Section 5.3.2
 \subsubsection{HC-05}
+The HC{}-05 is a BlueTooth module that shares many similarities with the
+RN{}-41. It is of comparable size to the RN{}-41 with dimensions of 27x13mm.
+HC{}-05 modules are also commonly sold along with a breakout board with male
+headers. This makes it an option to have the PCB include female headers and use
+them for installing the HC{}-05. Our intention for the base station containing
+the BlueTooth module is to have the PCB board hidden, so using female headers
+for plugging in the HC{}-05 to the PCB is a viable option. The module is
+advertised as a low power class 2 BlueTooth device with power consumption for
+communication listed at 8 mA. This is lower power consumption than the RN{}-41.
+The max signal range is not listed in the data sheet, however we have tested
+this chip and have achieved a signal range of more than 50m which is more than
+enough for what we desired in our BlueTooth chip. Just like the RN{}-41 the
+HC{}-05 communicates to microcontrollers by simplifying RS{}-232 and only using
+the Rx and Tx pin. The maximum supported baud rate is 460800 which will allow
+for very fast data transfer and will exceed the needs of communication speeds
+in our system. The picture in \autoref{fig:bluetooth-hc05} shows the HC{}-05
+BlueTooth module.
+
+\ucfgfx{fig:bluetooth-hc05}{a53expected2pages-img002.png}{HC-05 Chip}
+
+The HC{}-05 comes with default settings similar to most BlueTooth modules. The
+default baud rate is 9600 and the default passcode is 1234. In order to change
+this the module must be accessed in AT mode. AT mode is entered by utilizing
+pin 11 {}``key{}'' on the HC{}-05. When this pin is held high, the module
+enters AT mode on startup and is ready to take commands. This means that
+whenever we want to program the BlueTooth module we will need to use a
+microcontroller with a UART connection to a terminal as well as a UART
+connection to the HC{}-05. This will require the implementation of a software
+Rx and Tx pin. This will only need to be done once because once the BlueTooth
+module has been programmed it retains that configuration. The requirement of
+holding the key pin high during startup of the module eliminates the danger of
+entering the programming mode during normal operation.
+
+For WHCS we have decided to use the HC{}-05 as our BlueTooth module instead of
+the RN{}-41. The main factors deciding this were the cheaper price of the
+HC{}-05 and the fact that they both accomplish the same thing. The two chips
+were comparable in size, features, wiring, layout, and usability however at the
+price of approximately \$6.00 the HC{}-05 cost less than half of the RN{}-41.
+The RN{}-41 is the second best choice and can serve as a fallback if HC{}-05
+chips went out of stock or an unforeseen circumstance occurred.
 
 % Section 5.4
 \subsection{LCD}
