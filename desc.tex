@@ -1,9 +1,58 @@
 % Section 2 in file desc.tex
 
 \subsection{Motivation}
+The goal of this project is to improve the quality of life for people in their
+homes. Imagine sitting on the couch at home about to watch a movie, but all the
+lights are on and it{}'s a little warm inside. It is irksome to have to get up
+and turn off every individual light. With the technology existing today it is
+perfectly feasible to be able to turn off the lights and turn on a fan with a
+mobile phone. With the software available today it is even possible for this
+process to be initiated by voice. The problem that exists is these solutions
+lack mass implementation. By creating a wireless home control base station that
+a mobile phone could connect to these visions can be realized. The need to get
+up and physically interact with an appliance can be made a thing of the past.
+
+We want to develop an easy to use system that allows people at their home to
+interact with their appliances without having to be in front of them. Our aim
+is for the solution to be reliable and low cost. The use case scenarios should
+be intuitive so that even someone who was just visiting could utilize the
+system. A person using WHCS should be able to turn on their lights or an outlet
+with the press of a button or with a voice command from their mobile phone.
+They should also be able to turn on their coffee pot from their phone when they
+first wake up. If someone knocks on the door the person should be able to
+unlock the door without having to get up. With the activation capabilities of
+WHCS there is an opportunity to utilize a foundation that can be expanded upon.
+We will have the infrastructure for integrating different types of sensors into
+the home to provide users with information about things like temperature or air
+quality.
 
 \subsection{Overview}
+The diagram pictured in \autoref{fig:whcs-overview} shows the highest level
+overview of WHCS.  When the user wants to begin interacting with WHCS he has
+the option of choosing to use a mobile phone or the included LCD screen. Both
+option will provide full capabilities for interacting with the system. The
+phone will be attached to the system through a BlueTooth connection that is
+created by the user in the WHCS application. Using the phone will be a more
+mobile and easy method for access because the LCD will be connected to the
+central component of WHCS, the base station. The base station will be the
+brains of WHCS. It will be the base station{}'s job to take commands from the
+user and relay them to the endpoints, while also displaying the state of the
+system. The base station will have a list of endpoints, also called control
+modules, that can be targeted by the system. This list will be dynamic and
+allow for endpoints to be added or removed from the system during operation.
+Together the base station and the control modules will form a network through a
+home and will communicate wirelessly to one another through radio transceivers.
 
+The control modules designed for WHCS will allow for all the activation of
+appliances around the house. These endpoints will be listening for commands
+from the base station via a radio transceiver. Each control module will be
+tailored for interacting with a certain device. There will be control modules
+for toggling outlets, toggling lights, unlocking the front door, and also for
+monitoring sensors. The control modules will be as similar as possible with a
+designated area that allows for assigning specific roles to the control
+modules.
+
+\ucfgfx{fig:whcs-overview}{a21expected2pages-img001.png}{WHCS System Overview}
 
 % Section 2.2
 \subsection{Objectives}
