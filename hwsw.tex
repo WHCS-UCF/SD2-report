@@ -101,6 +101,13 @@ chip enable pin and the chip select not pin. Assigning the ce pin and the csn
 pin are the first step of using the NRF driver. Any communication between the
 microcontroller and the NRF will rely on the proper assignment of these pins.
 
+%\begin{wrapfigure}{r}{0.5\textwidth}
+%  \begin{center}
+%      \includegraphics[width=0.48\textwidth]{a51-img002.png}
+%  \end{center}
+%  \caption{NRF Class Diagram}
+%  \label{fig:nrf-class-diagram}
+%\end{wrapfigure}
 \ucfgfx[scale=0.5]{fig:nrf-class-diagram}{a51-img002.png}{NRF Class Diagram}
 
 Usage of the NRF driver will involve first constructing the class by telling
@@ -260,7 +267,7 @@ important information for homeowners would be step up from traditional ``dumb''
 thermostats. With a simple LCD combined with a touchscreen, users now have a
 way to control and query their home without having to find their phone.
 
-For our LCD touchscreen, we have choosen Adafruit's 2.8" TFT\footnotemark with
+For our LCD touchscreen, we have choosen Adafruit's 2.8" TFT\footnotemark{} with
 resistive touch, which uses the \href{}{ILI9341 chipset}. There are
 \href{https://github.com/adafruit/Adafruit_ILI9341/tree/master/examples}{plenty
 of usage examples} and Adafruit's
@@ -275,6 +282,8 @@ would be a feasible solution or writing a specific minimal driver would suffice
 as well.
 
 \footnotetext{\url{https://www.adafruit.com/products/1770}}
+
+
 
 % Section 5.4.1
 \subsubsection{Capabilities}
