@@ -71,7 +71,7 @@ driver. The NRF driver should provide the functionality included in the use
 case diagram in an easy to use format.  These will be the most common uses of
 the NRF.
 
-\ucfgfx{fig:nrf-usecase-diagram}{a51-img001.png}{NRF Driver Use-case Diagram}
+\ucfgfx[scale=0.4]{fig:nrf-usecase-diagram}{a51-img001.png}{NRF Driver Use-case Diagram}
 
 The core use of the NRF driver is transmitting and receiving payloads. Every
 other use case is a supporting role for the final goal of transmission. The
@@ -101,7 +101,7 @@ chip enable pin and the chip select not pin. Assigning the ce pin and the csn
 pin are the first step of using the NRF driver. Any communication between the
 microcontroller and the NRF will rely on the proper assignment of these pins.
 
-\ucfgfx{fig:nrf-class-diagram}{a51-img002.png}{NRF Class Diagram}
+\ucfgfx[scale=0.5]{fig:nrf-class-diagram}{a51-img002.png}{NRF Class Diagram}
 
 Usage of the NRF driver will involve first constructing the class by telling
 the microcontroller which pins the NRF is connected to. Then the user will be
@@ -196,7 +196,7 @@ the transmission rates necessary for communicating between the mobile device
 and the base station. The picture in \autoref{fig:bluetooth-rn41} shows the RN{}-41 BlueTooth
 module.
 
-\ucfgfx{fig:bluetooth-rn41}{a53expected2pages-img001.png}{RN-41 chip}
+\ucfgfx[scale=0.7]{fig:bluetooth-rn41}{a53expected2pages-img001.png}{RN-41 chip}
 
 The RN{}-41 has a manageable means of programming the internal settings. When
 the RN{}-41 is on, sending {}``\$\$\$'' over the UART lines puts the chip into
@@ -228,7 +228,7 @@ for very fast data transfer and will exceed the needs of communication speeds
 in our system. The picture in \autoref{fig:bluetooth-hc05} shows the HC{}-05
 BlueTooth module.
 
-\ucfgfx{fig:bluetooth-hc05}{a53expected2pages-img002.png}{HC-05 Chip}
+\ucfgfx[scale=0.7]{fig:bluetooth-hc05}{a53expected2pages-img002.png}{HC-05 Chip}
 
 The HC{}-05 comes with default settings similar to most BlueTooth modules. The
 default baud rate is 9600 and the default passcode is 1234. In order to change
@@ -348,7 +348,7 @@ source control. \autoref{fig:git-scm} shows the important feature offered by
 Android Studio that we use for collaboration. This meant that as we were
 writing our code we could easily submit our changes to a remote Git repository.
 
-\ucfgfx{fig:git-scm}{a55-img001.png}{Git source control in Android Studio}
+\ucfgfx[scale=0.7]{fig:git-scm}{a55-img001.png}{Git source control in Android Studio}
 
 \subsubsection{Use Case Diagram} The central use cases for WHCS are toggling
 the state of certain devices within the home and monitoring certain states.
@@ -378,7 +378,7 @@ group once for it to last in the application. Creating an endpoint group will
 be a simple task involving assigning a group number to endpoints. That number
 will be the endpoint group, then that endpoint groups state can be toggled.
 
-\ucfgfx{fig:android-usecase}{a55-img002.png}{Android App Use-case diagram}
+\ucfgfx[scale=0.45]{fig:android-usecase}{a55-img002.png}{Android App Use-case diagram}
 
 \subsubsection{Speech Recognition} The Android application for WHCS will offer
 speech activation capabilities. These will be on top of GUI activation
@@ -395,7 +395,7 @@ command to the user and then perform it. The following flow chart in
 \autoref{fig:android-speech} displays the sequence of events happening when a
 user performs speech activation.
 
-\ucfgfx{fig:android-speech}{a55-img003.png}{Android app speech activation
+\ucfgfx[scale=0.4]{fig:android-speech}{a55-img003.png}{Android app speech activation
 chart}
 
 The goal of the speech activation feature is to be easy to use. In order to
@@ -437,7 +437,7 @@ time handling BlueTooth connections every time they open the application.
 \autoref{fig:android-bluetooth-start} shows what the BlueTooth software will be
 doing whenever the user opens the Android application.
 
-\ucfgfx{fig:android-bluetooth-start}{a55-img004.png}{Android BlueTooth Startup
+\ucfgfx[scale=0.4]{fig:android-bluetooth-start}{a55-img004.png}{Android BlueTooth Startup
 Flowchart}
 
 In \autoref{fig:android-bluetooth-start} we see that the first check that is
@@ -492,7 +492,7 @@ receives in order to figure out what action the application is trying to
 perform. \autoref{fig:android-comm} shows a visual representation of the
 communication between the aplication and the base station.
 
-\ucfgfx{fig:android-comm}{a55-img005.png}{Visual of Communication Between
+\ucfgfx[scale=0.4]{fig:android-comm}{a55-img005.png}{Visual of Communication Between
 Android Device and Base Station}
 
 % Section 5.5.4
@@ -508,7 +508,7 @@ screen that lists all possible end points in the system that can be targeted by
 a command. The top right layout in \autoref{fig:android-gui} shows the view
 that would list all of the accessible control modules in the system.
 
-\ucfgfx{fig:android-gui}{a55-img006.png}{Android GUI Layout}
+\ucfgfx[scale=0.55]{fig:android-gui}{a55-img006.png}{Android GUI Layout}
 
 As shown in \autoref{fig:android-gui} there are layouts that provide support
 around the main list layout. The first two layouts in the upper left and upper
@@ -558,7 +558,7 @@ the getRow method that is implemented in cmAdapter.
 The class is simple but provides important functionality for the Android
 application.
 
-\ucfgfx{fig:android-class-diagram}{a55-img007.png}{\texttt{cmAdapter} Class
+\ucfgfx[scale=0.4]{fig:android-class-diagram}{a55-img007.png}{\texttt{cmAdapter} Class
 Diagram}
 
 % Section 5.5.6
@@ -580,7 +580,7 @@ been received. This is one of the core classes for communicating with the base
 station. \autoref{fig:bluetooth-listener} shows the class diagram for the
 BlueToothListener class as well as the classes associated with it.
 
-\ucfgfx{fig:bluetooth-listener}{a55-img008.png}{\texttt{BlueToothListener}
+\ucfgfx[scale=0.45]{fig:bluetooth-listener}{a55-img008.png}{\texttt{BlueToothListener}
 Class Along With Supporting Data Structures}
 
 The BlueToothListener allows the application to directly hook up a parser for
