@@ -5,10 +5,15 @@
 %   For authors, see the title page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% What type of document are we building here
 \ifdefined\enabledraft
   \documentclass[draft,letterpaper,11pt]{article}
 \else
-  \documentclass[letterpaper,11pt]{article}
+  \ifdefined\enablefinal
+    \documentclass[final,letterpaper,11pt]{article}
+  \else
+    \documentclass[letterpaper,11pt]{article}
+  \fi
 \fi
 \usepackage[margin=1in, lmargin=1.5in]{geometry}
 
@@ -25,7 +30,7 @@
 % Advanced captions
 \usepackage{caption}
 % TODO tracking
-\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
+\usepackage[obeyFinal,colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 % Fancy section headings
 \usepackage{titlesec}
 % TikZ madness
@@ -37,6 +42,8 @@
 \usepackage{wrapfig}
 % For pretty code listings
 \usepackage{listings}
+% Keep floats in check with [H]
+\usepackage{float}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Hyperref should be last
@@ -100,7 +107,7 @@ pdfauthor={Grant Hernandez},
 %     Param 2: figure content
 %     Param 3: caption
 \newcommand{\ucffig}[3]{
-\begin{figure}
+\begin{figure}[H]
 \centering
 #2
 \caption{#3}
