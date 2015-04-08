@@ -27,6 +27,8 @@
 \usepackage{parskip}
 % For easy importing of documents
 \usepackage{import}
+% For the checkbox and other math symbols
+\usepackage{amssymb}
 % Advanced captions
 \usepackage{caption}
 % TODO tracking
@@ -152,17 +154,17 @@ pdfauthor={Grant Hernandez},
   %xleftmargin=\MaxSizeOfLineNumbers
 }
 
+%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%
+% BEGIN DOCUMENT
+%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%
+\begin{document}
+
 % We want this depth for our TOC
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
 % Start roman numerals as per the spec
 \pagenumbering{roman}
-
-%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%
-% BEGIN DOCUMENT
-%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%
-\begin{document}
 
 % BEGIN COVER PAGE
 \input{title-page.tex}

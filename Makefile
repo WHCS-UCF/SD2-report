@@ -7,6 +7,9 @@ draft:
 final:
 	pdflatex -draftmode whcs.tex && pdflatex "\def\enablefinal{}\input{whcs.tex}"
 
+quick:
+	pdflatex "\def\enabledraft{}\input{whcs.tex}"
+
 clean:
 	-rm -f *.aux *.log
 

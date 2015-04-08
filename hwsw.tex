@@ -264,44 +264,152 @@ chips went out of stock or an unforeseen circumstance occurred.
 Being able to interface with WHCS like a normal wall thermostat is one of our
 project goals. Having a centralized display that can quickly display the most
 important information for homeowners would be step up from traditional ``dumb''
-thermostats. With a simple LCD combined with a touchscreen, users now have a
+thermostats. With a simple LCD combined with a touchscreen, users would have a
 way to control and query their home without having to find their phone.
 
-For our LCD touchscreen, we have choosen Adafruit's 2.8" TFT\footnotemark{} with
-resistive touch, which uses the \href{http://www.newhavendisplay.com/app_notes/ILI9341.pdf}{ILI9341 chipset}. There are
+To make this a reality, we have chosen the versatile, premade, and well
+supported Adafruit 2.8" TFT LCD\footnotemark{} with a resistive touchscreen.
+Internally, the display is driven by the feature-rich
+\href{http://www.newhavendisplay.com/app_notes/ILI9341.pdf}{ILI9341 chipset}.
+This chip is specifically created for a 240x320 pixel LCD with a focus on
+small, power-conscious mobile devices. Another reason we chose to buy this from
+Adafruit and not integrate the chip directly is due to the complexity of the
+design. Also, with the abstracted product, there are
 \href{https://github.com/adafruit/Adafruit_ILI9341/tree/master/examples}{plenty
 of usage examples} and Adafruit's
 \href{https://learn.adafruit.com/adafruit-2-dot-8-color-tft-touchscreen-breakout-v2}{excellent
-technical documentation} combined with their
-\href{https://github.com/adafruit/Adafruit_ILI9341}{libraries} guarantee that
-integrating this in to our design will be straight forward. One issue with this
-solution is with the ILI9341 driver code: it was written to target the Arduino
-platform. Now, the Arduino platform is fairly close to bare AVR, minus the
-remapped pin numbers and some support libraries. Porting Adafruit's library
-would be a feasible solution or writing a specific minimal driver would suffice
-as well.
+technical documentation}. This combined with Adafruit's
+\href{https://github.com/adafruit/Adafruit_ILI9341}{libraries}, assure
+that integrating the LCD will be straight forward. The one issue with
+this solution is with the ILI9341 driver code: it was written to target the
+Arduino platform. Now, the Arduino platform is fairly close to bare AVR, minus
+the remapped pin numbers and some support libraries, so porting Adafruit's library
+would be a feasible solution. Our plan is to use the existing driver along with the chip datasheet to create a library specific to our needs. That way we get full control over the port placement and the experience of creating an LCD driver.
 
 \footnotetext{\url{https://www.adafruit.com/products/1770}}
-
-
 
 % Section 5.4.1
 \subsubsection{Capabilities}
 \todo{1 page}
+In terms of capabilities, we have summarized the main features of the LCD module in \autoref{tab:lcd-features}
 
-% Section 5.4.2
-\subsubsection{Driver}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+\bfseries Specification & \bfseries Description \\ \hline
+Resolution & 240x360 \\ \hline
+Colors & 262K @ 18bits, 65K @ 16bits \\ \hline
+Voltage Input & 3.3 - 5V \\ \hline
+Weight & 40 grams \\ \hline
+Dimensions (LCD itself) & 2.8" diagonal \\ \hline
+MCU Interface & Multiple. See \autoref{sec:lcd-driver}\\ \hline
+Touchscreen technology & Resistive (one finger)\\
+\hline
+\end{tabular}
+\caption{a brief summary of the pertinent features of the LCD module}
+\label{tab:lcd-features}
+\end{table}
+
+These features are more than sufficient for out application as most of the
+drawing we will be doing will be non-realtime. Nearly all of the displayed
+information will be text and UI element, which don't change often. For an
+overview of our UI elements, see \autoref{sec:ui-lib}.
+
+One of the beneficial features of the LCD is that it gives developers a choice
+of which interface to use. The broken out interfaces are 4-bit SPI and 8-bit
+parallel. For prototyping, we used the low pin count SPI interface, but for our
+final design, we will be using the 8-bit interface to avoid having to wait for
+lengthy SPI transfers. Also, our NRF radio will be using the SPI bus, which
+should have priority over that channel.
+
+\missingfigure{LCD Pinout}
+
+Another feature of Adafruit's module is the resistive touchscreen present on top of the
+LCD. With this, we don't just have to display information about WHCS, we can
+receive commands as well! Using this simple interface, we plan on creating a
+featureful UI library to communicate up-to-date information about the home
+while allowing for user control. The specific interface for the touchscreen
+requires 4 pins, 2 of which must be connected to the MCU's Analog to Digital
+Converter. By reading the resistance of the touchscreen, we would be able to
+calculate the position of a single finger.
+
+Finally, one extra component on the LCD module is an SD card slot. We are free
+to read and write directly to this card to store large images, such as logos
+for display on the LCD. We plan on storing at least our logo, but we may also
+store fancy UI badges such as arrows ($\leftarrow,\rightarrow$), X's
+($\otimes$), checkboxes (
+\makebox[0pt][l]{$\square$}\raisebox{.15ex}{\hspace{0.1em}$\checkmark$}), and
+anything else we can think of.
+
+\subsubsection{ILI9341 Driver}
+\label{sec:lcd-driver}
 \todo{2 page}
 
-% Section 5.4.3
-\subsubsection{Touchscreen}
+In order to perform the required operations for drawing pixels to the LCD, we
+need a robust driver to manage the state of the ILI9341 chip. This driver will
+have to have primitives for choosing a position to draw and the ability to fill
+pixels.
+
+
+\missingfigure{class diagram}
+
+\subsubsection{Touchscreen Driver}
 \todo{1 page}
+The touchscreen will need code dedicated 
+
+\missingfigure{diagram showing the touchscreen coordinates}
 
 X+, X-, Y+, Y-
 
-% Section 5.4.4
+\subsubsection{Graphics Driver}
+Unlike the previous ILI9341 driver, our graphics driver will be in charge of
+taking the low-level primitives exported by the LCD driver and using them to
+draw useful screen elements. These include text, lines, rectangles, circles,
+and images. The driver will essentially contain a set of routines for drawing
+these objects given a set of parameters such as length/width for rectangles,
+radius and position for circles, and bitmap lookup-tables for the text. These
+functions and more are already created by Adafruit, but for the experience and
+control of designing the graphics routines, we choose to implement our own.
+
+Due to the unique hardware and software constraints (i.e limited clock speed
+and memory), we must take care to not exceed the capabilities of the hardware.
+This means floating point operations, which may be required for shapes such as
+a circle must be optimized or not used at all. A quick optimization for
+floating point operations would be to use a $sin()$ lookup table and only
+integer multiplications. These performance issues will be addressed as needed
+and only if necessary. By avoiding unnecessary optimizations, we will save
+valuable time for building out the library.
+
+\paragraph{Algorithms Necessary}
+The functionality of graphics driver depends on some core algorithms for
+efficiently creating meaningful screen objects. One of these core algorithms is
+\href{https://en.wikipedia.org/wiki/Bresenham\%27s_line_algorithm}{Bresenham's
+line algorithm}. This algorithm needs to be efficiently implemented as it will
+be the base for nearly every derived graphics operation. For example, a
+transparent rectangle has four sides which results in four calls to this line
+drawing function.
+
+\paragraph{Character Lookup Table}
+In order to convey useful information, we will need to display text to the
+user. This text will be stored in an effcient lookup table for quick drawing
+operations similiar to \autoref{fig:character-lut}. On a limited embedded
+system like this, there is a limited amount of time that can be dedictated for
+font rendering. To save on time, we will use an existing font available online.
+Adafruit also bundles a font in with their graphics library that is implemented
+as a function instead of a block of memory.
+
+\ucfgfx[scale=0.5]{fig:character-lut}{raster-character}{a raster image showing
+a possible character lookup table}
+
 \subsubsection{UI Library}
+\label{sec:ui-lib}
 \todo{2 page}
+
+%\begin{itemize}
+%\item line drawing algorithms
+%\item wow
+%\end{itemize}
 
 % Section 5.5
 \subsection{Android Application} For most WHCS users the mobile application
