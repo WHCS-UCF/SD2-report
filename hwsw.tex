@@ -134,23 +134,133 @@ NRF. The hardware interactions with the chip are all abstracted away.
 \todo{Talk about pin count and having to disable the JTAG fuses to get access to those pins}
 \todo{Talk about the speed grade for the CPU and why a higher grade would be faster}
 
+For the proper operation of WHCS microcontrollers will need to be installed
+into all of the control modules as well as the base station. This meant
+research was needed to choose what the best microcontroller for each of the
+modules was.  The base station is a bit more hefty than the control modules so
+the design considerations are different for the two.  The first step was to
+figure out what family of microcontrollers to use.
 
 % Section 5.2.1
-\subsubsection{Development Environment}
+\subsubsection{Microcontroller Brand}
+Choosing the microcontroller brand would set the path for all the development
+that we do with the microcontroller. Every other choice would stem from this
+decision so we wanted to make a smart choice. We weighed out the documentation,
+support, ease of acquisition, ease of use, and community for the brands that we
+considered. Our initial choice was Texas Instruments because of the use of the
+MSP430 launchpad board in the UCF curriculum. The fact that using the MSP430
+was required in EEL 4742 (Embedded Systems) meant that everyone was already at
+least somewhat familiar with it.  The familiarity factor was a plus for the
+MSP, and we all knew that T.I. has very good, albeit lengthy, documentation for
+their chips. A quick look at digikey showed that MSP430 microcontroller chips
+were well in stock so there would be no problem acquiring them if they were the
+chip that we wanted to use. The thing that we were unsure about with using
+Texas Instruments chips was the community surrounding the brand. For example if
+we encountered a problem rewriting a fuse on the microcontroller would we be
+able to find a forum of people who knew how to solve the problem, and things of
+that nature.
 
-% Section 5.2.2
-\subsubsection{Programming}
+While we researched Texas Instruments based microcontrollers we also researched
+the Atmel brand. We knew Atmel is very popular especially because they produce
+the chip used on the Arduino development boards. We checked how the Atmel chips
+were documented by looking at the datasheet for the Atmega 88, and were pleased
+with how well things were laid out.  Digikey had most of the common brands of
+Atmel chips in stock so acquisition would be no problem. We didn{}'t feel the
+need to consider any other brands because we felt that between the two choices
+we looked into they could both suit our needs. Atmel offered chips and brand
+support similar to that of Texas Instruments, so for whatever kind of chip we
+required we could use Atmel or T.I. For us the choice came down to how
+prominent the communities for the two brands are. Ultimately we decided that
+the Atmel brand had a very pervasive community that was sure to aid us in our
+utilization of any chips produced by the company. While the MSP430 was familiar
+to all of us the Texas Instruments chips did not seem as broadly used across
+the open source populus. So our final decision was to use the Atmel brand of
+microcontrollers for WHCS.
 
-% Section 5.2.3
+\subsubsection{Base Station Microcontroller}
+The base station is the center of operations for WHCS so it needs the most
+computing power. It has the most data structures to take care of, the most
+commands to process, and the longest compiled program. The microcontroller for
+the base station also needs to be able to connect to the LCD screen, the radio
+transceiver, and BlueTooth transceiver all at the same time. So taking all
+these things into consideration for choosing the microcontroller was important.
+We needed a large amount of pins to interface with all the peripherals,
+especially because we knew we wanted a parallel interface LCD. A large amount
+of flash memory was also a trait that we looked for since we knew the base
+station would be doing a lot, thus making its program long. The first big
+decision was whether to use an ARM based microcontroller for our base station
+since it was the brains of the system. ARM microcontrollers have much higher
+processing power, but also introduce complexity. Many ARM microcontrollers
+don{}'t have on board flash memory so that is an added layer of design that is
+needed to get the unit working. After considering the processing necessary in
+the base station and the bandwidth of the network in WHCS we realized that an
+ARM based microcontroller would not be necessary. There was not enough data to
+be processed to warrant the use of an ARM microcontroller. Using an ARM unit
+would introduce design complexity for a solution that could be attained through
+easier means.
+
+Eventually our research efforts landed us upon the Atmega series of Atmel
+microcontrollers. These microcontrollers are often thought of as the flagship
+Atmel chips in the DIY community and they did seem highly capable. The chips
+were cheap, had plenty of pins, plenty of on{}-chip peripheral support such as
+the UART, were easy to program, and were highly available. After browsing the
+Atmega series of chips we narrowed down the chip that we would be using for the
+base station to the three chips listed in \autoref{tab:atmega-chips}. The table
+shows that the lowest maximum operating frequency between the three is 16 MHz
+which is more than capable of powering the low bandwidth network of WHCS. 16
+MHz is enough to handle communication, the LCD display and interrupt vectors,
+so all the chips are viable options in that feature. The 8 KB of flash memory
+was low compared to the 32 KB offered by the other two so we actually took that
+chip out of the running when we considered that the base station would have a
+large routine. When we were down to choosing between the Atmega328 and the
+Atmega32A we realized that the Atmega32A was actually the only option between
+the two chips that would work. The reason for this was the number of I/O pins.
+We had picked the LCD, radio transceiver, and BlueTooth chip that we would be
+using and the Atmega32A was the only chip with enough I/O pins to support all
+the peripherals. Our final decision was to use the Atmega32A as the
+microcontroller for the base station.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+{\color{black} Atmega MCU} &
+{\color{black} Flash Memory (KB)} &
+{\color{black} Max I/O Pins} &
+{\color{black} Max freq. (MHz)}\\\hline
+{\color{black} Atmega88} &
+{\color{black} 8} &
+{\color{black} 23} &
+{\color{black} 20}\\\hline
+{\color{black} Atmega328} &
+{\color{black} 32} &
+{\color{black} 23} &
+{\color{black} 20}\\\hline
+{\color{black} Atmega32A} &
+{\color{black} 32} &
+{\color{black} 32} &
+{\color{black} 16}\\\hline
+\end{tabular}
+\caption{comparison of ATMega chips}
+\label{tab:atmega-chips}
+\end{table}
+
+After we had decided to use the Atmega32A as the microcontroller for the base
+station there were still some things that needed researching to make it usable.
+The main issue was disabling the JTAG interface on port C to make the pins
+usable as general I/O. After researching the data sheet and the community
+forums we found that to be able to use port C pins as GPIO the JTAG fuse must
+be disabled. Otherwise setting these pins on port C to high or low will have no
+effect.
+
 \subsubsection{Control Module}
 
-% Section 5.2.4
-\subsubsection{Base Station}
+\subsubsection{Development Environment}
 
-% Section 5.2.5
+\subsubsection{Programming}
+
 \subsubsection{External Oscillator}
 
-% Section 5.3
 \subsection{BlueTooth Chip}
 The BlueTooth device for WHCS will enable the base station to communicate with
 the mobile phone controller. Our guidelines for choosing a BlueTooth device
@@ -200,10 +310,7 @@ advertised 100 meter transmission range the RN{}-41 meets the requirements we
 set for distance of BlueTooth reception.  According to the datasheet the
 RN{}-41 has a maximum baud rate of 921K which means it goes above and beyond
 the transmission rates necessary for communicating between the mobile device
-and the base station. The picture in \autoref{fig:bluetooth-rn41} shows the RN{}-41 BlueTooth
-module.
-
-\ucfgfx[scale=0.7]{fig:bluetooth-rn41}{a53expected2pages-img001.png}{RN-41 chip}
+and the base station.
 
 The RN{}-41 has a manageable means of programming the internal settings. When
 the RN{}-41 is on, sending {}``\$\$\$'' over the UART lines puts the chip into
@@ -232,10 +339,7 @@ enough for what we desired in our BlueTooth chip. Just like the RN{}-41 the
 HC{}-05 communicates to microcontrollers by simplifying RS{}-232 and only using
 the Rx and Tx pin. The maximum supported baud rate is 460800 which will allow
 for very fast data transfer and will exceed the needs of communication speeds
-in our system. The picture in \autoref{fig:bluetooth-hc05} shows the HC{}-05
-BlueTooth module.
-
-\ucfgfx[scale=0.7]{fig:bluetooth-hc05}{a53expected2pages-img002.png}{HC-05 Chip}
+in our system.
 
 The HC{}-05 comes with default settings similar to most BlueTooth modules. The
 default baud rate is 9600 and the default passcode is 1234. In order to change
@@ -251,12 +355,40 @@ holding the key pin high during startup of the module eliminates the danger of
 entering the programming mode during normal operation.
 
 For WHCS we have decided to use the HC{}-05 as our BlueTooth module instead of
-the RN{}-41. The main factors deciding this were the cheaper price of the
-HC{}-05 and the fact that they both accomplish the same thing. The two chips
-were comparable in size, features, wiring, layout, and usability however at the
-price of approximately \$6.00 the HC{}-05 cost less than half of the RN{}-41.
-The RN{}-41 is the second best choice and can serve as a fallback if HC{}-05
-chips went out of stock or an unforeseen circumstance occurred.
+the RN{}-41. \autoref{tab:bluetooth-compare} shows highlights of the features of each
+BlueTooth module that led to the decision. The main factors deciding this were
+the cheaper price of the HC{}-05 and the fact that they both accomplish the
+same thing. The table shows clearly that the HC{}-05 is a much more affordable
+option. The two chips were comparable in size, features, wiring, layout, and
+usability however at the price of \$6.64 the HC{}-05 cost less than half of the
+RN{}-41. The RN{}-41 is the second best choice and can serve as a fallback if
+HC{}-05 chips went out of stock or an unforeseen circumstance occurred.
+
+\begin{table}[H]
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+ &
+{\bfseries Cost} &
+{\bfseries Range (meters)} &
+{\bfseries Breakout Option} &
+{\bfseries Configurable} &
+{\bfseries Size}\\\hline
+{\color{black} RN{}-41} &
+{\color{black} \$21.70} &
+{\color{black} 100} &
+{\color{black} No} &
+{\color{black} Yes} &
+{\color{black} 25.8x13.2mm}\\\hline
+{\color{black} HC{}-05} &
+{\color{black} \$6.64} &
+{\color{black} 50+} &
+{\color{black} Yes} &
+{\color{black} Yes} &
+{\color{black} 27x13mm}\\\hline
+\end{tabular}
+\caption{comparison of the BlueTooth chips}
+\label{tab:bluetooth-compare}
+\end{table}
 
 % Section 5.4
 \subsection{LCD}
