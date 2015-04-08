@@ -28,6 +28,7 @@
 % For easy importing of documents
 \usepackage{import}
 % For the checkbox and other math symbols
+\usepackage{amsmath}
 \usepackage{amssymb}
 % Advanced captions
 \usepackage{caption}
@@ -102,6 +103,7 @@ pdfauthor={Grant Hernandez},
 \renewcommand\sectionautorefname{Section}
 \renewcommand\subsubsectionautorefname{Section}
 \renewcommand\subsectionautorefname{Section}
+\renewcommand\paragraphautorefname{Section}
 
 % Custom figure macro for quick and easy changes across the document
 %   \ucffig
@@ -169,6 +171,7 @@ pdfauthor={Grant Hernandez},
 % BEGIN COVER PAGE
 \input{title-page.tex}
 
+\todo{Fix footnotes in captions and list of figure hyperlinks}
 % BEGIN TOC,LOF,LOT
 \tableofcontents% \addcontentsline{toc}{section}{Table of Contents}
 %\let\clearpage\relax

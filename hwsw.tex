@@ -848,15 +848,215 @@ application.
 
 % Section 5.6
 \subsection{Power Hardware}
+\label{sec:power-hw}
+
+Throughout this section we will be discussing all that deals with the power.
+For reasons that will be discussed in greater detail in
+\autoref{sec:power-through} we decided that each control module and the base
+station would have a power board that would be separate from the PCB of the
+control modules and base station.  The reason for each power board is to
+convert 120VAC to DC lines of 3.3V 5V and 12V. We will also need to be able to
+switch on and off 120VAC for the outlet and light switching control modules as
+well switch on and off the 12V used to operate the strike.
 
 % Section 5.6.1
 \subsubsection{Design Summary}
+The designs for each board will be mostly the same with slight variations
+depending on the application. This section will \emph{not} go
+into the specifics of why certain designs were chosen over other designs but
+will provide a big picture view of how our design works.
+
+To start off we will explain the black. Black is the color that is used to
+explain what is constant for every board design. Basically what the black line
+does is provide power to the microcontroller using AC outlet power. First the
+AC power is transformed with a transformer down from 120VAC to 24VAC this 24VAC
+is rectified using diodes into 33.6 VDC.  At this point the line goes through a
+DC to DC converter that will transform the 33.6 V to 5V. This 5V line leaves
+the power board and enters the PCB containing the microcontroller and turns it
+on.
+
+\ucfgfx[scale=0.25]{fig:baseline-na}{a561expected3pagesDesignSum-img001.png}{power board baseline design}
+
+The next line to discuss is the red line. The red line is used in both the
+light and outlet modules. The basic function of these control modules is to
+switch on and off power to either lights or outlets. Basically in addition to
+the line taken from the 120VAC to power the microcontroller we will have a line
+to power the actual application (the light and/or outlet). This extra line will
+run along our power board and will only be interrupted by a 5V operated relay.
+This relay will be connected to the microcontroller so that from the
+microcontroller WHCS will be able to open and close the 120VAC line. This is
+the easiest way to implement switching into our design. The only difference
+between the light and outlet modules is the load that is placed at the end of
+it.
+
+\ucfgfx[scale=0.25]{fig:baseline-na2}{a561expected3pagesDesignSum-img002.png}{power board light and outlet control module design}
+ 
+The green line is very similar to the red line. The green line is used to
+explain the door access. Door access is fairly simple, it consists of providing
+or not providing power to the electronic strike in order to allow the user to
+lock and unlock the door. It too has a relay that is used in order to provide
+the switching. The only change is that electric strikes operate on 12V. In
+order to provide the 12V an additional DC to DC converter (in addition to the
+line used for the microcontroller) is used after the rectifier. The 12V line in
+combination with the relay from the microcontroller is all this module needs to
+perform its task of providing power to the door access module. It is however
+also equipped with a backup battery. The reason for this is that we still want
+the microcontroller to be powered even if there is a power failure from the
+120VAC home power. The backup battery will not provide power to the 12V line
+meaning the strike will remain in locked mode. However having the
+microcontroller powered will allow it continue completing tasks such as
+checking the state of the system.
+
+\ucfgfx[scale=0.25]{fig:baseline-na4}{a561expected3pagesDesignSum-img003.png}{power board door access control module design}
+
+The purple line is the simplest of the modules. It is used to explain the
+module of the thermo sensors. this module really only needs the basic design of
+the black line that provides the microcontroller with 5V. Yet it too like the
+green and blue line is equipped with a back up battery. This way the
+information about the temperature of the home can still be gathered from the
+sensors even if there is a power failure.
+
+\ucfgfx[scale=0.25]{fig:baseline-na3}{a561expected3pagesDesignSum-img004.png}{power board thermosensor control module design}
+
+Lastly and arguably the most important line is the blue line.
+This line is used for the base station. The base station in addition to the
+microcontroller will make use of NRF and Bluetooth which require 3.3V lines.
+The 3.3V line will stem out from the the 5V line as shown in \autoref{fig:power-bs}.
+In order to make this step down we will be using a linear rectifier. It
+too will be equipped with a backup battery in case of power failure. This will
+allow the base station to be fully operational even if the power goes out.
+
+\ucfgfx[scale=0.25]{fig:power-bs}{a561expected3pagesDesignSum-img005.png}{base station power board design}
+
+The only reason that red is not equipped with a backup battery is because a
+backup battery for red would serve no purpose. The backup batteries allow the
+microcontrollers of the control modules to remain operational, thus allowing
+the microcontrollers to complete small tasks such as checking the state of the
+system. For light and outlet applications however there is no need for this; it
+can be assumed that the state of the lights and outlets if off.  There is no
+need to check this with a microcontroller and therefore a back up battery would
+be useless.
 
 % Section 5.6.2
-\subsubsection{Regulators vs DC to DC Converters}
+\subsubsection{DC-to-DC Converters vs. Linear Voltage Regulators}
+In our control modules and base stations we are required to provide lines of
+three different voltages 12V, 5V and 3.3V. This can be accomplished with a
+voltage regulator or a DC to DC converter. Voltage regulators are variable
+resistors that dissipate energy as heat to get the desired voltage levels. The
+advantage of voltage regulators is that they are cheap. The issue is that they
+are highly inefficient. Linear voltage regulators are good for low power
+applications where not too much power will be wasted due to inefficiency.
+Whereas DC to DC converters are more appropriate for large step downs in
+voltage.
+
+The basic tradeoff between the two technologies is cost vs efficiency. Dc to DC
+converters are capable of achieving efficiency levels as high as 95\% but cost
+close to \$10. The efficiency of linear voltage regulators depends on the
+difference between the input and the output voltage. Yet the cost of a linear
+voltage regulator is usually below \$2. Power wasted in a linear voltage
+regulator can be determined by using \autoref{eqn:power-waste}.
+
+\begin{equation}
+P_{wasted} = (V_i - V_o) * i_l
+\label{eqn:power-waste}
+\end{equation}
+
+Where $P_{wasted}$ is the power wasted, $V_i$ is the input voltage, $V_o$ the
+output voltage, and $i_l$ the load current.
+
+The basic question becomes how large of a stepdown are you expecting to have
+from your regulators. In our design (mostly because of the backup battery) we
+decided to have a step down from 34 volts down to 5V and/or 12V, as well as a
+step down from 5V down to 3.3V. Based on these step down values it makes most
+sense for us to use a DC to DC converter to step down 34V to 5V and/or 12V, and
+to use a linear voltage regulator in order to step down from 5V to 3.3 volts.
 
 % Section 5.6.3
 \subsubsection{Backup Battery Configuration}
+Each control module along with the base station in WHCS will be equipped with a
+backup battery. In the case of power failure WHCS will still be able to carry
+out the basic function of checking the state of the system. Actual operation of
+some of the control modules will be impossible without the use of AC power. Yet
+checking statuses such as temperature and the position of door locks will still
+be fully operational. This is meant only to serve as a short term solution to
+power failure.
+
+Here we will consider different designs to make a backup battery. We{}'ll start
+with the circuit that was actually selected to be used in our design. The
+circuit below was made in Easy Circuit. The idea for the design came from the
+following link
+
+\ucfgfx[width=12cm]{fig:backup-bat-circuit}{a563expected2pagesBackBattery-img001.png}{chosen backup-battery configuration\protect\footnotemark}
+
+\footnotetext{Design idea taken from \url{http://www.instructables.com/id/Simple-5v-battery-backup-circuit/}. Circuit remade.}
+
+This design is simple. The circuit being open indicates when there is a power
+failure, while a closed circuit signifies normal operation. The circuit shows
+two sources, one (the one farthest to the left) that is of a higher voltage and
+acts as the primary source and a secondary lower backup voltage source. Since
+the secondary source is of lower voltage it will not discharge until the
+voltage of the first source drops below a certain level. This is how tradeoff
+occurs.  The secondary source has no potential until the first sources
+potential drops below a certain level. In \autoref{fig:backup-bat-circuit} we see that
+during normal operation (closed switch) that this design will recharge the
+batteries, that is if the batteries are rechargeable. This feature can easily
+be taken out by removing the diode and the resistor that feed into the
+secondary battery.
+
+In this design it is very important that the secondary source be of a lower
+voltage than the primary source. If this is not the case the batteries will
+discharge even when the primary source is functioning properly. Initially we
+believed that this would be a handicap for our project and that a new design
+would have to be used. Yet we realized that there was a way to ensure that the
+primary voltage was higher than the secondary voltage. If we were to place the
+backup battery before the DC to DC converter, and allow the DC to DC converter
+to do a large portion of the voltage step down.  Say we had the the transformer
+only transform down to 24VAC (roughly equivalent to 34 VDC) then had the DC to
+DC converter bring the voltage down to 5VDC. Our primary voltage would be 34V
+and our secondary backup source could be anything lower than 34V that is
+accepted by the DC to DC converter.
+
+Designing in such a fashion has it{}'s advantages and it{}'s disadvantages. The
+benefit of placing this design right before the DC to DC converter is that no
+matter what the voltage is coming into the converter (as long as it is within
+the range or acceptable voltages for the converter) the output will always hold
+the same voltage level. The main disadvantage is that the required voltage rage
+needed by the voltage regulator may cause us to need higher voltage batteries
+than we would have needed otherwise. Say for example we need a 5V line, the DC
+to DC converter takes voltages from 9V{}-40V and converts it to 5V. For our
+back up battery we are now required to use a 9V battery whereas in another
+design we may have been able to get away with a 6V battery source.
+
+Because of the high efficiency level of the DC to DC converters using a higher
+voltage battery than may have been required is not a problem of wasting power
+rather a problem of design cost. 9V batteries cost around \$6 for a pack of two
+while AA batteries cost about \$14 for a pack of 24. The cost difference a 9V
+battery and a 6V source with AA batteries is \$0.33. The 9V battery is more
+expensive but it actually isn{}'t that much more expensive. The cost/volt of a
+9V battery is better than that of the AA batteries.
+
+The design above works because we have decided to use a DC to DC converter with
+a decently sized voltage step down.If however this were not the case and the
+primary and secondary designs were much closer in voltage levels than an
+alternative design would have to be used. There are a few other design
+possibilities that were explored.
+
+Another design that was explored was to use a relay in order to drive the
+switch. In \autoref{fig:backup-bat2} current flows from the primary source to
+ground which activates the relay allowing the primary source to power the load.
+If there were a power failure in the primary source the relay would switch to
+circuit with the backup battery and thus the secondary source would take over.
+The main issue with this circuit is that it requires a line that goes directly
+to ground, thus wasting energy. The effect of this can be lessened by choosing
+a large resistor value. Yet in the end we decided to go with the first design
+because it provides the simplest solution.
+
+\ucfgfx[scale=0.5]{fig:backup-bat2}{a563expected2pagesBackBattery-img002.png}{another backup battery configuration\protect\footnotemark}
+
+\footnotetext{This schematic was constructed using Easy Circuit, and the idea for the
+schematic came from a
+\href{http://electronics.stackexchange.com/questions/96632/12v-battery-backup-supply-for-gprs-tracker}{StackExchange
+post}.}
 
 % Section 5.6.4
 \subsubsection{Transformer Choice}
@@ -869,6 +1069,33 @@ application.
 
 % Section 5.6.7
 \subsubsection{Power Through Hole Board}
+\label{sec:power-through}
+Sending in PCB{}'s to be built can be expensive. Also the size of the boards
+have a large impact on the cost. Due to the fact that components found in power
+designs are large and will therefore be costly to place on a PCB we decided to
+self build a separate board for power. Not only is this an advantage because it
+is cheaper but it allows us keep high voltage AC isolated from the DC used for
+our control modules and the base station. Additionally each of our power boards
+are slightly different from one another so making our own boards will make it
+easy to customize each board for their specific needs.
+
+After deciding that we needed a separate power board we had to decide how to
+build the board. The three candidates were: perf boards, vero boards, and
+etched PCB boards. Out of the three the team decided that an etched PCB would
+be the cleanest and would look more professional than an a perfboard or
+stripboard. Next we decided that a through hole board would be superior to a
+surface mounted board; mostly due to the fact that power boards can contain
+heavy components (for example transformers) and through hole boards are more
+mechanically sound than surface mounted boards.
+
+In order to build our board we will be using Rogers RO4003. The primary reason
+we decided to use Rogers was because they provide free samples for learning
+purposes through their University Sample Orders Program. Since this is in fact
+a non commercial academic project we were able to order a sufficient amount of
+laminate material to complete our project.  RO4003 is a double sided laminate
+typically used for high frequency applications. Building this board from
+scratch will give added experience to the members of the group, which is the
+ultimate goal of this project.
 
 % Section 5.6.8
 \subsubsection{Schematic}
@@ -909,11 +1136,68 @@ application.
 \subsubsection{Electronic Strike}
 \label{sec:electronic-strike}
 
+For WHCS we knew that we wanted access control to be part of our design.
+Basically a way for the user to unlock and lock the doors from their smart
+device. We explored a number of different options for what kind of locking and
+unlocking mechanism we could use. First we considered servo motors. The
+advantage of using servo motors is that they allow for very precise control.
+The design would be fairly simple the rotating motor would slide a deadbolt
+that could lock and unlock the door. \autoref{fig:electronic-strike-dia} shows a simple
+graphic of how such a system would operate.
+
+\ucfgfx[scale=0.5]{fig:electronic-strike-dia}{a584expected2pagesElectricStike-img001.png}{servo
+motor access control design}
+ 
+The fact that the servo motors allow us to control exactly how much rotate is
+an advantage for two reasons. One once the servo is done rotating we know
+exactly what position the lock is in, and two we know for sure that the lock
+will stay in that position. The other design consideration was using a solenoid
+to move a deadbolt lock. When activated the solenoid would push or pull the
+deadbolt into the locked or unlocked position. While this would work it{}'s
+design is a little more complicated than the servo motors. Unfortunately the
+solenoid design would require some sort of locking mechanism once the deadbolt
+is fully extended. Plus it would be hard to measure whether or not the door
+really did get locked or not.
+
+While both of these methods would have worked, in the end we decided that these
+designs were too mechanically involved and we wanted to focus our efforts on
+electrical and computer engineering designs. The alternative was to use a
+premanufacture electric strike. In the following sections we will discuss what
+design considerations were taken when selecting our strike.
+
 % Section 5.8.4.1
 \paragraph{Normally Open or Normally Closed}
+The first thing we considered was whether we wanted a normally open lock or a
+normally closed lock. Normally opened means that the door requires power to be
+unlocked and is otherwise locked without power, while normally closed means
+that the door needs power in order to be locked and is only unlocked when the
+power is shut off. It was pretty easy for our group to decide that normally
+open was the better design choice because it would allow the door to be locked
+most of the time without wasting power. The only issue we saw initially was
+that it might be a potential safety hazard to have doors locked while there is
+a power failure. In the case of an emergency this could be a huge problem. We
+did however find an easy way to have a mechanical alternative (this will be
+discussed in the next \autoref{sec:strike-v-deadbolt}) so that the safety hazard was
+no longer present.
 
 % Section 5.8.4.2
 \paragraph{Strike vs Deadbolt}
+\label{sec:strike-v-deadbolt}
+There are two main types of electric locks to choose from, electric strikes and
+deadbolts. While some may argue that deadbolts are more secure, electric
+strikes have the advantage that it they can be used with a regular door knob.
+This is an advantage because it allows us to include a door knob with a
+mechanical lock. That way if there is ever a power failure the mechanical lock
+can still be used. This gets rid of the safety hazard that could arise if for
+example a fire where to occur. It also allows for a backup system in case you
+were to lose your phone or if there were some sort of failure in the
+electronics that give the command to unlock the door. While perhaps there is a
+higher level of security that could result from using a deadbolt, the advantage
+that comes from using an electric strike outweighs the benefit or an electric
+deadbolt. \autoref{fig:electric-strike-entry} shows the two methods for opening the door when
+an electric strike and a door knob with a lock is used.
+
+\ucfgfx[scale=0.5]{fig:electric-strike-entry}{a584expected2pagesElectricStike-img002.png}{electric strike entry methods}
 
 % Section 5.8.5
 \subsubsection{Sensor Collection}
