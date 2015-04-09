@@ -89,7 +89,7 @@ networking of WHCS.
 % Section 5.1.3
 \subsubsection{Driver Class Diagram}
 It was decided that the best design approach for implementing the NRF driver
-was as a class in C++. We will be using atmega microcontrollers in WHCS so C++
+was as a class in C++. We will be using Atmel ATMega microcontrollers in WHCS so C++
 is supported as a development language. Using C++ allows us to create a class
 that can leverage object oriented programming techniques such as encapsulation.
 The class diagram for the driver is shown in \autoref{fig:nrf-class-diagram}.
@@ -282,7 +282,7 @@ have default passcodes. We want to implement good security into WHCS so we need
 to be able to change the default passcode for the BlueTooth device. Also the
 baud rate is usually low in BlueTooth devices by default, which can be bumped
 up depending on the microcontroller being used. A BlueTooth device that could
-not be programmed manageably was not an option.
+not be programmed easily was not an option.
 
 % Section 5.3.1
 \subsubsection{RN-41}
@@ -415,8 +415,11 @@ technical documentation}. This combined with Adafruit's
 that integrating the LCD will be straight forward. The one issue with
 this solution is with the ILI9341 driver code: it was written to target the
 Arduino platform. Now, the Arduino platform is fairly close to bare AVR, minus
-the remapped pin numbers and some support libraries, so porting Adafruit's library
-would be a feasible solution. Our plan is to use the existing driver along with the chip datasheet to create a library specific to our needs. That way we get full control over the port placement and the experience of creating an LCD driver.
+the remapped pin numbers and some support libraries, so porting Adafruit's
+library would be a feasible solution. Our plan is to use the existing driver
+along with the chip datasheet to create a library specific to our needs. That
+way we get full control over the port placement and the experience of creating
+an LCD driver.
 
 \footnotetext{\url{https://www.adafruit.com/products/1770}}
 
@@ -453,9 +456,10 @@ of which interface to use. The broken out interfaces are 4-bit SPI and 8-bit
 parallel. For prototyping, we used the low pin count SPI interface, but for our
 final design, we will be using the 8-bit interface to avoid having to wait for
 lengthy SPI transfers. Also, our NRF radio will be using the SPI bus, which
-should have priority over that channel.
+should have priority over that channel. You may view a high level overview of
+the LCD module in \autoref{fig:lcd-high-level}.
 
-\missingfigure{LCD Pinout}
+\ucfgfx[width=\textwidth]{fig:lcd-high-level}{lcd-high-level}{a high level outline of the LCD pin configuration and specifications}
 
 Another feature of Adafruit's module is the resistive touchscreen present on top of the
 LCD. With this, we don't just have to display information about WHCS, we can
@@ -480,19 +484,74 @@ anything else we can think of.
 
 In order to perform the required operations for drawing pixels to the LCD, we
 need a robust driver to manage the state of the ILI9341 chip. This driver will
-have to have primitives for choosing a position to draw and the ability to fill
+have to implement primitives for choosing a position to draw and the ability to fill
 pixels.
 
+\paragraph{Choosing where to draw}
+The ILI9341 works like many chips in which it has a command set for controlling
+display parameters. One of these commands will set the window in which pixel
+data is drawn. Before a batch drawing operation, a window is selected by
+specifying the column and page addresses. These are set using the
+\textbf{Column Address Set (0x2A)} and the \textbf{Page Address Set (0x2B)}
+commands. From this point, the RAMWR command is send followed by \emph{N}
+different 16-bit pixel colors. This scheme of setting the window and filling
+the pixels is why the graphics transfers end up being so slow, which is
+discussed more in \autoref{par:lcd-perf}.
+
+\paragraph{LCD State Management}
+Beyond just drawing pixels, the LCD module has a wide variety of bonus features
+that could assist us in making a fully-featured interface. One of these is
+vertical scrolling, which could enable us to cheaply draw familiar UI elements,
+such as list views. The most intensive state management comes from the early
+initialization of the LCD module straight from power on. This requires a long
+incantation of LCD commands with equally archaic parameters in order to reach
+the initialized zen. Luckily, there are multiple examples of slightly different
+LCD initialization sequences online for reference. In terms of power
+management, the LCD controller provides a command set to set the power mode.
+Although, the base station will be on wall power, being able to dim the screen
+and save energy would be a useful feature.
+
+\paragraph{LCD Performance}
+\label{par:lcd-perf}
+Due to the real-time nature of microcontrollers, everything must be juggled as
+quickly as possible in order to have a good responsive design. Imagine a user
+touch kicking off a set of expensive UI redrawing operations. Well, a WHCS
+control module has just sent its latest state to the base station, but it
+cannot be serviced due to the drawing operation! This is a common theme
+throughout real time environments, so much so that highly specialized Real Time
+Operating Systems have been created to provide \emph{assurance} that some
+operation/action will complete within a specified amount of time. We don't have that luxury -- instead we must consider performance before we hit any performance walls.
+
+The slowest part about managing the LCD are the synchronous transfer of
+commands and pixel data between the MCU and the graphics controller. Each
+ILI9341 command is 8-bits and before any pixel operation the CAS and PAS
+commands need to be set. These commands have two 16-bit arguments \emph{each}!
+For settting just one arbitrary pixel 104 bits would need to be sent. This is a
+considerable overhead, so care must be taken to perform pixel operations in
+batch. Obviously, an algorithm that generates random pixels on the screen would have very
+low performance.
+
+One other hit to potential performance is the lack of double buffering. The LCD
+chip only has enough RAM for one set of graphics memory, which means active
+drawing occurs on the viewing surface. In modern day graphics pipelines, double
+buffering and even \emph{triple} buffering are common place as they eliminate
+tearing and free the developer from having to clear the screen. On modern day
+graphics cards, clearing the screen is an extremely cheap operation -- on the
+ILI9341, it's just as expensive as every other drawing operation.
 
 \missingfigure{class diagram}
 
 \subsubsection{Touchscreen Driver}
 \todo{1 page}
-The touchscreen will need code dedicated 
+The touchscreen will need code dedicated to polling the X+, X-, Y+, and Y- pins
+of the LCD. These will give voltage readings that can be used to calculate the
+position of a single touch. They can be read by using the built-in ATMega ADC.
+Due to their not being a dedicated touch controller,
+interrupts cannot be used to sense sharp changes. This will add to the
+processing time of the microcontroller's main loop as it will constantly have
+to perform ADC operations and comparisons.
 
 \missingfigure{diagram showing the touchscreen coordinates}
-
-X+, X-, Y+, Y-
 
 \subsubsection{Graphics Driver}
 Unlike the previous ILI9341 driver, our graphics driver will be in charge of
@@ -524,9 +583,9 @@ drawing function.
 
 \paragraph{Character Lookup Table}
 In order to convey useful information, we will need to display text to the
-user. This text will be stored in an effcient lookup table for quick drawing
-operations similiar to \autoref{fig:character-lut}. On a limited embedded
-system like this, there is a limited amount of time that can be dedictated for
+user. This text will be stored in an efficient lookup table for quick drawing
+operations similar to \autoref{fig:character-lut}. On a limited embedded
+system like this, there is a limited amount of time that can be dedicated for
 font rendering. To save on time, we will use an existing font available online.
 Adafruit also bundles a font in with their graphics library that is implemented
 as a function instead of a block of memory.
@@ -657,7 +716,7 @@ application which hold the preferred name of each type of endpoint. Endpoints
 can be distinguished by the type they are, their individual identifier number
 and their preferred name. The preferred name should be stored when the
 application is closed so a permanent source of storage is needed to do this.
-The file system can be used or possibly a sqlite database.
+The file system can be used or possibly a SQLite database.
 
 In the code for our application we will be using the Android speech recognition
 API (Application Program Interface).  Android has a speech recognition service
