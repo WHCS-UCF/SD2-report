@@ -154,6 +154,107 @@ certain amount of attempts. This would handle transient errors, but not a
 complete loss of connectivity, which would occur if the base station lost
 power.
 
+In order to keep the network topology simple, we opt to have a simple module to
+base network. This means modules will talk directly to the base station and to
+no other modules. This is a simplification based on the underlying radio's
+range and our project requirements. We do not need a complicated mesh network
+as all of the nodes will be within range of the base station during their
+lifetime. For larger or noisier households this architecture would break down,
+but for the purposes of an initial design, this configuration will do the job.
+Additionally, the network topology is not fixed in hardware - it is merely
+additional code that needs to be written and implemented in to the overall
+design. More research could be done along the direction of a full mesh network,
+but only if necessary for good performance. The direct benefit of this simple
+architecture is that is easy to test and easy to program. The logic will only
+expect transactions to occur between two nodes. That fact will drive the
+construction of a specific and optimized network communication protocol that
+doesn't waste unnecessary bytes during transmission. The lower the byte count
+for each transmission, the more likely the packet will reach the destination in
+tact.
+
+\paragraph{Modes of operation}
+Before diving in to the specific functions required for implementing a robust
+NetLib, we will discuss the high-level modality of the library. The state of a
+network link can be broken in to the following modes:
+
+\begin{itemize}
+  \item Joining
+  \item Communicating
+  \item Idling
+  \item Leaving
+\end{itemize}
+
+The network library will be in the \textbf{joining} mode when it is first
+powered on or in the event of a disassociation. The node will attempt to join
+on to a local network of nodes through a master node that is defined at the
+initial hardware configuration of the network. The joining process will have
+its own state machine describing the required processes for association on the
+WHCS network. The \textbf{communicating} mode will be active if the node is
+joined to a network and if there are data to be sent or received. Otherwise the
+node will be in the \textbf{idling} state, which will include a reduction in
+power consumption. If for some reason the network needs to be reconfigured
+dynamically, the base station or a control module can begin the
+\textbf{leaving} mode. This will free any resources present for maintaining
+state on the active network join and prevent the leaving node from
+communicating on the network. A graphical overview of the NetLib modes and the
+transitions between modes is shown in \autoref{fig:netlib-state-overview}.
+
+\ucfgfx[scale=0.75]{fig:netlib-state-overview}{netlib-state-overview}{the overall state machine for the network library}
+
+\paragraph{Join mode detail}
+The join mode will be fired when a new node wants to associate to an existing
+WHCS network as maintained by a base station. The base station will be the
+arbiter of all communication for the WHCS network and as such will also handle
+initial join requests. It is the node's responsibility to know and maintain any
+necessary access tokens for a join request along with the required channel of
+the network. Having the required channel is required for the sender and
+receiver to communicate. An optional (as per the setup configuration) will be
+communicated during a join request. The base station will validate the joining
+node and grant or deny access to the WHCS network. This process is necessary to
+provide some assurance and tracking for the active nodes on the network.
+
+\missingfigure{Join mode state machine}
+
+\paragraph{Communicate mode detail}
+Once a node has been successfully joined to the WHCS network, it will be able
+to communicate directly with the base station as its network gateway. All
+communication will flow through this node, which will process the data, and if
+required, generate a response. This response may be directed back at the
+transmitting node, such as an acknowledgement of the packet. Packets of control
+modules have the ability to change state in the base station through the use of
+``update packets.'' These packets will provide some periodic or event
+information about the transmitting node. This could include arbitrary data an
+is parsed based off of the node type. For example, a temperature node will have
+a specific data format that the base station will know how to unmarshal and
+store.
+
+The overall flow of the communicate mode will be to pump out packets to be
+sent, wait for any responses, and generate any actions as required by the
+packets. This loop will be performed by any node with a radio. The base station
+is the only special case as it has to receive from multiple nodes
+simultaneously.
+\missingfigure{Communicate mode state machine}
+
+\paragraph{Idle mode detail}
+The idle mode is the simplest mode for the NetLib. This state is where the
+library has no data to send or receive. During this mode, the underlying radio
+is free to sleep in order to conserve power usage. Also interrupts would be
+used to avoid polling the radio for new data, which would eat a lot of power.
+When a new packet is received or one needs to be sent, the radio would be woken
+up and enter in to the communication mode.
+\missingfigure{Idle mode state machine}
+
+\paragraph{Leaving mode detail}
+The final mode of the network library is the leaving state. This is the state
+where the node decided or is ordered to leave the network. It will disassociate
+from the WHCS network thereby causing its state and all of the resources
+associated with the join to be freed. Additional cleanup will be performed in
+order to get the library ready for a new join request. Any outstanding packet
+sends or received will be canceled harshly and any potential data will be lost.
+A safer shutdown would assert that the radio must be in the idle mode. That way
+no data will be lost to the leave transition.  \missingfigure{Leaving mode
+state machine}
+
 %\begin{table}[H]
 %\centering
 %\begin{tabular}{|l|l|l|l|}
