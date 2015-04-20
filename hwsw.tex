@@ -129,11 +129,48 @@ NRF. The hardware interactions with the chip are all abstracted away.
 \label{sec:network-library}
 \todo{3 pages}
 
+In order for WHCS to be networked, a set of networking functions will have to
+be constructed on top of the radio driver to form a network library or
+\textbf{NetLib}. Abstraction of the raw driver will allow for the concept of a
+\textbf{node} to be created. The network will consist of a set of nodes capable
+of direct communication and reception of \textbf{logical packets}. These
+packets will contain metadata describing their purpose and the data that they
+contain. By dividing up the required network features of WHCS in to packets, we
+will have a library of datagrams. These datagrams no longer have to worry about
+low-level details such as when to transmit -- they merely have to worry about
+who they are sending to and receiving from.
+
+Similar to network protocols today, WHCS will implement a lightweight protocol
+stack similar to the OSI model. The physical layer is handled by the NRF chip
+itself, the logical link layer by the NRF driver, and all other layers by the
+NetLib. In WHCS's case, our version of an ``Internet Protocol'' would be to
+assign each node with unique ID that can be targeted by other nodes for sending
+and receiving data. In terms of the transport layer, our application would be
+similar to User Datagram Protocol, which is ``best effort'' in terms of
+reliability. We plan on adding additional code and sequencing to allow for this
+unreliable medium to withstand lost packets. The NRF already provides the
+ability to retransmit on a non-acked frame, but this will just fail after a
+certain amount of attempts. This would handle transient errors, but not a
+complete loss of connectivity, which would occur if the base station lost
+power.
+
+%\begin{table}[H]
+%\centering
+%\begin{tabular}{|l|l|l|l|}
+%\hline
+%\bfseries Command & \bfseries Response & \bfseries Description  & \bfseries Direction \\ \hline
+%ASSOC & ASSOC\_RESP & NODE\_TYPE,   & Node to Base Station  \\ \hline
+%DATA & N/A & DATA\_TYPE, DATA & Node to Base Station  \\ \hline
+%REQ\_DATA & DATA & DATA\_TYPE, DATA\_PARAMS... & Base Station to Node  \\ \hline
+%ACTION & ACTION\_RESP & ACTION\_TYPE, ACTION\_PARAMS... & Base Station to Node  \\ \hline
+%\hline
+%\end{tabular}
+%\caption{FILL IT IN}
+%\label{tab:netlib-cmd}
+%\end{table}
+
 % Section 5.2
 \subsection{Microcontrollers}
-\todo{Talk about pin count and having to disable the JTAG fuses to get access to those pins}
-\todo{Talk about the speed grade for the CPU and why a higher grade would be faster}
-
 For the proper operation of WHCS microcontrollers will need to be installed
 into all of the control modules as well as the base station. This meant
 research was needed to choose what the best microcontroller for each of the
