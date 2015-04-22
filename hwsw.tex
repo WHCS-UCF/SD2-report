@@ -722,14 +722,11 @@ drawing function.
 \paragraph{Character Lookup Table}
 In order to convey useful information, we will need to display text to the
 user. This text will be stored in an efficient lookup table for quick drawing
-operations similar to \autoref{fig:character-lut}. On a limited embedded
+operations similar. On a limited embedded
 system like this, there is a limited amount of time that can be dedicated for
 font rendering. To save on time, we will use an existing font available online.
 Adafruit also bundles a font in with their graphics library that is implemented
 as a function instead of a block of memory.
-
-\ucfgfx[scale=0.5]{fig:character-lut}{raster-character}{a raster image showing
-a possible character lookup table}
 
 \subsubsection{UI Library}
 \label{sec:ui-lib}
@@ -1300,14 +1297,75 @@ ultimate goal of this project.
 % Section 5.7
 \subsection{Base Station}
 \todo{whole section except sch breakdown}
+The heart of WHCS resides with the base station (BS). When users think of WHCS, they
+will think of the base station as it is the most visible part of the system.
+The base station is responsible for managing, collecting, and displaying
+information from all of the control modules. If the BS were to fail, WHCS
+would cease to function.
+
+When a new control module is introduced in to the system, it must first pair
+with the BS, which will authenticate it on to the network. Once it joins, the
+control module can be abstracted as an ``API'' meaning, the specific hardware
+details do not have to be considered. This abstraction will be excellent in
+keeping the system clean from one-off cases and allow for a Domain Specific API
+to be formed.
 
 % Section 5.7.1
 \subsubsection{Software Flowchart}
+The main software flow for the base station is the most complicated in WHCS. It
+has to manage three separate devices simulatenously and be able to service each
+one in a timely manner. The LCD, NRF radio, and Bluetooth module are all being
+controlled and commanded by one ATMega32-A chip. There isn't much room for busy
+waiting or any expensive operations as everything has to be running as fast as
+possible. Given this, the BS is the least point of failure for the WHCS system.
+
+In \autoref{fig:base-station-flow}, we have constructed the general architecure
+of the main loop for the BS, including some early initialization. Most of the
+implementation details are left out as they are very specific to the final
+drivers.
 
 \ucfgfx[width=0.8\textwidth]{fig:base-station-flow}{base-station-flow}{the high level software flow for the base station}
 
+The large amount of tasks that are required of the BS become clear when viewing
+\autoref{fig:base-station-flow}.
+
+\paragraph{Software Flow Breakdown}
+The base station from reset would first load any saved settings from the
+EEPROM (saved control modules, behavior settings, LCD settings, etc.), then it
+would bring up all of the main modules (radio, LCD, bluetooth, and UART). Once
+all of these modules are inited correctly, the BS would begin the main loop.
+Radio events, bluetooth events, and LCD state would all be processed as
+required. For both the bluetooth and radio, new packets would be checked for
+and serviced as needed. From these packets internal state would updated and any
+response packets would be generated and sent. 
+
 % Section 5.7.2
 \subsubsection{Control Module Data Structures}
+For WHCS to function smoothly and scale well, a neat and abstracted interface
+must be defined to accept \emph{any} type of control module. New control module
+types should be easily added to the system without affecting older types and
+there should be a set of generic data structures for managing and storing
+information on modules. These structures must be carefully defined to wrap more
+specific control module packets in all of the shared metadata. Think of it like
+a hierarchy where all of the common attributes and actions shared by control
+modules have packets that can be sent to any module. Whereas the more specific
+packets (get temperature, engage door, etc.) would be wrapped up in the generic
+ones (essentially a derived object from the generic control module.) The
+details of the network structure that would enable this clean interface is
+further described in \autoref{sec:network-library}.
+
+Beyond sending packets, the base station must accurately record and update
+state for all of the control modules. Depending on the control module,
+additional state will need to be stored and functions will need to be written
+to query that state.
+
+\begin{lstlisting}[frame=single]
+struct control_module {
+  enum control_state state; // 1 byte of state
+  uint8_t type; // type of control module - used to delayer *data
+  void * data;  // the specific data for a control module
+};
+\end{lstlisting}
 
 % Section 5.7.3
 \subsubsection{Networking State Machine}
