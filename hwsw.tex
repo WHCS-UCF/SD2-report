@@ -601,7 +601,7 @@ the LCD module in \autoref{fig:lcd-high-level}.
 
 Another feature of Adafruit's module is the resistive touchscreen present on top of the
 LCD. With this, we don't just have to display information about WHCS, we can
-receive commands as well! Using this simple interface, we plan on creating a
+receive commands as well. Using this simple interface, we plan on creating a
 featureful UI library to communicate up-to-date information about the home
 while allowing for user control. The specific interface for the touchscreen
 requires 4 pins, 2 of which must be connected to the MCU's Analog to Digital
@@ -652,10 +652,10 @@ and save energy would be a useful feature.
 \paragraph{LCD Performance}
 \label{par:lcd-perf}
 Due to the real-time nature of microcontrollers, everything must be juggled as
-quickly as possible in order to have a good responsive design. Imagine a user
-touch kicking off a set of expensive UI redrawing operations. Well, a WHCS
-control module has just sent its latest state to the base station, but it
-cannot be serviced due to the drawing operation! This is a common theme
+quickly as possible in order to have a good responsive design. A user event
+such as a touch event followed by a graphics redraw should never take prioirity
+over more important operations, such as sending and receving from the radios.
+This is a common theme
 throughout real time environments, so much so that highly specialized Real Time
 Operating Systems have been created to provide \emph{assurance} that some
 operation/action will complete within a specified amount of time. We don't have that luxury -- instead we must consider performance before we hit any performance walls.
@@ -663,7 +663,7 @@ operation/action will complete within a specified amount of time. We don't have 
 The slowest part about managing the LCD are the synchronous transfer of
 commands and pixel data between the MCU and the graphics controller. Each
 ILI9341 command is 8-bits and before any pixel operation the CAS and PAS
-commands need to be set. These commands have two 16-bit arguments \emph{each}!
+commands need to be set. These commands have two 16-bit arguments.
 For settting just one arbitrary pixel 104 bits would need to be sent. This is a
 considerable overhead, so care must be taken to perform pixel operations in
 batch. Obviously, an algorithm that generates random pixels on the screen would have very
