@@ -1,6 +1,4 @@
-% Section 5 in file hwsw.tex
 
-% Section 5.1
 \subsection{Radio Transceiver}
 For the radio transceiver of WHCS the chip that we decided to use is Nordic
 Semiconductor{}'s NRF24L01+. This chip meets all the requirements that we set
@@ -11,7 +9,6 @@ have chosen to use an XBee radio device which implements the zigbee 802.15.4
 IEEE standard, however we did not see the need for this. XBee devices are also
 more expensive than the NRF chips that we have decided to utilize.
 
-% Section 5.1.1
 \subsubsection{Operating Principles and Usability of NRF24L01+}
 The NRF24L01+ is a radio transceiver that operates in the ISM (Industrial,
 Scientific, and Medical) radio band. The range of channels for the NRF is
@@ -55,7 +52,6 @@ monitored in order to listen for data received, data sent, and data failed to
 send notifications. In total the NRF will take up 6 pins whilst three of the
 pins will be shareable with other SPI components.
 
-% Section 5.1.2
 \subsubsection{Driver Use Case}
 The NRF chip that we have decided to use for communication in WHCS will need to
 have a driver written for it. This will help keep the way we interface with the
@@ -86,7 +82,6 @@ writing payloads, transmitting payloads, and analyzing interrupts. These use
 cases need to be implemented perfectly to provide a strong foundation for the
 networking of WHCS.
 
-% Section 5.1.3
 \subsubsection{Driver Class Diagram}
 It was decided that the best design approach for implementing the NRF driver
 was as a class in C++. We will be using Atmel ATMega microcontrollers in WHCS so C++
@@ -124,7 +119,6 @@ transmission address, writing a payload, and then transmitting a payload. With
 this driver, the user does not need to know the registers involved with the
 NRF. The hardware interactions with the chip are all abstracted away.
 
-% Section 5.1.4
 \subsubsection{Network Library}
 \label{sec:network-library}
 \todo{3 pages}
@@ -270,7 +264,6 @@ state machine}
 %\label{tab:netlib-cmd}
 %\end{table}
 
-% Section 5.2
 \subsection{Microcontrollers}
 For the proper operation of WHCS microcontrollers will need to be installed
 into all of the control modules as well as the base station. This meant
@@ -279,7 +272,6 @@ modules was.  The base station is a bit more hefty than the control modules so
 the design considerations are different for the two.  The first step was to
 figure out what family of microcontrollers to use.
 
-% Section 5.2.1
 \subsubsection{Microcontroller Brand}
 Choosing the microcontroller brand would set the path for all the development
 that we do with the microcontroller. Every other choice would stem from this
@@ -422,7 +414,6 @@ baud rate is usually low in BlueTooth devices by default, which can be bumped
 up depending on the microcontroller being used. A BlueTooth device that could
 not be programmed easily was not an option.
 
-% Section 5.3.1
 \subsubsection{RN-41}
 The RN{}-41 is a BlueTooth module designed by Microchip. This module is
 designed to be an all inclusive solution for embedded BlueTooth. It is clear
@@ -460,7 +451,6 @@ event that the sequence {}``\$\$\$'' was ever passed during operation it could
 throw off the whole system. This is not a terrible thing but it is worthy of
 consideration.
 
-% Section 5.3.2
 \subsubsection{HC-05}
 The HC{}-05 is a BlueTooth module that shares many similarities with the
 RN{}-41. It is of comparable size to the RN{}-41 with dimensions of 27x13mm.
@@ -528,7 +518,6 @@ HC{}-05 chips went out of stock or an unforeseen circumstance occurred.
 \label{tab:bluetooth-compare}
 \end{table}
 
-% Section 5.4
 \subsection{LCD}
 \todo{whole section}
 Being able to interface with WHCS like a normal wall thermostat is one of our
@@ -561,7 +550,6 @@ an LCD driver.
 
 \footnotetext{\url{https://www.adafruit.com/products/1770}}
 
-% Section 5.4.1
 \subsubsection{Capabilities}
 \todo{1 page}
 In terms of capabilities, we have summarized the main features of the LCD module in \autoref{tab:lcd-features}
@@ -737,7 +725,6 @@ as a function instead of a block of memory.
 %\item wow
 %\end{itemize}
 
-% Section 5.5
 \subsection{Android Application} For most WHCS users the mobile application
 will be the only physical interaction they have with the application. When we
 set out for development we wanted to make an easy to use application that would
@@ -745,7 +732,6 @@ attract users to stick with our system.  Operability and usability were
 emphasized in our design process. We wanted an appealing U.I. without
 complexity, after all we are targeting a simple solution to home automation.
 
-% Section 5.5.1
 \subsubsection{Development Environment} Android is the mobile operating system
 that we chose to utilize for our BlueTooth enabled phone. The Android operating
 system is accessed through the Java language, which is a staple in the UCF
@@ -938,7 +924,6 @@ communication between the aplication and the base station.
 \ucfgfx[scale=0.4]{fig:android-comm}{a55-img005.png}{Visual of Communication Between
 Android Device and Base Station}
 
-% Section 5.5.4
 \subsubsection{GUI Philosophy} Our goal for the development of the user
 interface was to make something simple that users could navigate quickly and
 efficiently. There is no need for the UI to be deep or hold the user{}'s
@@ -1004,7 +989,6 @@ application.
 \ucfgfx[scale=0.4]{fig:android-class-diagram}{a55-img007.png}{\texttt{cmAdapter} Class
 Diagram}
 
-% Section 5.5.6
 \subsubsection{BlueTooth Listener Class} When the WHCS application is
 communicating with the base station it is easy for the base station to be
 interrupted and start parsing communication using the UART interrupt vectors on
@@ -1040,7 +1024,6 @@ handling what to do when this type of information is received. This would be
 how the communication protocol for receipt is implemented on the Android
 application.
 
-% Section 5.6
 \subsection{Power Hardware}
 \label{sec:power-hw}
 
@@ -1053,7 +1036,6 @@ convert 120VAC to DC lines of 3.3V 5V and 12V. We will also need to be able to
 switch on and off 120VAC for the outlet and light switching control modules as
 well switch on and off the 12V used to operate the strike.
 
-% Section 5.6.1
 \subsubsection{Design Summary}
 The designs for each board will be mostly the same with slight variations
 depending on the application. This section will \emph{not} go
@@ -1131,7 +1113,6 @@ can be assumed that the state of the lights and outlets if off.  There is no
 need to check this with a microcontroller and therefore a back up battery would
 be useless.
 
-% Section 5.6.2
 \subsubsection{DC-to-DC Converters vs. Linear Voltage Regulators}
 In our control modules and base stations we are required to provide lines of
 three different voltages 12V, 5V and 3.3V. This can be accomplished with a
@@ -1165,7 +1146,6 @@ step down from 5V down to 3.3V. Based on these step down values it makes most
 sense for us to use a DC to DC converter to step down 34V to 5V and/or 12V, and
 to use a linear voltage regulator in order to step down from 5V to 3.3 volts.
 
-% Section 5.6.3
 \subsubsection{Backup Battery Configuration}
 Each control module along with the base station in WHCS will be equipped with a
 backup battery. In the case of power failure WHCS will still be able to carry
@@ -1252,16 +1232,12 @@ schematic came from a
 \href{http://electronics.stackexchange.com/questions/96632/12v-battery-backup-supply-for-gprs-tracker}{StackExchange
 post}.}
 
-% Section 5.6.4
 \subsubsection{Transformer Choice}
 
-% Section 5.6.5
 \subsubsection{Power Consumption}
 
-% Section 5.6.6
 \subsubsection{Isolation}
 
-% Section 5.6.7
 \subsubsection{Power Through Hole Board}
 \label{sec:power-through}
 Sending in PCB{}'s to be built can be expensive. Also the size of the boards
@@ -1291,10 +1267,8 @@ typically used for high frequency applications. Building this board from
 scratch will give added experience to the members of the group, which is the
 ultimate goal of this project.
 
-% Section 5.6.8
 \subsubsection{Schematic}
 
-% Section 5.7
 \subsection{Base Station}
 \todo{whole section except sch breakdown}
 The heart of WHCS resides with the base station (BS). When users think of WHCS, they
@@ -1310,7 +1284,6 @@ details do not have to be considered. This abstraction will be excellent in
 keeping the system clean from one-off cases and allow for a Domain Specific API
 to be formed.
 
-% Section 5.7.1
 \subsubsection{Software Flowchart}
 The main software flow for the base station is the most complicated in WHCS. It
 has to manage three separate devices simulatenously and be able to service each
@@ -1409,7 +1382,6 @@ All of the above tasks will be executing in the same way as single core CPU
 would: in pseudo-parallel. The faster the whole system runs, the better the
 appearance of everything executing at once.
 
-% Section 5.7.2
 \subsubsection{Control Module Data Structures}
 For WHCS to function smoothly and scale well, a neat and abstracted interface
 must be defined to accept \emph{any} type of control module. New control module
@@ -1437,29 +1409,21 @@ struct control_module {
 };
 \end{lstlisting}
 
-% Section 5.7.3
 \subsubsection{Networking State Machine}
 
-% Section 5.7.4
 \subsubsection{Associating With Base Station}
 
-% Section 5.7.5
 \subsubsection{Schematic Breakdown}
 
-% Section 5.8
 \subsection{Control Module}
 \todo{whole section except schematic breakdown}
 
-% Section 5.8.1
 \subsubsection{Software Flowchart}
 
-% Section 5.8.2
 \subsubsection{Schematic Breakdown}
 
-% Section 5.8.3
 \subsubsection{High-Voltage Control}
 
-% Section 5.8.4
 \subsubsection{Electronic Strike}
 \label{sec:electronic-strike}
 
@@ -1492,7 +1456,6 @@ electrical and computer engineering designs. The alternative was to use a
 premanufacture electric strike. In the following sections we will discuss what
 design considerations were taken when selecting our strike.
 
-% Section 5.8.4.1
 \paragraph{Normally Open or Normally Closed}
 The first thing we considered was whether we wanted a normally open lock or a
 normally closed lock. Normally opened means that the door requires power to be
@@ -1507,7 +1470,6 @@ did however find an easy way to have a mechanical alternative (this will be
 discussed in the next \autoref{sec:strike-v-deadbolt}) so that the safety hazard was
 no longer present.
 
-% Section 5.8.4.2
 \paragraph{Strike vs Deadbolt}
 \label{sec:strike-v-deadbolt}
 There are two main types of electric locks to choose from, electric strikes and
@@ -1526,9 +1488,7 @@ an electric strike and a door knob with a lock is used.
 
 \ucfgfx[scale=0.5]{fig:electric-strike-entry}{a584expected2pagesElectricStike-img002.png}{electric strike entry methods}
 
-% Section 5.8.5
 \subsubsection{Sensor Collection}
 
-% Section 5.8.6
 \subsubsection{Light Control}
 
