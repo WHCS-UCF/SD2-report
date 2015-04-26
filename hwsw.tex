@@ -1284,7 +1284,7 @@ details do not have to be considered. This abstraction will be excellent in
 keeping the system clean from one-off cases and allow for a Domain Specific API
 to be formed.
 
-\subsubsection{Software Flowchart}
+\subsubsection{Software Flow}
 The main software flow for the base station is the most complicated in WHCS. It
 has to manage three separate devices simulatenously and be able to service each
 one in a timely manner. The LCD, NRF radio, and Bluetooth module are all being
@@ -1302,7 +1302,6 @@ drivers.
 The large amount of tasks that are required of the BS become clear when viewing
 \autoref{fig:base-station-flow}.
 
-\paragraph{Software Flow Breakdown}
 The base station from reset would first load any saved settings from the
 EEPROM (saved control modules, behavior settings, LCD settings, etc.), then it
 would bring up all of the main modules (radio, LCD, BlueTooth, and UART). If
@@ -1382,7 +1381,7 @@ All of the above tasks will be executing in the same way as single core CPU
 would: in pseudo-parallel. The faster the whole system runs, the better the
 appearance of everything executing at once.
 
-\subsubsection{Control Module Data Structures}
+\subsubsection{Control Module Abstraction}
 For WHCS to function smoothly and scale well, a neat and abstracted interface
 must be defined to accept \emph{any} type of control module. New control module
 types should be easily added to the system without affecting older types and
@@ -1392,22 +1391,162 @@ specific control module packets in all of the shared metadata. Think of it like
 a hierarchy where all of the common attributes and actions shared by control
 modules have packets that can be sent to any module. Whereas the more specific
 packets (get temperature, engage door, etc.) would be wrapped up in the generic
-ones (essentially a derived object from the generic control module.) The
-details of the network structure that would enable this clean interface is
+ones (essentially a derived object from the generic control module.) This can
+be visualized in \autoref{fig:ctrl-mod-hierarchy}. The
+details of a network structure that would enable this clean interface is
 further described in \autoref{sec:network-library}.
+
+\ucfgfx[scale=0.75]{fig:ctrl-mod-hierarchy}{control-module-hierarchy}{showing the control
+module hierarchy for WHCS}
 
 Beyond sending packets, the base station must accurately record and update
 state for all of the control modules. Depending on the control module,
 additional state will need to be stored and functions will need to be written
-to query that state.
+to query that state. Each control module would have its own state machine that
+would control its function in relation to the base station.
 
-\begin{lstlisting}[frame=single]
-struct control_module {
-  enum control_state state; // 1 byte of state
-  uint8_t type; // type of control module - used to delayer *data
-  void * data;  // the specific data for a control module
-};
-\end{lstlisting}
+%\begin{lstlisting}[frame=single]
+%struct control_module {
+%  enum control_state state; // 1 byte of state
+%  uint8_t type; // type of control module - used to delayer *data
+%  void * data;  // the specific data for a control module
+%};
+%
+%\end{lstlisting}
+
+\subsection{Subsystems}
+The base station has the hardest job in the entire WHCS architecture. It has to
+juggle a lot data with limited memory and processing speed. Packets need to be
+processed and queued to keep the pipeline flowing smoothly. The following
+sections will break down the individual subsystems and how they work in concert
+to make the base station a well oiled microcontroller.
+
+\subsubsection{NRF24L01+: Interaction}
+The NRF radio will be directly connected to the Atmega32-A microcontroller
+which will control its state. This module will be constantly listening for new
+packets from the control modules and sending responses in turn. Due to this
+link being the most critical for WHCS, it needs to have the most attention to
+detail when constructing the layout and software design. Also, besides the
+expensive drawing operations for the LCD, this may take up the most CPU time to
+process packets and perform data transfers. This is partly due to the slow SPI
+interface that will be used to transfer the data. the NRF24LO1+ breakout board
+does not offer any other options for transferring data to and from a
+microcontroller. The overall system speed will be limited by the maximum
+transfer speed of this radio. When the considerations for thw WHCS topology are
+brought forward, its is obvious that the organization relies solely on the
+speed of the base station. We have considered this fact throughout the system
+design - for example, the LCD could have \emph{also} been controlled over SPI,
+but we made a trade off for pin count in order to use the parallel interface.
+This frees up the SPI bus for programming (infrequent) and the NRF.
+Essentially, the NRF has full control over the SPI bus and will receive the
+full attention of the microcontroller. 
+
+Assuming the NRF is not limited by the transfer rate of the SPI bus, the
+additional considerations can now be focused on. The microcontroller needs a
+way to quickly assess the state of the NRF chip. This state query could include
+the status of the radio's transfer queues - meaning if there is a packet to be
+received or if a packet has been successfully sent. This is something that will
+need to be checked very frequently as the radio usage will increase linearlly
+with the amount of control modules that are apart of WHCS. If any algorithms or
+tight loops in the microcontroller were to \textbf{not} have linear
+performance, then the system speed would suffer as more control modules were
+brought in to the network. We are focusing on WHCS' scalability for more
+complex households that a small demo setup. Of course, once the network becomes
+too crowded, the somewhat weak Atmega32-A will no longer be able to sustain the
+flood of packets that are required to maintain WHCS. At this point, more base
+stations will need to be operating simultaneously in order to handle the load.
+Our implementation of WHCS briefly considers this fact, but due to the
+prototype nature of this endeavour, we have left these more complicated details
+to another, more scalable revision of WHCS.
+
+In WHCS' architecture, the main loop of the base station will not be
+interacting directly with the radio. This is due to the abstraction we plan on
+building around the low-level radio driver. All driver specific functions will
+be wrapped in to a fa\c{c}ade pattern, network library. This would allow WHCS
+to swap out the underlying network hardware for another, similar radio. This
+would encourage code reuse and prevent massive, expensive rewrites of the
+net code. The high-level interface that the BS will know about will be
+sufficient and feature rich enough to carry out all of the actions required for
+WHCS to come to fruition.
+
+\subsubsection{HC-05: Interaction}
+The HC-05 BlueTooth module is quite simple in its operations. Data is sent over
+a two line serial bus and if there is an active connection to a bluetooth
+enabled device, it will be able to easily receive the data and handle it. In
+this case the device on the other end is expected to be a phone, but not
+limited to one. As long as the device on the other end of the BlueTooth link
+follows the WHCS BlueTooth application protocol, then WHCS will be able to
+receive commands from arbitrary devices. Assuming that the only thing that will
+connected to WHCS is a phone, then a suitable protocol for querying and
+changing WHCS' state will need to be derived. This set of functions is
+important for more than just the BlueTooth link - if written correctly, it
+could scale to many different consumers and producers of commands. A simple
+diagram showing a very high level interaction of a BT device with the base
+station is for reference in \autoref{fig:bt-bs-seq}. Once again
+this underlying protocol will be made to be abstracted away from the underlying
+hardware. For example, if the HC-05 were to fail to meet WHCS' strict
+requirements, then we would have to switch it for the next best unit - the
+RN-41. If we write the underlying driver to be ``top level'' layer that the
+base station will interact with, then large amount of code and possibly
+architecture will have to be swapped out to meet the needs of another hardware
+device.
+
+\ucfgfx[scale=0.6]{fig:bt-bs-seq}{bluetooth-bs-seq}{an example sequence diagram that could
+occur between a connected bluetooth phone and the base station}
+
+In regards to the application level protocol for WHCS, there will need to be a
+well defined, easy way, for the BlueTooth library to gather information from
+WHCS' state. This can be handled on the top-level flow of the base station by
+gluing together two different libraries without them knowing about each other.
+This is a good approach because it will decouple the two modules from each
+other, making their individual implementations separate. Two tightly coupled
+modules may start to take on the appearance of a ``ball of mud.'' A connected
+phone will be able to accomplish any task that manually interacting with the
+LCD could handle. This would include controlling the function of individual
+modules and querying their current state. The BT connection would try to avoid
+generating too many packets over the NRF radio in response to user events.
+Instead it would merely lookup the cached state from the base station's memory.
+This would be faster and the round trip time would be quick. Also, if a
+bluetooth packet did require a packet to be generated over the NRF radio, this
+interaction would have to asynchronously tracked until the request was
+fulfilled. This would complicate the system, but would allow for more advanced
+queries and commands.
+
+\subsubsection{LCD: Interaction}
+In what could be considered the ``face of WHCS'', the LCD module, which will be
+situated directly over the Atmega32-A, will have the tough job of accurately
+and quickly conveying any desired information about the state of WHCS' control
+modules. This is no simple task as not only does it have to display, but with
+an attached touchpanel, it has to react to user touches. What functionality is
+exported to the LCD is only limited by the underlying processor speed and the
+UI library. The high level design of the WHCS LCD will only have to worry about
+what the end goals are for its usage. An example of this abstraction may be
+viewed in \autoref{fig:lcd-soft-hier}.
+
+\ucfgfx[scale=0.6]{fig:lcd-soft-hier}{lcd-soft-hier}{the level of abstractions for the LCD
+subsystem}
+
+As the state of the WHCS network changes, the base station will have to fire
+off redraw events in order to keep the LCD up-to-date. These redraws will sync
+the internal state of WHCS with the user viewable interface. The physical
+connections to the LCD will consist of data signaling and an 8-bit wide
+parallel data bus. There is an optional reset pin that WHCS will opt to use for
+emergency resets and debugging. The high level interface with the LCD will
+occur directly with the high-level UI library and if necessary the underlying
+graphics library. The base station should never use the direct driver interface
+as this is subject to change in an emergency (if the LCD fails to meet WHCS'
+requirements.) In additiona, a subtle feature that WHCS may choose to implement would be
+dynamic power saving through screen dimming. Although we assume the base
+station will have wall power at all times, there may come a time where the
+system may migrate over to a lower wattage current source, such as power
+stealing from an HVAC unit. In this case, the system would most certainly have
+to be power efficient. Despite not needing to worry about power, this function
+would be simple to implement as only one microcontroller pin is required to
+control the screen brightness.
+
+\subsubsection{Touchpanel: Interaction}
+
+\subsubsection{Timers: Interaction}
 
 \subsubsection{Networking State Machine}
 
@@ -1415,16 +1554,19 @@ struct control_module {
 
 \subsubsection{Schematic Breakdown}
 
+% % % % % % % % % % % % % % % % % % % % %
+
 \subsection{Control Module}
 \todo{whole section except schematic breakdown}
 
 \subsubsection{Software Flowchart}
 
-\subsubsection{Schematic Breakdown}
-
 \subsubsection{High-Voltage Control}
 
 \subsubsection{Electronic Strike}
+
+\subsubsection{Schematic Breakdown}
+
 \label{sec:electronic-strike}
 
 For WHCS we knew that we wanted access control to be part of our design.
