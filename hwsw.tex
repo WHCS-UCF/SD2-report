@@ -1317,7 +1317,7 @@ has to manage three separate devices simulatenously and be able to service each
 one in a timely manner. The LCD, NRF radio, and Bluetooth module are all being
 controlled and commanded by one ATMega32-A chip. There isn't much room for busy
 waiting or any expensive operations as everything has to be running as fast as
-possible. Given this, the BS is the least point of failure for the WHCS system.
+possible. Given this, the BS is the least point of failure for the WHCS.
 
 In \autoref{fig:base-station-flow}, we have constructed the general architecure
 of the main loop for the BS, including some early initialization. Most of the
@@ -1332,12 +1332,82 @@ The large amount of tasks that are required of the BS become clear when viewing
 \paragraph{Software Flow Breakdown}
 The base station from reset would first load any saved settings from the
 EEPROM (saved control modules, behavior settings, LCD settings, etc.), then it
-would bring up all of the main modules (radio, LCD, bluetooth, and UART). Once
-all of these modules are inited correctly, the BS would begin the main loop.
-Radio events, bluetooth events, and LCD state would all be processed as
-required. For both the bluetooth and radio, new packets would be checked for
-and serviced as needed. From these packets internal state would updated and any
-response packets would be generated and sent. 
+would bring up all of the main modules (radio, LCD, BlueTooth, and UART). If
+any of these initialization steps were to fail, the BS would indicate through
+an LED or from a UART debug message. An initialization failure shouldn't be
+handled as it's a critical failure of the system along with its assumptions. We
+believe that by assuring that the initialization sequences for all modules is
+well defined, we will be able to diagnose hardware issues quickly and without
+strenuous debugging. One of the issues we found while prototyping is that it's
+difficult to determine if the issue with module initialization is with the
+wiring or code. Having a golden model for code that is know to work on our
+target setup would allow us to have a good working state.
+
+Each module has a unique sequence of ``commands'' with parameters that are
+required to configure the device. The NRF radio has to have its power, channel,
+payload length, and other parameters set before usage. Once these basic
+options, any further configuration is done at run time. This would include
+switching from listening to transmitting mode and enabling or disabling the
+automatic acknowledgement feature. The built-in Atmel UART only needs to know
+the baud rate at which data will be sent and received. There are also other
+options relating to other bits used (parody, stop, etc.). In our case, we are
+using the default 8 bit data, 1 stop bit, which is simple enough for our needs.
+The LCD happens to have the most extensive initialization sequence due to
+required screen configuration, gamma settings, pixel order and other more
+archaic options.
+
+Once all of the modules are brought up correctly, the BS would begin the main loop.
+Radio events, BlueTooth events, and LCD state would all be processed as
+required. For both the BlueTooth and radio, new packets would be checked for
+and serviced as needed. From these packets, internal state would updated and any
+response packets would be generated and sent. Internally, WHCS will have an
+internal event queue with different event types. These events will be processed
+and any responses will be generated, if any. These responses could include a
+confirmation packet over the NRF radio, or a status update through BlueTooth.
+The base station may also initialize actions despite not receiving events.
+These could be triggered from timers firing.
+
+In terms of the NRF radio, the module we have chosen exports an interrupt pin
+which will fire on the reception of a new packet. This feature is great for the
+WHCS architecture as the radio requires a significant amount of power
+while actively receiving SPI commands and transmitting. By avoiding the polling
+of the NRF, the main loops for both the control module and base station will
+have more cycles to process more important and intensive tasks. Essentially,
+the NRF will be kept in the listening mode at all times, waiting for a packet
+from a control module to be received. This is in contrast to the control
+modules which will try to avoid the transmitting and listening states to save
+power. The power down mode is great for saving watts, but has very poor
+performance for quickly responding to new packets.
+
+The BlueTooth module won't require as much time to service as the other modules
+due to the low data rate. It will connected directly to the hardware UART of
+the base station, instead of the normal serial debugger. This will have to be
+connected to some free GPIO ports and software serial will be used. This is
+unfortunate as ``bit banging'' serial isn't efficient and will take up many
+more cycles than just using the hardware UART. If needed, a packet over
+BlueTooth could be sent asynchronously from the main loop due to the hardware
+UART. If the micro loops fast enough, then it would be as if there was no delay
+in transmission. Due to the real time nature of the NRF radio and LCD, WHCS
+will take steps to avoid blocking too long on a single activity. Blocking too
+much will lower the overall performance and responsiveness of the system. At
+worst, touch events could be lost and packet buffers could overflow. Until the
+system's code is ready, this worry cannot be confirmed, but an effort will be
+made to profile the main loop's average time using hardware timers.
+
+One of the most important parts of WHCS is its usage of timers. A global list
+of timers will be constantly maintained and updated to schedule events
+in the future, instead of having to handle them immediately. The granularity of
+the timers will depend on the average execution time of the main loop along
+with how many timers are processed at once. If the main loop is slow on
+average, then timers will have to wait for extended periods to be serviced
+(starvation). Depending on the criticality of the timer and the event
+associated with it, there may need to be a mechanism for assigning a priority
+for a timer. This will have to be determined during actual system programming
+as it is heavily dependent on the task required.
+
+All of the above tasks will be executing in the same way as single core CPU
+would: in pseudo-parallel. The faster the whole system runs, the better the
+appearance of everything executing at once.
 
 % Section 5.7.2
 \subsubsection{Control Module Data Structures}
