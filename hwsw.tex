@@ -952,11 +952,8 @@ to it being tailored specifically for Android it was probably better than
 anything else. This turned out to be correct, because it was much easier for us
 to create an Android project and navigate our code from within this IDE. We
 also decided to use Android Studio because it has built in Git support for
-source control. \autoref{fig:git-scm} shows the important feature offered by
-Android Studio that we use for collaboration. This meant that as we were
+source control. This meant that as we were
 writing our code we could easily submit our changes to a remote Git repository.
-
-\ucfgfx[scale=0.7]{fig:git-scm}{a55-img001.png}{Git source control in Android Studio}
 
 \subsubsection{Use Case Diagram} The central use cases for WHCS are toggling
 the state of certain devices within the home and monitoring certain states.
@@ -1216,81 +1213,7 @@ switch on and off 120VAC for the outlet and light switching control modules as
 well switch on and off the 12V used to operate the strike.
 
 \subsubsection{Design Summary}
-The designs for each board will be mostly the same with slight variations
-depending on the application. This section will \emph{not} go
-into the specifics of why certain designs were chosen over other designs but
-will provide a big picture view of how our design works.
-
-To start off we will explain the black. Black is the color that is used to
-explain what is constant for every board design. Basically what the black line
-does is provide power to the microcontroller using AC outlet power. First the
-AC power is transformed with a transformer down from 120VAC to 24VAC this 24VAC
-is rectified using diodes into 33.6 VDC.  At this point the line goes through a
-DC to DC converter that will transform the 33.6 V to 5V. This 5V line leaves
-the power board and enters the PCB containing the microcontroller and turns it
-on.
-
-\ucfgfx[scale=0.25]{fig:baseline-na}{a561expected3pagesDesignSum-img001.png}{power board baseline design}
-
-The next line to discuss is the red line. The red line is used in both the
-light and outlet modules. The basic function of these control modules is to
-switch on and off power to either lights or outlets. Basically in addition to
-the line taken from the 120VAC to power the microcontroller we will have a line
-to power the actual application (the light and/or outlet). This extra line will
-run along our power board and will only be interrupted by a 5V operated relay.
-This relay will be connected to the microcontroller so that from the
-microcontroller WHCS will be able to open and close the 120VAC line. This is
-the easiest way to implement switching into our design. The only difference
-between the light and outlet modules is the load that is placed at the end of
-it.
-
-\ucfgfx[scale=0.25]{fig:baseline-na2}{a561expected3pagesDesignSum-img002.png}{power board light and outlet control module design}
- 
-The green line is very similar to the red line. The green line is used to
-explain the door access. Door access is fairly simple, it consists of providing
-or not providing power to the electronic strike in order to allow the user to
-lock and unlock the door. It too has a relay that is used in order to provide
-the switching. The only change is that electric strikes operate on 12V. In
-order to provide the 12V an additional DC to DC converter (in addition to the
-line used for the microcontroller) is used after the rectifier. The 12V line in
-combination with the relay from the microcontroller is all this module needs to
-perform its task of providing power to the door access module. It is however
-also equipped with a backup battery. The reason for this is that we still want
-the microcontroller to be powered even if there is a power failure from the
-120VAC home power. The backup battery will not provide power to the 12V line
-meaning the strike will remain in locked mode. However having the
-microcontroller powered will allow it continue completing tasks such as
-checking the state of the system.
-
-\ucfgfx[scale=0.25]{fig:baseline-na4}{a561expected3pagesDesignSum-img003.png}{power board door access control module design}
-
-The purple line is the simplest of the modules. It is used to explain the
-module of the thermo sensors. this module really only needs the basic design of
-the black line that provides the microcontroller with 5V. Yet it too like the
-green and blue line is equipped with a back up battery. This way the
-information about the temperature of the home can still be gathered from the
-sensors even if there is a power failure.
-
-\ucfgfx[scale=0.25]{fig:baseline-na3}{a561expected3pagesDesignSum-img004.png}{power board thermosensor control module design}
-
-Lastly and arguably the most important line is the blue line.
-This line is used for the base station. The base station in addition to the
-microcontroller will make use of NRF and Bluetooth which require 3.3V lines.
-The 3.3V line will stem out from the the 5V line as shown in \autoref{fig:power-bs}.
-In order to make this step down we will be using a linear rectifier. It
-too will be equipped with a backup battery in case of power failure. This will
-allow the base station to be fully operational even if the power goes out.
-
-\ucfgfx[scale=0.25]{fig:power-bs}{a561expected3pagesDesignSum-img005.png}{base station power board design}
-
-The only reason that red is not equipped with a backup battery is because a
-backup battery for red would serve no purpose. The backup batteries allow the
-microcontrollers of the control modules to remain operational, thus allowing
-the microcontrollers to complete small tasks such as checking the state of the
-system. For light and outlet applications however there is no need for this; it
-can be assumed that the state of the lights and outlets if off.  There is no
-need to check this with a microcontroller and therefore a back up battery would
-be useless.
+\todo{Joseph needs rewrite}
 
 \subsubsection{DC-to-DC Converters vs. Linear Voltage Regulators}
 In our control modules and base stations we are required to provide lines of
