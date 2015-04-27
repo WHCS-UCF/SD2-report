@@ -2284,3 +2284,70 @@ outlet will receive the power it normally would from the household main.
 Wiring Schematic for Solid State Relay}
 
 \subsubsection{Schematic Breakdown}
+The control modules for WHCS have to be able to support communication via a
+radio transceiver as well as interaction with their target endpoints.
+\autoref{fig:ctrl-mod-sch} shows the schematic for the control modules that will be
+implemented in WHCS. The main component of the schematic is the ATmega328.
+Everything in the schematic is connected to the microcontroller in some way. In
+the schematic three different VCC lines are shown. This is because the control
+modules will have to access to a 3.3V line, a 5V line, and a 12V line. The
+power board will supply these power lines to the control module. The 5V and
+3.3V lines are necessary because they provide power to the logic chips like the
+microcontroller and the radio transceiver. The 12V line is necessary solely for
+the electronic strike that we have chosen.
+
+\ucfgfx[width=16.51cm,height=9.878cm]{fig:ctrl-mod-sch}{a686SchematicBreakdownExpected2pages-img001.png}
+{WHCS Control Module Schematic}
+
+All the control module endpoint targets are featured in this
+schematic. In the upper right of the schematic you can see the TMP36
+temperature sensor, the electronic strike representation, and the solid state
+relay for switching AC. We will be able to create all the control modules
+with the same design and just put whichever parts we want onto each
+individual control module based on which one of the three endpoint types it
+will be targeting. One option we were thinking of during design for
+modularity is instead of putting the footprints for the circuits necessary
+for interacting with endpoint targets directly on the control module PCB, we
+could put a section on each control module that acted similarly to a
+breadboard. This way we could shrink the size of the control module PCB
+because the circuit for each target would not be on every control module. A
+smaller PCB means less money spent ordering it to be made. The issue with the
+breadboard imitation design is it does not look as good and it allows for
+mistakes to be made when soldering the circuit to the PCB. When we weighed
+the two options we decided that just having every circuit on each control
+module and only soldering the parts on to the circuit we were utilizing was the
+best option.
+
+The control module schematic is quite similar to the base
+station schematic. It is missing the BlueTooth module and replaces that with
+all the different circuits for interacting with appliances around the house.
+The microcontroller is also smaller. The crystal that is shown in the figure
+will be the same on the base station and the control module. Our goal during
+design was to make the boards for the control module and the base station to
+be as similar as possible.  There is no reason to make them very different
+and it saves research and development time for us to be able to recycle
+footprints and things of that nature. One thing we realized when we were
+designing the control module and referencing other PCB designs is the
+importance of an indicator LED. We originally did not have any indicator LEDs
+in our design.  Now we will have an indicator LED in every PCB we create if
+there is a pin available. The indicator LED for the control module is shown
+in \autoref{fig:ctrl-mod-led} along with the resistor necessary for forward biasing
+it. The LED indicator is valuable for showing that the board is getting power
+which can same a large amount of time during testing. The LED can also be
+programmed to blink while the control module is in certain states. The
+usefulness of the indicator LED should not be underestimated.
+
+\ucfgfx[width=7.673cm,height=4.419cm]{fig:ctrl-mod-led}{a686SchematicBreakdownExpected2pages-img002.png}
+{Control Module Indicator LED}
+
+The areas where we connect the electronic strike and the AC
+voltage to the control module will be screw terminals. This is the best way
+we found to connect these components. The electronic strike will not be able
+to be mounted directly to the control module because of it{}'s large size, so
+wires will have to go from the screw terminals to the leads on the strike.
+Using the screw terminals for the AC voltage allows us to shorten the traces
+carrying that voltage on our PCB because we can put the terminal wherever we
+wish. Similarly to the base station the NRF radio transceiver will be
+connected to the board via female pin headers. The NRF comes with a breakout
+option so this will be the easiest way to get it on our board from the
+prototyping phase.

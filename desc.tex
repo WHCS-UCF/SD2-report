@@ -1,5 +1,3 @@
-% Section 2 in file desc.tex
-
 \subsection{Motivation}
 The goal of this project is to improve the quality of life for people in their
 homes. Imagine sitting on the couch at home about to watch a movie, but all the
@@ -54,14 +52,12 @@ modules.
 
 \ucfgfx[scale=0.65]{fig:whcs-overview}{a21expected2pages-img001.png}{WHCS System Overview}
 
-% Section 2.2
 \subsection{Objectives}
 \todo{3 pages}
 In order to enable homeowners to have the best experience with their new WHCS,
 we will explain our core project objectives. These describe what the end-users
 are be able to do with the system at a high level.
 
-% Section 2.2.1
 \subsubsection{Voice Control}
 Voice control from a supported, BlueTooth enabled, Android device will allow
 the user to remotely activate any part of the home that is integrated with
@@ -80,7 +76,6 @@ plugin-like interface, allowing for intrepid home owners to have a fully custom
 home. This combined with the control module's free breadboard area, new
 applications may be created.}
 
-% Section 2.2.2
 \subsubsection{Light Activation}
 Through activating lights and querying their status remotely, a homeowner will
 no longer have to be present in the same room as the switch.  By connecting
@@ -94,7 +89,6 @@ the home, will be able to be actuated on a specific schedule. This schedule
 \todo{make a section for scheduling or remove} can be designed by the homeowner
 to meet their daily lives or in a special circumstance, such as travel.
 
-% Section 2.2.3
 \subsubsection{Outlet Activation}
 Lights aren't the only actionable thing in the home. There are a multitude of
 appliances throughout the home which could benefit from remote control. Some
@@ -107,7 +101,6 @@ outlets being automated is that there would be less draw from power leeching
 devices' power subsystems, which may be always-on. \todo{cite article
 hyping up how much power you lose to leeches}
 
-% Section 2.2.4
 \subsubsection{Door Access}
 In addition to controlling home lights and various appliances, giving users
 remote control of their doors is  a goal of WHCS. Through the use of an
@@ -128,7 +121,6 @@ to) and also prevent outside attackers from engaging the door opening mechanism
 just by sniffing traffic. For additional details on the security considerations
 of WHCS, please refer to \autoref{sec:safety-sec}.
 
-% Section 2.2.5
 \subsubsection{Data Collection}
 In order to give users a broad overview of their home's state, WHCS supports
 the collection of data from \emph{arbitrary} sensors. Data collected can
@@ -153,13 +145,112 @@ All of this raw data being collected could be displayed to the user in the form
 of graphs and tables. It would also serve as the basis for a set of descriptive
 statistics for display to the user.
 
-% Section 2.3
 \subsection{Requirements and Specifications}
+For WHCS to become the product that we want it to be it must adhere to a strict
+set of requirements and specifications.  We have identified certain
+requirements for subsystems involved in our system that we must fulfill in the
+development process. The following section is devoted to identifying
+requirements that we must meet to completely reach our goals for WHCS.
 
-% Section 2.4
+\subsubsection{Mobile Application}
+
+The mobile application must communicate to other components of WHCS through
+BlueTooth. The process of connecting to the base station within the application
+must take no more than eight seconds from when the application is opened.
+Toggling the state of a control module within the system such as a light or
+outlet must also take no more than eight seconds from anywhere within the
+application. The user must be able to create sets of control modules to
+interact with simultaneously. The Android mobile application must follow
+Google{}'s material design guidelines for Android development. The application
+must not request any privileges other than Bluetooth services. The application
+must support full duplex communication with the base station. The application
+should be able to react to disconnections to the base station by polling the
+connection every thirty seconds and dropping the BlueTooth connection if no
+response is received.
+
+\subsubsection{Radio Module}
+
+The radio module must communicate in ISM allocated radio bands in order not to
+interfere with bands requiring radio licenses. The radio module used to
+communicate between subsystems must be able to communicate at ranges up to at
+least 50 meters. The radio chip must be able to act as a transmitter and a
+receiver and must be able to switch roles quickly.  The radio module must be
+interoperable with common microcontrollers, so it should have a feasible method
+for interfacing with a microcontroller{}'s pins. The radio chip must be capable
+of addressing, and further must be able to listen for messages from multiple
+addresses when in receiving mode.
+
+\subsubsection{Microcontroller}
+
+The microcontroller for the base station must have enough GPIO pins for an LCD,
+radio transceiver, and a BlueTooth module. The microcontroller must have an
+on{}-chip UART and SPI solution. All microcontrollers in the system must have
+on board flash memory to promote design simplicity. The microcontrollers must
+operate in logic level voltages ranging from 3.3V{}-5V. The microcontrollers
+must be capable of operating with a supply current of 50mA or less. The
+microcontrollers must have an option for setting the frequency to at least 8
+MHz to boost throughput of the system. SMD footprints should be available for
+whichever microcontroller is chosen. The microcontrollers must be programmable
+while in circuit. The base station and control module microcontrollers must
+both have on{}-chip analog to digital conversion hardware. All microcontrollers
+must support interrupts to properly implement the network that is planned for
+WHCS.
+
+\subsubsection{BlueTooth Module}
+
+The BlueTooth must communicate with some form of RS232 to be interoperable with
+a microcontroller{}'s UART. The BlueTooth chip must be able to exchange data
+with a baud rate of 9600, with higher baud rate options being a plus. The
+password and name of the BlueTooth module must be programmable for security
+measures. The BlueTooth module should operate at logic level voltages of
+3.3V{}-5V. The BlueTooth module should be capable of communicating at ranges up
+to at least 50 meters.
+
+\subsubsection{Printed Circuit Board}
+
+The printed circuit board layout{}'s outer dimensions should have a width of
+.008''. The size of vias on the PCB should be set to .02''. Isolation of ground
+pour polygons on the PCB layout should be set to .012''. Logic level trace
+sizes should be .01'', and any high level voltage traces should be set by
+referencing a trace width calculator. The preferred of resistor package for the
+PCB is 0805. SMD components should be used whenever possible in the PCB design.
+The control module PCB should be no more than 4''x4''. The base station PCB
+should be no more than 5''x6''. High level voltages from the power supply
+should be isolated from the logic level voltages with an isolation area of at
+least .75''. A two layer board design should be used for all of the PCBs in
+WHCS.
+
+\subsubsection{Power Specifications}
+
+The power supply developed for WHCS must rectify and downstep 120V AC provided
+by household mains. A transformer must be chosen that downsteps 120V AC to a
+level that is suitable for a switching buck regulator to regulate with high
+efficiency. A 5V and 3.3V line should be provided for each board in WHCS to
+meet the needs of individual logic chips.  The 5V line must be obtained through
+a regulator with at least 80\% efficiency. The step down to 3.3V from 5V does
+not need to be highly efficient. A relay must be chosen for switching high
+voltage to control high voltage components. The relay should have a load
+voltage capable of tolerating 120V AC. The input voltage required for
+activating the relay should be no more than 5V so it can be switched by a
+microcontroller. The relays forward current for activation must be no more than
+40mA so that it can be supplied by the GPIO pin of a common microcontroller. At
+least 500mA should be suppliable to every board in WHCS. The electronic strike
+that is used in WHCS must consume no more than 700 mA while activated. The
+electronic strike must operate at 12V or less.
+
+\subsubsection{LCD}
+
+The LCD must have a touch screen interface to allow direct interaction with the
+system. Any interaction that can be performed on the system that is available
+from the mobile application must be performable from the LCD. The LCD must be
+operable with a supply voltage of 3.3V{}-5V. The LCD must be interoperable with
+a microcontroller with speeds of approximately 8 MHz. The LCD must be able to
+interface with a microcontroller through SPI or parallel data in. The LCD must
+be no more than 6''x6'' and must be mountable directly to a PCB through the use
+of standoffs.
+
 \subsection{Research of Related Products}
 
-% Section 2.4.1
 \subsubsection{Z-Wave}
 Z{}-Wave is a wireless technology that serves as a building foundation for home
 automation technologies. It is a certain type of home technology networking
@@ -191,13 +282,60 @@ the user to change the state of the system to certain common configurations. For
 all the lights in the house with a {}``sleep mode{}'' every night. This will be achievable through the hardware that
 WHCS will create for the house.}
 
-% Section 2.4.2
 \subsubsection{Belkin}
+Belkin has a brand of home automation products called WeMo. The WeMo brand
+consists of products that broadcast themselves via wifi and are controllable
+through mobile phone applications. There are multiple offerings such as
+heaters, outlet plug ins, light switches, and cameras. Overall their product
+line is quite similar to what we are aiming for. They have things that assist
+in home automation and are controllable by a mobile application. This is what
+want to accomplish with WHCS. They are different from the previously mentioned
+company Z{}-Wave because they actually provide smart appliances that go inside
+your home rather than just providing the foundation for a home automation
+system.
 
-% Section 2.4.3
+One notable difference between Belkin{}'s line of WeMo products
+and our solution is how outlets are handled. WeMo offers outlet plugins that
+are put directly into the outlet and then expose an outlet facade for a user to
+insert into. Rather than completely turning off the outlet that is connected to
+the household main like WHCS will be doing, WeMo shuts off the insert that has
+been put into the outlet as a middleman. This type of design is great for ease
+of installation but also clutters the outlet. When a WHCS outlet is installed
+it will not be noticeable from the outside and it will be a permanent addition
+to the household. Belkin also has a solution for toggling the state of lights
+with their WeMo light switches. These light switches are different from the
+outlets because they actually require the stock light switch in the home to be
+replaced with the WeMo product. Our version of light control will leave the
+stock light switch of the home intact.
+
 \subsubsection{Apple HomeKit}
 
-% Section 2.4.4
+Apple HomeKit is an application programming interface that Apple develops for
+programmers to interact with any appliance that implements the Apple HomeKit
+Accessory Protocol. This is an approach to home automation that is not very
+popular.  Apple seeks to make the mobile applications that access home
+automation systems not proprietary. With Apple HomeKit any Apple developer is
+capable of developing applications that interact with a multitude of
+appliances. HomeKit does not seek to develop one home automation solution, it
+wants to decouple the application development from the hardware. The company
+that we mentioned before called Belkin creates a mobile application to go along
+with the smart appliances that they sell. With Apple HomeKit the philosophy
+shifts away from development like this where the application comes along with
+the hardware.
+
+With HomeKit multiple developers could develop independent applications all
+targeting the same hardware and users could choose which application they like
+best. Our WHCS solution for home automation will feature things that Apple
+HomeKit does except they will all be internal to us who are developing the
+system. There will need to be libraries that interact with the hardware but
+they will be proprietary and we will not expose them to developers. Together
+Z{}-Wave, Belkin, and Apple HomeKit complete the spectrum of home automation
+solutions. Z{}-Wave provides a network foundation for people to create
+appliances for, Belkin creates hardware and a mobile application to control it,
+and then Apple HomeKit creates tools to develop applications for controlling
+hardware.
+
+
 \subsubsection{Nest Labs}
 \todo{0.5 pages}
 Unlike the previous companies, \href{http://nest.com}{Nest Labs} is quite new,
@@ -227,7 +365,6 @@ that they can ``harness the future today.'' Quite a solid business model.
 Coming in at \$249, the thermostat might be a tough sell for typical home owners who
 already have a working, yet ``dumb'', thermostat.
 
-% Section 2.4.5
 \subsubsection{X10}
 \todo{0.5 pages}
 
