@@ -496,30 +496,26 @@ we will be using the circuit pictured in \autoref{fig:mcu-crystal}. The crystal
 connects to the XTAL pins on the microcontroller and the microcontroller gets
 its driving wave from the crystal. As the diagram shows there are two
 capacitors that must be utilized to get the circuit working. These capacitors
-are C\textsubscript{1} and C\textsubscript{2} and there is an equation for
+are $C_{1}$ and $C_{2}$ and there is an equation for
 choosing their value.
 
 \ucfgfx[width=6.006cm,height=7.038cm]{fig:mcu-crystal}{a62expected5pages-img001.png}{Microcontroller Crystal Schematic}
 
-The equation is for choosing the values for C\textsubscript{1} and
-C\textsubscript{2} is shown in \textbf{Equation 6.2.5.1 }where
-C\textsubscript{stray} is dependent on board layout and is approximately 2-5 pF
-and C\textsubscript{L} is a property of the crystal. For our calculations we
-used C\textsubscript{stray} = 3pF. C\textsubscript{1 }also is equal to
-C\textsubscript{2} so this simplifies the calculations. The value of
-C\textsubscript{L} for the crystal we listed is shown as 8pF in the datasheet.
+The equation is for choosing the values for $C_{1}$ and
+$C_{2}$ is shown in \autoref{eqn:req-cap} where
+$C_{stray}$ is dependent on board layout and is approximately 2-5 pF
+and $C_{L}$ is a property of the crystal. For our calculations we
+used $C_{stray}$ = 3pF. $C_{1}$ also is equal to
+$C_{2}$ so this simplifies the calculations. The value of
+$C_{L}$ for the crystal we listed is shown as 8pF in the datasheet.
 Using the given equation we found that the best value for the capacitors
-C\textsubscript{1 }and C\textsubscript{2} necessary in the crystal circuit was
+$C_{1}$ and $C_{2}$ necessary in the crystal circuit was
 10pF.
 
-{\centering\color{black}
-C\textsubscript{L} = (C\textsubscript{1}*C\textsubscript{2})/(C\textsubscript{1}+C\textsubscript{2}) +
-C\textsubscript{stray}
-\par}
-
-{\centering\color{black}
-Equation 6.2.5.1
-\par}
+\begin{equation}
+  C_{L} = (C_1 * C_2) / (C_1+C_2) + C_{stray}
+\label{eqn:req-cap}
+\end{equation}
 
 To make the external crystals work with the microcontrollers, certain fuses
 must be set through a programmer connected to the microcontroller. The
@@ -886,6 +882,9 @@ be the base for nearly every derived graphics operation. For example, a
 transparent rectangle has four sides which results in four calls to this line
 drawing function.
 
+If there were any need for UI elements to be at different depths, then each UI
+element would have to have its
+
 \paragraph{Character Lookup Table}
 In order to convey useful information, we will need to display text to the
 user. This text will be stored in an efficient lookup table for quick drawing
@@ -898,6 +897,12 @@ as a function instead of a block of memory.
 \subsubsection{UI Library}
 \label{sec:ui-lib}
 \todo{2 page}
+
+\paragraph{ButtonView}
+\paragraph{TextView}
+Properties: length (uint16_t), width (uint16_t), depth (uint8_t), text (16
+bytes),
+\paragraph{ListView}
 
 %\begin{itemize}
 %\item line drawing algorithms
@@ -1372,7 +1377,6 @@ ultimate goal of this project.
 \subsubsection{Schematic}
 
 \subsection{Base Station}
-\todo{whole section except sch breakdown}
 The heart of WHCS resides with the base station (BS). When users think of WHCS, they
 will think of the base station as it is the most visible part of the system.
 The base station is responsible for managing, collecting, and displaying
@@ -1647,6 +1651,25 @@ would be simple to implement as only one microcontroller pin is required to
 control the screen brightness.
 
 \paragraph{Touchpanel: Interaction}
+In order to provide a way for an end user to be able to control WHCS from the
+LCD unit, there is a requirement to poll for touch events.
+This subsystem can be considered a part of the LCD, but the driver is independent
+from the graphics and ILI9431 drivers. These events will be dispatched
+to the appropriate UI element  based on the X and Y position of the touch
+event. There is also an optional Z ``position'' which represents the pressure
+of the touch event. This could be used to gather more fine grained information
+about the touch itself. One of the unfortunate properties of the touchpanel is
+that it must be actively polled for new touches. This requires that the ADC be
+constantly providing conversions, which raises the dynamic power of the MCU.
+This isn't a major concern as the base station is expected to have power from the wall
+most of the time.
+
+The extent of the touchpanel interaction will occur from a \texttt{getTouch()}
+method. This method will return the latest touch event, if any. The base
+station will have full control over where this touch event is dispatched to.
+Depending on the LCD scene (i.e main menu, boot screen), this event will be
+handled in different ways. Further details are discussed in
+\autoref{sec:ui-lib} for the UI library.
 
 \paragraph{Timers: Interaction}
 
@@ -1657,9 +1680,59 @@ control the screen brightness.
 % % % % % % % % % % % % % % % % % % % % %
 
 \subsection{Control Module}
-\todo{whole section except schematic breakdown}
+What can be thought of as the ``arms of WHCS'', the control modules serve as
+the main devices that seed the network with data. This data is specific to the
+control module that is emitting it. The base station is more more complex than
+an individual control module because it needs to be. The control modules should
+be as lightweight as possible to save cost and keep power usage down. If the
+control modules were too complex, then the entire cost of WHCS would increase
+proportionally to the number of control modules.
 
 \subsubsection{Software Flowchart}
+The general flow for the control modules is much simpler than the base station
+just due to the requirements of the system. There isn't as much that needs to
+be done on each loop iteration. The only main module that the control module
+needs to work with is the NRF radio. This can be seen in
+\autoref{fig:ctrl-mod-soft-flow}. Due to the capabilities
+for the NRF radio to provide an interrupt signal on the reception of a packet,
+the control module actually has the ability to sleep when not doing anything.
+Control modules should be as mobile as possible, which limits their overall
+functionality and processing power. Without these limits, any battery attached
+would quickly be drained.
+
+\ucfgfx[scale=0.6]{fig:ctrl-mod-soft-flow}{control-module-flow}{the high level
+software flow for a generic control module}
+
+Beyond scheduling packets and receving responses, the sensor or actuator that
+the control module is responsible needs to be serviced. The rate at which the
+sensor is polled is depending on the required data rate. For instance, if this
+control module is controlling the door, then it needs to be actively listening
+for a packet to open or close it. This is quite different from the requirements
+of a control module that is gathering temperature data. Like the base station,
+the control module will also have a global list of timers that will govern the
+timing of events and actions to be taken. The timer list can be associated to
+any thing that is required to run in the future or periodically.
+
+Events spawned from receiving packets from the base station will change the
+internal state of the control modules. This state is going to be transitioned
+between using a specific set of functions that act as an API to the base
+station. This API will extend across the network layer through a network
+protocol that will enable the control and querying of the control module's state
+from remote locations. It is important that this is done right in and in a
+sustainable manner in order to have clean API for usage across the entire
+network. With out a clean and well thought API, each control module will have
+duplicate functionality to handle common tasks. This has already been in
+further detail in the base station and network library sections.
+
+The mobile nature of WHCS' control modules means that they need to be aware of
+their power state. We want our modules to consume as little power as possible
+in order to sustain an isolated power outage. Also, some modules may opt to be
+battery only if their power requirements are low enough. For instance, a
+temperature module may be a low enough power consumption that it could last on
+a battery long enough to be feasible. This requires further field testing and
+research in order to prove right or wrong. Regardless of the end goals for WHCS
+control modules, the state of the battery for each control module should be
+known to the base station for analytics and tracking.
 
 \subsubsection{High-Voltage Control}
 
