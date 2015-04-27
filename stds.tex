@@ -1,0 +1,73 @@
+In order to speed up development and promote compatibility the WHCS design
+adheres to multiple standards. Using standards allows us to rely on certain
+characteristics for the devices we use. Standards allow us to stand upon the
+design decisions made by organizations before us.
+
+\subsection{RS{}-232}
+RS{}-232 (Recommended Standard) is a serial communication standard that
+specifies hardware and software implementation for serial communication between
+two connected devices. Our microcontrollers will be using a UART for debugging
+and communication through BlueTooth. The UART module present in our
+microcontrollers is based off of RS{}-232. The microcontrollers use logic
+voltage levels which are are not the same as those specified in the standard.
+This version of RS{}-232 is often referred to as TTL{}-serial (Transistor to
+Transistor Logic). The UART also only uses the Rx and Tx lines specified in the
+standard. The software and algorithm used to communicate with the UART is the
+same as RS{}-232, so the deviation from the standard is hardware only.
+
+\subsection{BlueTooth}
+BlueTooth is the standard that we will rely upon for
+communication between the base station of WHCS and the mobile application.
+BlueTooth was originally standardized by IEEE as standard 802.15.1. The
+standard is now maintained by the BlueTooth special interest group. Devices
+that implement BlueTooth are able to connect to one another wirelessly to
+exchange data serially. The wireless signal{}'s frequency is regulated to be
+between 2400 and 2483.5 MHz. The base station will contain a BlueTooth module
+which implements the BlueTooth standard. This module will allow communication
+with the mobile phone, who{}'s hardware will support the BlueTooth standard.
+BlueTooth{}'s serial communication characteristics make it well{}-suited for
+communicating with a microcontroller{}'s UART. The UART to BlueTooth module
+connection is what we will be performing.
+
+\subsection{SPI}
+SPI (Serial Peripheral Interface) communication is a de facto
+standard so there is no regulatory body that develops or maintains the
+specification. SPI is used in microchips for communicating to multiple
+connected devices through one bus.  SPI features a slave select line that
+allows the microchip (the master) to pick a target device (slave) to speak to.
+WHCS will use SPI for interfacing with the radio transceiver module from the
+microcontroller on the base station and control modules. SPI will also be used
+to program the microcontrollers we use. The slave select feature will allow us
+to have our radio transceiver still attached to the SPI bus while we are
+programming our microcontrollers.
+
+\subsection{FR{}-4}
+FR{}-4 (Flame Resistant) is a standard for flame resistant
+glass{}-reinforced epoxy laminate sheets. These provide the basis for printed
+circuit boards. The FR{}-4 standard was developed for complying with the
+regulations for flammable plastics set in standard UL94V{}-0. The core of PCBs
+are built around a laminate sheet that meets the FR{}-4 standard.  We will be
+populating printed circuit boards for WHCS so we will rely on this standard for
+the proper operation and safety of our PCBs.
+
+\subsection{Android Development Guidelines}
+The Android developer{}'s guide has a list of guidelines that
+are strongly recommended for Android applications. These are standardized
+guidelines, but they are not standards because they are not required. These
+guidelines are relevant to our project because we will be developing an Android
+application and we will be adhering to the specifications. The guidelines all
+have individual ID codes. Some noteable guidelines that we will be following
+during the development of the WHCS application are UX{}-B1, UX{}-N1, and
+FN{}-S1. Respectively these standards involve not redefining the functionality
+of on system icons, supporting back button operation in applications, and not
+leaving services such as BlueTooth open while an application is in the
+background.
+
+\subsection{ANSI/NEMA 1-15P, 5-15P, C84}
+WHCS will get its source power from household mains. The
+connectors for household mains, and the voltage levels provided are
+standardized by ANSI/NEMA. The plugs that will allow the base station to be
+connected to a United States structure{}'s outlets are standardized by 1-15p (2
+prong) and 5-15P (3 prong). We can count on the input voltage of WHCS being
+120v AC because of standard C84 which standardizes the power supplied to
+household mains in the United States.

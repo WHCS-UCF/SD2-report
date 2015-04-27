@@ -1,11 +1,153 @@
-% Section 4 in file system.tex
+This section contains an overview of the components necessary to create the
+Wireless Home Control system. Without going too deep into implementation
+details, an abstract view of WHCS is provided. Block diagrams are utilized to
+show the interaction between WHCS subsystems. The information in this section
+covers the central components necessary to realize the system and fulfill our
+objectives.
 
 % Section 4.1
 \subsection{Base Station}
+The base station of WHCS is the central component. It is the only component
+that will be involved in everything that is done with WHCS. Any command going
+to an endpoint will pass through the base station and any information coming
+from an endpoint will go through the base station. The base station acts as the
+smart middleman between the user and the control modules that they are
+targeting. The base station is a small portable device that can plug into a
+home outlet for power and will have an option for battery backup. The user will
+need to be able to interface with the base station in order to control the
+system. To facilitate this interaction there will be a mobile WHCS application
+that can be used to communicate to the base station, and there will also be a
+touch enabled LCD. Both of these methods will be available to control the base
+station. The base station will be in the shape of a rectangular prism and will
+have the LCD flush with the surface of the top of the prism. This way the PCB
+can be hidden away and does not have to be known to the user. This will provide
+an aesthetically pleasing look to the base station and hide away its inner
+workings. \autoref{fig:bs-ext-design} shows what the base station will look like
+including the LCD, the inner PCB, and the plug for power. The size of the base
+station will be based off of the size required for the printed circuit board.
+
+\ucfgfx[width=7.27cm,height=6.443cm]{fig:bs-ext-design}{a5Expected4pages-img001.png}{Base Station Exterior Design for WHCS}
+
+{\color{black} The base station will require a special printed circuit board
+that is different from the control modules. It will be the only board in the
+system that has to support BlueTooth communication. This is how the base
+station will communicate with the Android phone. It will also need to have
+space for the installation of the LCD screen. The LCD screen will be able to be
+mounted on the base station PCB so it can be pushed through the display box.
+Using this architecture the LCD will be all the user has to see. Like the
+control modules the base station will have a radio transceiver chip. This will
+be the part of the base station that allows it to communicate to the control
+modules who will have a similar radio transceiver. The LCD, BlueTooth chip, and
+radio transceiver will have to connect to the microcontroller that is chosen
+for the base station. This whole system will be powered by a 120V AC step down
+circuit and a battery backup. The base station will also have room for a
+programmer pinout that way any errors in design can be fixed in circuit. The
+block diagram of the components for the base station is depicted in
+\autoref{fig:bs-pcb-block-diagram}.}
+
+\ucfgfx[width=15.24cm,height=11.43cm]{fig:bs-pcb-block-diagram}{a5Expected4pages-img002.png}{Base Station PCB Block Diagram}
+
+{\color{black} As shown in the block diagram the programmer pinout and the
+radio transceiver will both be connected using the SPI bus of the
+microcontroller. SPI allows for selecting which chip to utilize at any given
+time so therefore the bus sharing conflict will be able to be resolved.}
 
 % Section 4.2
 \subsection{Control Module}
+The control modules of WHCS are the boards that will connect to the target
+endpoints around the home. Control modules can be of different types due to the
+fact there are multiple targets in the system. There will be light/outlet
+modules, door modules, and sensor modules. All of these different types of
+control modules have similarities that can be taken advantage of in order to
+create a single control module design that can be adapted to the specific
+endpoint it is targeting. Every control module will need to have a power supply
+circuit, a microcontroller, and a radio transceiver at a minimum. The rest of
+the circuitry will revolve around what the control module is meant to interact
+with. For example the circuit to activate the electronic strike on a door will
+need to switch the electronic strike power, while a temperature sensor circuit
+will need to do analog to digital conversion. There are two options that these
+possibilities bring about for the creation of control module boards. One option
+is to create a control module design that has room to solder the components
+necessary to interface with all of the supported endpoints of WHCS on one
+board. This means the control module would have the foundation for adding the
+electronic strike circuit, the light/outlet circuit, and the temperature
+circuit all at once. All that would need to be done is to connect the circuit
+to the actual target of choice, and if desired the control module could be
+removed and hooked up to a different type of target. The second option is to
+create a printed circuit board design that has a section dedicated to the
+implementation of a single control module endpoint circuit. This way when the
+printed circuit board is assembled we can custom solder components based on
+what that control module is being used for. Either of these options work. The
+option where all control module boards are able to support all three control
+module modes is the more involved option so that is the option that we consider
+for our design. \autoref{fig:ctrl-mod-blk-diagram} shows the block diagram for a control
+module. The blocks labeled radio transceiver, power, and microcontroller are
+the only ones necessary for every single control module. The three blocks on
+the lower left are the circuits that interact with specific endpoints around
+the home. These are the parts of the control module that can either all be
+included in every control module, or can appear as lone circuits on every
+control module.
+
+\ucfgfx[width=15.24cm,height=11.43cm]{fig:ctrl-mod-blk-diagram}{a5Expected4pages-img003.png}{Control Module Block Diagram}
 
 % Section 4.3
 \subsection{BlueTooth Capable Phone}
+{\color{black} The Wireless Home Control System is based around the capability
+of interacting with the system from a mobile phone. A phone with BlueTooth
+communication capabilities is required for the system to operate at its full
+capabilities. With the selected BlueTooth phone platform, a software
+application can be developed to allow users to interact with WHCS. It will be
+through this application that users can monitor the state of their home and
+remotely interact with targeted appliances. The phone application will feature
+a low{}-complexity graphical user interface as well as the ability to use
+speech{}-recognition activation. }
 
+\subsection{Software}
+WHCS will contain a network consisting of its base station, its peripheral
+control modules, and the user{}'s BlueTooth capable mobile phone. This creates
+the need for three distinct software models. These three different software
+implementations will follow a custom communication protocol in order to
+transmit data throughout the network. Commands will frequently flow from the
+user{}'s mobile phone all the way to a control module that they want to
+interact with.  The data flow can also occur in the reverse direction. It is
+the goal of WHCS software to facilitate this interaction.  Phone to base
+station communication will be done through BlueTooth. The phone will be able to
+utilize BlueTooth libraries, while the base station microcontroller will
+interface with a UART to control a BlueTooth module.  Communication between the
+base station and control modules will relay on a custom driver written for the
+radio transceiver used in the system. The base station will be the powerhouse
+in terms of software design. It is at this central hub that the collection of
+all active control modules will be stored. The base station will also
+constantly have to be ready to accept requests from any control module or the
+user. The main routine will need to have handlers ready for the LCD or the
+mobile phone because either choice will be usable to interact with the system.
+\autoref{fig:whcs-soft-block} shows the block diagram for the entire system{}'s
+software. This is meant to provide insight into the operation of the large
+components of the system
+
+{\color{black} Apart from the networking aspect of WHCS the software will also
+need to control the interaction with the targets of the individual control
+modules. This is depicted in \autoref{fig:whcs-soft-block} as the bottom{}-most block.
+This block will have to be custom tailored based on the role of the control
+module. The routines running on the microcontrollers will need to know the
+state of the appliance they are interacting with, and how to do any necessary
+activation that is requested by the user. For sensor type control modules the
+microcontroller will need to update at intervals in order to maintain correct
+information. For the modules that are activating outlets/lights or controlling
+the electronic strike the routine will be as simple as toggling the state of a
+solid state relay connecting to a GPIO pin. It will be the communication
+between subsystems that presents the biggest challenge for the microcontroller
+based boards.}
+
+{\color{black} The mobile application software will have three main components,
+the user interface, bluetooth communication handler, and speech recognition.
+These blocks are shown at the top of \autoref{fig:whcs-soft-block} and together they
+complete the mobile application. The user interface will be the most involved
+piece of software. The interface will have to constantly display the state of
+the system and provide intuitive use cases. All of the capabilities that we
+create for WHCS will have to be reflected by the user{}-interface that we
+design. The U.I. will need to be linked together with the BlueTooth
+communication handler because at the user will be expecting state changes in
+the system at the press of a button.}
+
+\ucfgfx[width=15.24cm,height=11.43cm]{fig:whcs-soft-block}{a5Expected4pages-img004.png}{WHCS Software Block Diagram}

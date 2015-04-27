@@ -1,4 +1,50 @@
 \subsection{Point-To-Point Transmission}
+The most essential part of WHCS is the ability for the modules and the base
+station to be able to communicate wirelessly. In our research and prototyping
+phase we made sure that this feat would be achievable. To ensure that we were
+able to communicate using our radio transceivers we set up a prototype for
+point{}-to{}-point transmission. The setup involved the use of two breadboards
+each populated with a microcontroller and a radio transceiver. One
+microcontroller out of the two was operating as the symbolic base station. The
+HC{}-05 BlueTooth module was connected to the Atmega328 microcontroller and
+through this module we were able to administer tests with the prototype setup.
+The microcontroller acting as the base station had a routine that enabled
+reading and writing to the NRF24L01's registers.  We were able to ensure that
+the state of the radio transceiver is the state that we needed to communicate.
+The other microcontroller was connected to the other radio transceiver as well
+as a TTL{}-serial module for connecting to a computer{}'s terminal. The control
+module microcontroller also had LED{}'s connected to two of the GPIO pins. The
+setup that we created is shown in \autoref{fig:ptp-tx} This setup allowed for
+us to make sure that the radio transceivers were able to send packets to one
+another and that the packets could be read into the microcontrollers.
+
+\ucfgfx[width=15.24cm,height=8.572cm]{fig:ptp-tx}{a81PointtoPointTransmissionexpected1pg-img001.png}{Point to Point Transmission Prototyping Setup}
+
+When we finished connecting and hooking up this prototype setup
+we were able to run the routine on the microcontroller that acted as the base
+station to take input from the BlueTooth module. Using an Android phone we
+communicated with the microcontroller and manipulated registers of the NRF24L01
+to ensure that the microcontroller was communicating with the device using the
+correct timing protocol. Once we ensured we were correctly interfacing with the
+NRF24L01 from the base stations side we connected the NRF24L01 to the control
+module chip. The control module chip was connected to a computer terminal via
+the TTL{}-serial chip located in the top center of Fig. 8.1.1. We made sure
+that we were able to interface with the radio transceiver for this
+microcontroller in the same way as the first. Once both radio transceivers were
+confirmed to be connected and interacting correctly we ordered the base station
+to transmit data to the control module.  The command was initiating from the
+Android application. The data was transmitted to the control module and was
+successfully received. As a result, one of the LEDs attached to the control
+module breadboard toggled to an on state.
+
+This prototype was able to give us a good gauge of how feasible
+our approach to designing a wireless home automation solution was. We
+successfully able to get an Android device to communicate to a stripped down
+base station and then to a stripped down control module. The actions that were
+done with this prototype will be the core of WHCS. Every action done in the
+system centers around the ability to communicate between microcontrollers and
+to and from the mobile phone.  When the control module microcontroller is doing
+more than just toggling an LED is when WHCS will be impressive.
 
 \subsection{Rogers Board Etching Prototyping}
 

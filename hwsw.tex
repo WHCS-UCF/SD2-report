@@ -383,13 +383,191 @@ forums we found that to be able to use port C pins as GPIO the JTAG fuse must
 be disabled. Otherwise setting these pins on port C to high or low will have no
 effect.
 
-\subsubsection{Control Module}
+\subsubsection{Control Module' Microcontrollers}
+The control modules are the parts of WHCS that do the interacting with the
+endpoint appliances. The microcontroller that we selected for the control
+modules would have to have the pin count and processing capabilities necessary
+to be able to interface with any of the appliances. This means that the
+microcontroller would need to have gpio pins for activating relays for the
+outlets and lights, and it would also need to be able to do analog to digital
+conversion for sensors. The control modules also receive commands from the base
+station and send status replies back, so the control module microcontroller
+would have to have an SPI interface for utilizing the radio transceiver that we
+chose for WHCS.
+
+The list of constraints on the selection of the control modules{}'
+microcontroller was not long. The control modules were not going to be as
+demanding as the base station. We could choose a minimalistic chip for the
+control modules, but we knew it would help with the design and development
+process if we used a microcontroller similar to the one in the base station for
+the control modules. This led us back to the ATmega series. Referring back to
+\autoref{tab:atmega-chips} we see the three main ATmega series chips that we
+researched. All the chips had the SPI interface necessary to communicate with
+the radio transceiver. They all had enough pins to interface with the most
+demanding control module, and the all had analog to digital conversion
+capabilities. Any one of the three chips would have been able to satisfy the
+needs of the control modules. The ATmega88 was the first chip out of the three
+that was removed from consideration for the base station. This was because the
+on{}-chip flash memory was quite low. We decided not to use it in the control
+modules for the same reason. The ATmega328 is only slightly more expensive than
+the ATmega328 but has 4 times the flash memory. The ATmega32A, while useful for
+the base station, would have been overkill for the control modules.  The amount
+of pins on the ATmega32A would have taken up too much room on the board.
+Therefore we decided to use the ATmega328 for the control modules.
+
+For the control module microcontroller we also put research into using an
+ATtiny microcontroller. The ATtiny series of Atmel microcontrollers are meant
+to be low power and low pin count. If we could use an eight pin or similarly
+sized microcontroller for the control module boards then it would save space
+and therefore money on the printed circuit board. One issue that turned us away
+from the ATtiny series was the lack of SPI and UART hardware modules on the low
+pin count chips. For the chips that had SPI and UART support the pin count was
+upwards of 20. This meant that there would be no large savings in terms of pin
+count from the ATmega328 to a viable ATtiny chip. Thus we saw no reason to use
+an ATtiny chip for the control modules rather than an ATmega chip.
 
 \subsubsection{Development Environment}
+To begin utilizing the microcontrollers that we chose we had to decide upon a
+development environment to use. We believed that having everyone in the group
+use the same environment would allow for easier collaboration and shorten
+development time. Research showed that there were two popular choices for
+writing programs for Atmel chips, Atmel Studio and WinAVR. Each of these two
+environments had pros and cons. \autoref{tab:compare-atmel} shows relevant comparisons
+between the two environments that led to the decision of what to use. The first
+thing that we considered when choosing a development environment was cost. We
+knew that certain IDEs, such as Visual Studio, require a license in order to
+use. We thought that since Atmel Studio was based off of Visual Studio that it
+probably required a similar license.  After looking into this issue we found
+that Atmel Studio is free and WinAVR is also free. Knowing both are free we
+took under consideration that part of the group mainly uses Linux.
+Unfortunately neither of these development environments are usable on linux so
+we all agreed to use the Windows operating system to host whichever option we
+chose. Our next consideration was which IDE worked best along with the
+programmer that we decided to use for the microcontroller. We decided to use an
+AVR Pocket Programmer which uses a program called AVRDude for programming Atmel
+microcontrollers. The Atmel Studio development environment could be set up so
+the Pocket Programmer could be activated with the press of a button. This
+capability was a noticeable win over WinAVR which elongated the process. The
+feature that made Atmel Studio the clear winner of the two was the fact that it
+provided so much sample code. Things such as the utilizing the UART or the SPI
+interface for certain chips were about three clicks away while in Atmel Studio.
+While the two IDEs did have many similarities, we all agreed that Atmel Studio
+was the best choice for developing for our Atmel microcontrollers.
 
-\subsubsection{Programming}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+ &
+{\color{black} Atmel Studio} &
+{\color{black} WinAVR}\\\hline
+{\color{black} Free} &
+{\color{black} Yes} &
+{\color{black} Yes}\\\hline
+{\color{black} Linux Compatible} &
+{\color{black} No} &
+{\color{black} No}\\\hline
+{\color{black} Integrated Compiler} &
+{\color{black} Yes (GNU)} &
+{\color{black} Yes (GNU)}\\\hline
+{\color{black} AVRDude Integration} &
+{\color{black} Yes} &
+{\color{black} No}\\\hline
+{\color{black} Sample Projects} &
+{\color{black} Yes} &
+{\color{black} No}\\\hline
+\end{tabular}
+\caption{Comparison of Atmel Studio and WinAVR}
+\label{tab:compare-atmel}
+\end{table}
 
-\subsubsection{External Oscillator}
+\subsubsection{Microcontroller Additions}
+To ensure that the microcontrollers we use on the base station and the control
+modules are operating at their full capabilities we will be adding external
+crystals to their circuits. The external crystals will boost the
+microcontrollers operating frequency from their factory ratings of 1 MHz to the
+native frequency of the crystal.  Because the lowest max operating frequency
+for the microcontrollers we chose is 16 MHz this is the frequency we looked for
+when choosing a crystal to use for the microcontrollers. We have decided to use
+the NDK NX5032GA{}-16.000000MHZ{}-LN{}-CD{}-1 as the crystal for our
+microcontrollers. This microcontroller has a 16 MHz operating frequency and has
+the simple two connection design. For adding the crystal to our microcontroller
+we will be using the circuit pictured in \autoref{fig:mcu-crystal}. The crystal
+connects to the XTAL pins on the microcontroller and the microcontroller gets
+its driving wave from the crystal. As the diagram shows there are two
+capacitors that must be utilized to get the circuit working. These capacitors
+are C\textsubscript{1} and C\textsubscript{2} and there is an equation for
+choosing their value.
+
+\ucfgfx[width=6.006cm,height=7.038cm]{fig:mcu-crystal}{a62expected5pages-img001.png}{Microcontroller Crystal Schematic}
+
+The equation is for choosing the values for C\textsubscript{1} and
+C\textsubscript{2} is shown in \textbf{Equation 6.2.5.1 }where
+C\textsubscript{stray} is dependent on board layout and is approximately 2-5 pF
+and C\textsubscript{L} is a property of the crystal. For our calculations we
+used C\textsubscript{stray} = 3pF. C\textsubscript{1 }also is equal to
+C\textsubscript{2} so this simplifies the calculations. The value of
+C\textsubscript{L} for the crystal we listed is shown as 8pF in the datasheet.
+Using the given equation we found that the best value for the capacitors
+C\textsubscript{1 }and C\textsubscript{2} necessary in the crystal circuit was
+10pF.
+
+{\centering\color{black}
+C\textsubscript{L} = (C\textsubscript{1}*C\textsubscript{2})/(C\textsubscript{1}+C\textsubscript{2}) +
+C\textsubscript{stray}
+\par}
+
+{\centering\color{black}
+Equation 6.2.5.1
+\par}
+
+To make the external crystals work with the microcontrollers, certain fuses
+must be set through a programmer connected to the microcontroller. The
+datasheets for the microcontrollers have a fuse list that can be used to make
+the proper alterations for incorporating an external crystal into the design.
+There is also a free online fuse calculator tool for AVR microcontrollers at
+\url{http://www.engbedded.com/fusecalc/} that can be used to quickly get the
+necessary fuses that must be changed for any sort of microcontroller alteration
+such as changing the operating frequency.
+
+To get the microcontrollers running the code we right needs to be programmed
+onto the chips flash memory. Atmega microcontrollers use SPI to transfer
+programs to the chip. There are different programmers that can be used to
+complete the task of uploading code to the microcontroller. We put research
+into which programmer to use in order to be the most cost effective with our
+design. The two programmers that our decision came down to are listed in
+\autoref{tab:comparison-of-prog}. Atmel has a programmer called the AVRISP mkII. This
+programmer is supported by the designers of the chips so it is sure to work
+when ordered however it also comes with a large price tag compared to other
+options. The online vendor SparkFun offers a product called AVR Pocket
+Programmer for \$15 that accomplishes all that we need to get our programs onto
+our microcontrollers. The programmer relies on an open source program called
+AVRDUDE to get the hex file from the development computer to the chips flash
+memory. The program is free and the pocket programmer is much cheaper than the
+Atmel programmer which costs \$34 if ordered from the Atmel site. The AVR
+Pocket Programmer was a clear winner when it came time to choose the programmer
+for our microcontrollers.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+{\color{black} Programmer} &
+{\color{black} Supplier} &
+{\color{black} Price} &
+{\color{black} Atmel Studio Compatible}\\\hline
+{\color{black} AVRISP mkII} &
+{\color{black} Atmel} &
+{\color{black} \$34} &
+{\color{black} Yes}\\\hline
+{\color{black} Pocket AVR Programmer} &
+{\color{black} SparkFun} &
+{\color{black} \$14.95} &
+{\color{black} Yes}\\\hline
+\end{tabular}
+\caption{Comparison of Two Different AVR Programmers}
+\label{tab:comparison-of-prog}
+\end{table}
 
 \subsection{BlueTooth Chip}
 The BlueTooth device for WHCS will enable the base station to communicate with
@@ -452,6 +630,7 @@ throw off the whole system. This is not a terrible thing but it is worthy of
 consideration.
 
 \subsubsection{HC-05}
+\label{sec:bt-hc-05}
 The HC{}-05 is a BlueTooth module that shares many similarities with the
 RN{}-41. It is of comparable size to the RN{}-41 with dimensions of 27x13mm.
 HC{}-05 modules are also commonly sold along with a breakout board with male
@@ -1414,14 +1593,14 @@ would control its function in relation to the base station.
 %
 %\end{lstlisting}
 
-\subsection{Subsystems}
+\subsubsection{Subsystems}
 The base station has the hardest job in the entire WHCS architecture. It has to
 juggle a lot data with limited memory and processing speed. Packets need to be
 processed and queued to keep the pipeline flowing smoothly. The following
 sections will break down the individual subsystems and how they work in concert
 to make the base station a well oiled microcontroller.
 
-\subsubsection{NRF24L01+: Interaction}
+\paragraph{NRF24L01+: Interaction}
 The NRF radio will be directly connected to the Atmega32-A microcontroller
 which will control its state. This module will be constantly listening for new
 packets from the control modules and sending responses in turn. Due to this
@@ -1469,7 +1648,7 @@ net code. The high-level interface that the BS will know about will be
 sufficient and feature rich enough to carry out all of the actions required for
 WHCS to come to fruition.
 
-\subsubsection{HC-05: Interaction}
+\paragraph{HC-05: Interaction}
 The HC-05 BlueTooth module is quite simple in its operations. Data is sent over
 a two line serial bus and if there is an active connection to a bluetooth
 enabled device, it will be able to easily receive the data and handle it. In
@@ -1512,7 +1691,7 @@ interaction would have to asynchronously tracked until the request was
 fulfilled. This would complicate the system, but would allow for more advanced
 queries and commands.
 
-\subsubsection{LCD: Interaction}
+\paragraph{LCD: Interaction}
 In what could be considered the ``face of WHCS'', the LCD module, which will be
 situated directly over the Atmega32-A, will have the tough job of accurately
 and quickly conveying any desired information about the state of WHCS' control
@@ -1544,13 +1723,11 @@ to be power efficient. Despite not needing to worry about power, this function
 would be simple to implement as only one microcontroller pin is required to
 control the screen brightness.
 
-\subsubsection{Touchpanel: Interaction}
+\paragraph{Touchpanel: Interaction}
 
-\subsubsection{Timers: Interaction}
+\paragraph{Timers: Interaction}
 
-\subsubsection{Networking State Machine}
-
-\subsubsection{Associating With Base Station}
+\paragraph{Networking State Machine}
 
 \subsubsection{Schematic Breakdown}
 
@@ -1564,8 +1741,6 @@ control the screen brightness.
 \subsubsection{High-Voltage Control}
 
 \subsubsection{Electronic Strike}
-
-\subsubsection{Schematic Breakdown}
 
 \label{sec:electronic-strike}
 
@@ -1630,7 +1805,114 @@ an electric strike and a door knob with a lock is used.
 
 \ucfgfx[scale=0.5]{fig:electric-strike-entry}{a584expected2pagesElectricStike-img002.png}{electric strike entry methods}
 
-\subsubsection{Sensor Collection}
+\subsubsection{Sensor Data Collection}
+The control modules of WHCS will not only be used for switching things on and
+off. They will also provide a foundation for sensing data around the house. For
+example any sensor that can turn physical data into an analog or digital signal
+could be connected to a control module and then be a part of WHCS. Examples of
+these would be temperature sensors and humidity sensors. For our project we
+will specifically be using a temperature sensor to demonstrate WHCS data
+collection. With the way the circuit will be designed only the sensor chip
+would need to be removed and any other sensor would be able to be hooked up.
 
-\subsubsection{Light Control}
+The temperature sensor that we have decided to use for WHCS is the TMP36. The
+TMP36 is widely available and comes in through hole and smd packages. The
+temperature sensor is simple in design as it has only three pins that require
+connection. The schematic shown in \autoref{fig:temp-sensor-connect} shows how the
+temperature sensor would be connected to the ATmega328 on the control modules.
+The VOUT pin of the TMP36 outputs a voltage signal that varies based on the
+temperature surrounding the component. The voltage range is between 2.7 to 5.5
+volts which will be suppliable through or logic level voltage lines. This model
+of temperature sensor is capable of sensing temperatures within the range of
+{}-40 to 125 degrees Celsius. This covers all the temperatures that one would
+encounter in a home and more. Connecting to the analog sensor will require the
+use of one of the ATmega328's ADC (Analog to Digital Conversion) pins for
+converting the analog signal to a digital signal. There are plenty of ADC pins
+available on the microcontroller and even when one pin on the ADC port is
+connected for conversion the other pins can still be used as GPIO pins. The
+schematic shows the output of the temperature sensor going to pin ACD0 but any
+ADC pin will be able to accomplish converting the signal to digital.
 
+\ucfgfx[width=13.944cm,height=6.8cm]{fig:temp-sensor-connect}
+{a683SensorCollectionexpected2pages-img001.png}{Temperature Sensor Connection Schematic}
+
+Utilizing the ADC pins will require working with special registers inside the
+microcontroller. The ADMUX register allows for selecting which pin out of the 8
+ADC pins should be connected to the internal hardware for doing the conversion.
+This register also holds bits necessary for setting up the reference values
+used in the conversion. The reference voltage in the conversion is important
+because the digital value that is obtained is a result of where that voltage
+level falls in between ground and the reference voltage that is supplied. For
+our design we will be using the power supply of the microcontroller as the
+reference for the ADC which means setting bits 7 and 6 of the microcontroller
+to 0. The ADCSRA register is also very important because this is where we set
+the prescaler that will divide the clock rate of the chip into the frequency
+that we want to use for ADC. We are running our microcontrollers at 16 MHz in
+WHCS which is too fast for good accuracy in the ADC. We will set the prescaler
+in the ADCSRA register to 128 in order to achieve an ADC sampling rate that
+provides reliable accuracy.
+
+\subsubsection{Light and Outlet Control}
+The control modules of WHCS will be capable of controlling lights and outlets
+around the home. To be able to support this functionality the control modules
+need to be able to switch 120V AC circuits. A simple circuit with a transistor
+is not capable of switching such high voltages using the logic voltage levels
+of microcontrollers. In order to switch such high voltages relays can be used.
+There are two different forms of relays, mechanical and solid state. For our
+purposes we investigated both to see which would be the best option. We
+originally considered mechanical relays in our design. For mechanical relays an
+actual arm inside the device is being physically moved due to the current going
+through the device. A side effect of this mechanical motion is that the current
+and voltage requirements to drive the relay are relatively high. Our
+prototyping of the system originally used a mechanical relay but the relay
+required 9V input to activate the large 120V load voltage. Mechanical relays
+are cheap because they are made out of simple components, and low cost is
+always a big factor. The biggest down side to the mechanical relay is that
+using one would limit us to not being able to directly activate the relay from
+our microcontroller. The required current and voltage to activate a mechanical
+relay is too high for any of our microcontrollers to supply.
+
+We want to be able to control the relay that is switching 120V AC directly from
+the control module microcontroller{}'s GPIO pins. We concluded that this would
+not be achievable through the use of mechanical relays. A mechanical relay
+would require extra transistors to switch another voltage source to the relay.
+Solid state relays solve the problem of supply voltage and current which is
+posed by mechanical relays. Solid state relays do not move any physical
+components to switch a circuit, instead they operate through semiconductors. As
+a result they require much less input to complete the circuit for the load
+voltage. One tradeoff for solid state relays is that they are generally more
+expensive than their mechanical counterparts. In this situation the price jump
+is not large enough dissuade us from utilizing SSRs (Solid State Relays)
+instead of mechanical relays. If we decided to use mechanical instead of solid
+state we would not get the behavior that we desired in our circuit so the
+decision is easy to make.
+
+Once we narrowed down our solution to controlling lights and outlets through
+the use of a SSR, we searched for a chip that had the electrical
+characteristics we were searching for. The GPIO pins of the ATmega328 that we
+are using for the control modules are capable of outputting a maximum of 40mA
+DC current. We needed a solid state relay that had a tolerance for 120V AC as a
+load voltage, could be supplied by 5V, and needed less than 40mA for
+activation/forward current. We found a solid state relay made by Sharp
+Microelectronics with the part number S108T02F that met all the requirements
+that we set. We confirmed that the chip is in stock and suppliable by digikey.
+The chip is available at an affordable price of \$5.10. \autoref{fig:wiring-sch-ssr}
+Shows a schematic using this solid state relay. The schematic for the control
+module would mimic the one shown in this figure. The activation input would be
+directly connected to the microcontroller{}'s GPIO pin in order to toggle on
+and off the state of the relay. This particular relay has an activation voltage
+of 1.2V DC which means that when the relay is on this is the voltage across the
+diode shown in the schematic. Thus the forward current for this schematic can
+be calculated through the equation (5V{}-1.2V)/R1. The SSR in the figure
+requires at least 15mA for activation. The microcontroller{}'s pins are
+adequate for supplying this low current. When the microcontroller{}'s
+activation pin, pin PB1 in the figure, is set to high, the 120V AC is free to
+flow through the triac of the SSR and power the component in place of the load
+resistor. In WHCS the load resistor RL in the figure will be replaced with an
+outlet or a light. Whenever the microcontroller pin goes high, the light or
+outlet will receive the power it normally would from the household main.
+
+\ucfgfx[width=15.24cm,height=9.278cm]{fig:wiring-sch-ssr}{a684LightandOutletControl-img001.png}{
+Wiring Schematic for Solid State Relay}
+
+\subsubsection{Schematic Breakdown}
