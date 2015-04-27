@@ -900,7 +900,7 @@ as a function instead of a block of memory.
 
 \paragraph{ButtonView}
 \paragraph{TextView}
-Properties: length (uint16_t), width (uint16_t), depth (uint8_t), text (16
+Properties: length (uint16\_t), width (uint16\_t), depth (uint8\_t), text (16
 bytes),
 \paragraph{ListView}
 
@@ -1217,8 +1217,192 @@ convert 120VAC to DC lines of 3.3V 5V and 12V. We will also need to be able to
 switch on and off 120VAC for the outlet and light switching control modules as
 well switch on and off the 12V used to operate the strike.
 
+Throughout this section we will be discussing all that deals with the
+power. For reasons that will be discussed in greater detail in
+\autoref{sec:power-through} we decided that each control module and the base
+station would have a power board that would be separate from the PCB of the
+control modules and base station. The reason for each power board is to convert
+120VAC to DC lines of 3.3V 5V and 12V. We will also need to be able to switch
+on and off 120VAC for the outlet and light switching control modules as well
+switch on and off the 12V used to operate the strike. The designs for each
+board will be mostly the same with slight variations depending on the
+application. This section will also not go into the
+specifics of why certain designs were chosen over other designs but will
+provide a big picture view of how our design works.
+
 \subsubsection{Design Summary}
-\todo{Joseph needs rewrite}
+
+To start off we will explain the baseline design of our board.
+\autoref{fig:pwr-brd-base} is used to explain what is constant for every board design. This
+basic design provides power to the microcontroller using AC outlet power. First
+the AC power is transformed with a transformer down from 120VAC to 24VAC this
+24VAC is rectified using diodes into 33.6 VDC. At this point the line goes
+through a DC to DC converter that will transform the 33.6 V to 5V. This 5V line
+leaves the power board and enters the PCB containing the microcontroller and
+turns it on.
+
+\ucfgfx[width=15.002cm,height=2.461cm]{fig:pwr-brd-base}{a661expected3pagesDesignSum-img001.png}{Baseline design for power board}
+
+Off this baseline design we will start to explain how the
+control modules and base station power boards differ in design. The first
+board that I{}'d like to go into is the design for the light control and
+outlet control. The basic function of these control modules is to switch on
+and off power to either lights or outlets. Basically in addition to the line
+taken from the 120VAC to power the microcontroller we will have a line to
+power the actual application (the light and/or outlet). This is shown in
+\autoref{fig:pwr-brd-addt} shown below. This extra line will run along our
+power board and will only be interrupted by a 5V operated relay. This relay
+will be connected to the microcontroller so that from the microcontroller
+WHCS will be able to open and close the 120VAC line. This is the easiest way
+to implement switching into our design. The only difference between the light
+and outlet modules is the load that is placed at the end of it.
+
+\ucfgfx[width=14.579cm,height=5.08cm]{fig:pwr-brd-addt}{a661expected3pagesDesignSum-img002.png}{Additions to the baseline design for the implementation of light and outlet control module boards}
+
+The next board design to be addressed is the design for the door
+access module. The design of this module is actually very similar to the
+design of the light and outlet control modules . Door access is fairly
+simple, it consists of providing or not providing power to the electronic
+strike in order to allow the user to lock and unlock the door. The strike
+runs on 12V of DC power and draws 450mA. \autoref{fig:pwr-brd-door} shows the
+basic design of the door access control module. Similarly to the light and
+outlet control modules it too has a relay that is used in order to provide
+the switching. The only change is that electric strikes operate on 12VDC
+instead of AC power. In order to provide the 12V an additional DC to DC
+converter (in addition to the DC to DC converter used for the
+microcontroller) is used after the rectifier. The 12V line in combination
+with the relay from the microcontroller is all this module needs to perform
+its task of providing power to the door access module. Another detail about
+this board that is not shown in the figure is that is has a backup battery.
+The reason for this is that we still want the microcontroller to be powered
+even if there is a power failure from the 120VAC home power. The backup
+battery will not provide power to the 12V line meaning the strike will remain
+in locked mode. However having the microcontroller powered will allow it
+continue completing tasks such as checking the state of the system.
+
+\ucfgfx[width=14.896cm,height=5.159cm]{fig:pwr-brd-door}{a661expected3pagesDesignSum-img003.png}{Additions to the baseline design for the implementation of door access module board}
+
+Another control module that must be discussed is the temperature
+sensor control module. There is no flowchart used to explain the module of
+the temperature sensors. This module really only needs the basic design of
+the black line that provides the microcontroller with 5V. Yet it too like the
+green and blue line is equipped with a back up battery. This way the
+information about the temperature of the home can still be gathered from the
+sensors even if there is a power failure.
+
+Lastly and arguably the most important is the design of the
+board for the base station. The base station in addition to the
+microcontroller will make use of NRF and Bluetooth which require 3.3V lines.
+The 3.3V line will stem out from the the 5V line as shown in
+\autoref{fig:pwr-brd-bs}. In order to make this step down we will be
+using a linear regulator.  Like the temperature sensor module and the door
+access modules, the base station will also be equipped with a backup battery in
+case of power failure. This will allow the base station to be fully operational
+even if the power goes out.
+
+\ucfgfx[width=15.24cm,height=2.54cm]{fig:pwr-brd-bs}{a661expected3pagesDesignSum-img004.png}{Additions to the baseline design for the implementation of the base station board}
+
+The only reason that the light and outlet modules are not
+equipped with a backup battery is because a backup battery for these modules
+would serve no purpose. The backup batteries allow the microcontrollers of
+the control modules to remain operational, thus allowing the microcontrollers
+to complete small tasks such as checking the state of the system. For light
+and outlet applications however there is no need for this. In the case of a
+power outage it can be assumed that the state of the lights and outlets if
+off. There is no need to check this with a microcontroller and therefore a back
+up battery would be useless.
+
+\subsubsection{Power Consumption}
+\label{sec:power-consumption}
+In this section we will discuss the amount of power consumed by the boards.
+First of all it is important to make note of the fact that saving power is not
+of incredible importance to us. While it is important not to be incredibly
+wasteful to the point that it becomes a problem, power was not something that
+we decided we wanted to be competitive on. Had we wanted to be more competitive
+with power, we would have taken a lot more into account and made different
+design decisions. For example with the microcontrollers we would have looked
+more carefully into the amount of current that they drew to help us weigh our
+decisions. MSP430 boards for example would have been attractive because of the
+low amounts of current that they draw. With that said we made all of our
+decisions based on performance in other aspects.  The comparisons that we made
+and the details that were of importance to us can be shown in the sections were
+we decided on each component that we selected.
+
+In \autoref{tab:pwr-current} below we have all the information on the amount of
+current that is to be drawn from the different elements in our design. Note
+that the information from the datasheet about the current drawn for the
+microcontrollers is under a clock speed of 16MHz. We choose to run everything
+at 16 MHz because is was the maximum speed for the Atmega32A. Although the
+Atmega328P can run at a higher clock speed of 20 MHz, we decided to to make
+everything consistent to run at 16MHz. The reason why we give ranges for the
+currents and voltages of the microcontrollers is because there are a number of
+different current voltage relationships that can achieve the same clock speed.
+This isn{}'t to say however that any combination will work. If a lower current
+is selected a higher voltage must be selected in order to maintain the same
+clock speed of 16MHz.
+
+\begin{table}[H]
+\begin{tabular}{|l|l|l|}
+\hline
+ &
+{\color{black} \textbf{Operating Voltages}} &
+{\color{black} \textbf{Current Drawn}}\\\hline
+{\color{black} \textbf{Atmega32A}} &
+{\color{black} 4.5-5.5V } &
+{\color{black} 12-16mA}\\\hline
+{\color{black} \textbf{Atmega328P}} &
+{\color{black} 4-5.5V} &
+{\color{black} Active: 7-11mA }
+
+{\color{black} Savings: 1.75-2.75mA}\\\hline
+{\color{black} \textbf{Electric Strike }} &
+{\color{black} 12V} &
+{\color{black} 450mA}\\\hline
+{\color{black} \textbf{Adafruit TFT LCD}} &
+{\color{black} 3.3V} &
+{\color{black} 150mA}\\\hline
+{\color{black} \textbf{Bluetooth HC 05}} &
+{\color{black} 1.8-3.6V} &
+{\color{black} 35mA}\\\hline
+{\color{black} \textbf{nRF24L01+}} &
+{\color{black} 1.9-3.6V}
+
+ &
+{\color{black} 13.5mA}\\\hline
+{\color{black} \textbf{TMP 35 36 37 }} &
+{\color{black} 2.7-5.5V} &
+{\color{black} .05mA}\\\hline
+\end{tabular}
+\caption{Currents and voltages of devices used in WHCS}
+\label{tab:pwr-current}
+\end{table}
+
+Note that the microcontroller of the control modules shows both an active and a
+power saving mode. When the module is in operation it will run in active mode,
+however since our microcontroller has the capability to run switch into a less
+consuming power mode, we will utilize this mode in order to save power. The
+microcontroller for the base station also has a low power setting for idle use,
+yet we will not be running in this mode for the base station because it is
+impractical. Some of the datasheets gave us specific information on how much
+current would be drawn while for others we were simply able to estimate the
+limit. For example the LCD (most of it{}'s current will be drawn from the
+backlight) only gave a description of the LDO that would be 3.3V at 150mA.
+Therefore we were able to assume that the current would not surpass 150mA.
+
+As you can see the components in WHCS do not draw a lot of power. Not because
+of smart design choices, but mostly because the things that our project must
+execute does not require a lot of power. Based on the fact that Power =
+Voltage*Current and that not all these devices will be used at a time. We can
+see that the devices themselves will never really draw that much power.
+
+Now that this data has been presented it can be used as a reference later when
+the amount of power drawn plays a part in design decisions. Again this section
+was not made to try and explain why certain decisions were made in order to try
+and conserve power. Our design is not heavily concerned with testing the limits
+of low power applications. Rather this section was made to present the data of
+the power usage that comes from the devices that have already been selected to
+be used in our design.
+
 
 \subsubsection{DC-to-DC Converters vs. Linear Voltage Regulators}
 In our control modules and base stations we are required to provide lines of
@@ -1340,10 +1524,196 @@ schematic came from a
 post}.}
 
 \subsubsection{Transformer Choice}
+One of the basic requirements for our project is to have a transformer to
+convert the AC power to DC power. There are however a lot of different
+transformers to choose from. With size and performance having a large impact on
+which transformer to choose. From previous sections we decided that our
+transformer will convert 120VAC to 24VAC. The first thing to consider is how
+much current will our load draw. We first consider the amount of current drawn
+so that we can determine the VA (volt amperes) rating. The VA rating is an
+actual specification of the transformers that will help us make our decision.
+Volt amperes is different from watts in that it is the {}``apparent power{}''
+instead of the {}``real power{}''. In order find the VA rating we will need the
+currents and voltages used in our system.
 
-\subsubsection{Power Consumption}
+The devices that our system powers will all need to be taken
+into account in order to make sure we are making the correct approximation
+for how much current is to be drawn. For now we can make approximations of
+the amount of current drawn based on datasheets and component
+characteristics. When we are in the prototyping stage we can run test to see
+if the actual amount of current drawn matches the amount that is expected.Yet
+for now we{}'ll just draw our information from the datasheets. If we look to
+\autoref{sec:power-consumption} there is a table that makes a nice summary of the
+current and voltage requirements of each device.
+
+There are quite a few devices to consider that draw current.
+There{}'s the microcontroller for the base station, the microcontrollers for
+the control modules, the electric strike, the temperature sensor, the LCD
+screen, the bluetooth module, and the nRF chip. Now not all of these devices
+will be used at the same time. Therefore we don{}'t really need to take into
+account everything at the same time. We can make our conclusions of current
+based on the max current drawn at a time. The operation that would draw the
+most current would come from using the electric strike from the base station.
+If we were to add the currents involved with operating the strike the current
+would be 665mA. The VA can be calculated by I*Vrms. Were {}``I{}'' pertains
+to the current directly after the transformer. The voltage we already know to
+be 24 Vrms. If we were to use the current from the device endpoints as an
+approximation of what the current would be directly after the transformer we
+would calculate the VA rating to be 16. When selecting our transformer we{}'ll
+need to pick a value that is above this value, adding some tolerance is a smart
+idea.
+
+After determining the VA rating there are still other factors
+that we need to take into account. Another thing to consider is the type of
+transformer. Do we want a regular transformer or a center tapped transformer.
+This is decided by the type of rectifier we use. We decided on a full wave
+bridge rectifier and will therefore be using a regular transformer as opposed
+to a center tapped transformer. There are also a whole list of mounting
+methods for transformers: Chassis, DIN Rail, PCB, Snap in, Surface Mount,
+Through Hole, Wall Mount. As will be discussed in \autoref{sec:proto-panel} our
+design is a full installation design meaning that the power board along with
+the control module and base station boards will be placed into the framing of
+the home. Now that means that the transformer could be directly connected to
+the framework of the house, that would be a very sturdy way to do it but
+would also require extra steps for installation. Having a transformer that is
+part of our power board will keep things simpler as far as installation goes.
+In \autoref{sec:power-through} we discuss why our power board is going to be a
+through hole power board.  Therefore if our board is to be a through hole
+board, the transformer will also be a through hole transformer. Size has some
+influence but is of less influence than the other constraints involved with
+choosing the part for our design.
+
+\subsubsection{Rectifiers, Diodes, Capacitors}
+The outline of the components needed for our design are fairly simple. It{}'s
+already been discussed in other sections that we will need to use a rectifier,
+capacitors, diodes, relays, and a linear regulator in our design. The point of
+this section is to go into the specifics of what type and what components will
+be used, as well as what size of components will be used. In this section we
+explain all the possible options that could have been selected for our design
+along with why what was chosen was chosen.
+
+\paragraph{Rectifier}
+
+First let{}'s discuss the rectifier used after the transformer. Not to explain
+how rectifiers work, rather to justify the choice of rectifier made for our
+design. Now there are two types of rectifiers; full wave and half wave
+rectifiers.  For our design we will be using full wave rectifiers. Full wave
+rectifiers are far more efficient because they utilize the full cycle, plus
+they have less ripple with peaks occurring at twice the frequency of half wave
+rectifiers. Of the full wave rectifiers there are center tapped rectifiers and
+full{}-wave bridge rectifiers. Center tapped rectifiers use two less diodes and
+a transformer tapped at the center. Using less diodes is an advantage because
+of the reduction in voltage drop (meaning less power is wasted). The problem
+with the center tapped rectifier is that it requires a transformer of twice the
+size for the same voltage step down. In the end full{}-wave bridge rectifiers
+are the best choice for power supplies because transformer size is of high
+importance.
+
+\paragraph{Capacitor}
+
+Having decided what type of rectifier we want we still need to determine the
+specifics on the components used for the rectifier. The two components under
+discussion are the diodes and the capacitors. The capacitor will determine the
+voltage ripple. To calculate the ripple in full wave bridge rectifiers we use
+the following equation Vr = I/(2*f*C) for an approximation of the expected
+ripple (Millman{}-Halkias, pp 112--114). Where I is the current in the circuit,
+f is the frequency, and C is the capacitor value chosen. In the United States
+f=60 Hz for wiring used in the home. For the sake of our design we will assume
+{}``I{}'' to be at approximately .5A. Knowing the values of I and f we can
+control the amount of ripple by adjusting C. The real question now becomes what
+is the acceptable amount of ripple in our circuit. Since the circuit will go
+through a DC to DC converter after this smoothing capacitor, there is actually
+no real need for the capacitor to smooth out the ripple since the DC to DC
+converter will ensure that a steady voltage is made at the output. Yet
+regardless we will make our design such that 1V is the allowable amount of
+ripple. With an acceptable ripple of 1V the corresponding capacitor value of
+4150 microfarad. With a capacitor of this size we would definitely ensure that
+the ripple would be less than 1V. Having a capacitor of this size is really
+quite unnecessary though, we{}'ll do fine to get away with using a smaller
+capacitor. Yet using two 2200 microfarads would also do the trick.
+
+There are many types of capacitors. Yet the capacitor that we are most likely
+to use is a electrolytic capacitor. These capacitors are highly used in
+rectifier circuits due to the fact that they have a small size for their level
+of capacitance.
+\footnote{\url{http://www.electronics-tutorials.ws/capacitor/cap_2.html}} The capacitor
+that we will be using in our board will be a through hole capacitor. Using two
+2200 microfarad capacitors we{}'ll have a capacitance of 4400 microfarads. The
+main thing that we must take into consideration is if the capacitor will be
+able to handle the voltage used for the power board. This stage in the circuit
+is right after the 24VAC has been rectified into DC. Meaning we will get a DC
+voltage equivalent to the 24/.707 or 33.9VDC. We must make sure that the
+capacitor used is at least able to handle this level of voltage.
+Capacitors with this sort of requirement can easily be found on sites like
+mouser or digikey one such part would be the Vishay 021 capacitor rated for 40V
+with a value of 2200 microfarads. The peak voltage will depend on the input
+voltage and the type of diodes used in our circuit.
+
+\paragraph{Diodes}
+
+Now let{}'s discuss the diodes used for the power board. There are many
+different types of diodes. For the rectifier their is no need for any type of
+special diode. The diode that we had in mind to use for our rectifier was the
+1N4001 diode. This diode is a simple rectifier diode. It is not as fast as
+other diodes such as a schottky diode that could have been used; however, there
+is no real need for a higher performing diode. Because of the simplicity and
+economy of this diode it is highly used, even though it is less efficient than
+other diodes. This diode is rated to be able to handle 1A of current and 50 V
+which is sufficient for our design. This diode however is not the only diode
+that we will be using. There will also be a diode in the DC to DC converter
+should we choose to design this ourselves. This diode however does have a much
+stricter requirement for diode speeds. In this case we will be required to use
+a schottky diode.
+\footnote{\url{http://www.diodes.com/datasheets/ds28002.pdf}}
+
+\paragraph{Relay}
+Next let us discuss the relay. The requirements of the relays used in our power
+boards is that they must be able to handle switching an AC circuit with a DC
+driving circuit of 5V. This is the main requirement of the relay. Now when
+evaluating relays you run into one key design choice, solid state relay or
+electromechanical relay. Let{}'s discuss the advantages and disadvantages of
+each. Electromechanical relays run with actual inductors that pull the switch
+by induction when voltage is applied across the terminals. Because the
+electromechanical relay uses these parts they tend to be much larger than the
+the solid state relays. Solid state relays produce very little interference and
+they consume very little power. Solid state relays also have no arc meaning
+that they are very good for situations that require large amounts of isolation.
+A disadvantage of solid state relays is that they are more likely to overheat,
+and could require heat sinks. Electromechanical relays are better for
+applications where there is a potential of large current or voltage surges.
+Both could be used in our design, however for our design we decided to use a
+solid state relay rather than an electromechanical one.
+\footnote{\url{http://electronicdesign.com/components/electromechanical-relays-versus-solid-state-each-has-its-place}}
+
+\paragraph{Linear Regulators}
+There are two types of linear regulators standard regulators an LDO regulators.
+LDO stands for Low Drop Out. The difference between the two regulators is in
+the dropout voltage. Regulators with a higher dropout voltage have a larger
+required difference in size between the input and output voltages. The reason
+why LDO{}'s are often talked about as more efficient is because they allow a
+smaller a closer input and output voltage, thus making them more efficient. If
+however you are using a drop out voltage large enough to use a standard linear
+regulator, using an LDO won{}'t have much of an impact on efficiency. We will
+need a linear regulator in order to drop 5V down to 3.3V for use with our
+bluetooth module as well as with the nRF chip.
+\footnote{\url{http://focus.ti.com/download/trng/docs/seminar/Topic\%209\%20-\%20Understanding\%20LDO\%20dropout.pdf}}
+
+Converting 5.5V to 3.3V is a voltage drop of 2.2V. For this application we
+could use either a standard regulator or a linear regulator as long as the
+dropout voltage is less than 2.2V. Other things that have to be taken into
+consideration are the maximum and minimum input voltage. For our design the
+maximum can{}'t be above 5.5V and the minimum shouldn{}'t be below 4.5V. The
+output current is also very important. For our design the current drawn from
+the nRF chip along with the bluetooth module is lower than 50mA. The linear
+regulator would have to be a through hole regulator since that is what is used
+in the power board. An acceptable part would be the texas instruments UA7M33.
+It gives an output of 3.3V takes a max voltage of 25V. Our input will always be
+around 5V. The output current of the device can be as large as 500mA, which is
+about 10 times what we need.
 
 \subsubsection{Isolation}
+
+\subsubsection{Simulation Testing}
 
 \subsubsection{Power Through Hole Board}
 \label{sec:power-through}
@@ -1375,6 +1745,8 @@ scratch will give added experience to the members of the group, which is the
 ultimate goal of this project.
 
 \subsubsection{Schematic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Base Station}
 The heart of WHCS resides with the base station (BS). When users think of WHCS, they
