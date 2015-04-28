@@ -4,7 +4,7 @@ The source files, build scripts, and source images with references for our
 UCF Senior Design I report.
 
 For the work-in-progress, you may view the [latest build](/export/latest.pdf?raw=true)
-There is also a [printable version](/export/latest-printable?raw=true).
+There is also a [printable version](/export/latest-print.pdf?raw=true).
 Page count is determined from the printable version as there are no fancy headings that might not fly so well.
 These are updated when there are major releases and for periodic peer review.
 
