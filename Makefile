@@ -16,7 +16,7 @@ final-print:
 	pdflatex "\def\enablefinal{}\def\printable{}\input{whcs.tex}"
 
 quick:
-	pdflatex "\def\enabledraft{}\input{whcs.tex}"
+	pdflatex -interaction=batchmode "\def\enabledraft{}\input{whcs.tex}"
 
 clean:
 	-rm -f *.aux *.log
