@@ -121,7 +121,6 @@ NRF. The hardware interactions with the chip are all abstracted away.
 
 \subsubsection{Network Library}
 \label{sec:network-library}
-\todo{3 pages}
 
 In order for WHCS to be networked, a set of networking functions will have to
 be constructed on top of the radio driver to form a network library or
@@ -132,7 +131,10 @@ packets will contain metadata describing their purpose and the data that they
 contain. By dividing up the required network features of WHCS in to packets, we
 will have a library of datagrams. These datagrams no longer have to worry about
 low-level details such as when to transmit -- they merely have to worry about
-who they are sending to and receiving from.
+who they are sending to and receiving from. This can be seen in
+\autoref{fig:netlib-uml}.
+
+\ucfgfx[scale=0.75]{fig:netlib-uml}{netlib-uml}{Network Library Class Diagram}
 
 Similar to network protocols today, WHCS will implement a lightweight protocol
 stack similar to the OSI model. The physical layer is handled by the NRF chip
@@ -193,7 +195,7 @@ state on the active network join and prevent the leaving node from
 communicating on the network. A graphical overview of the NetLib modes and the
 transitions between modes is shown in \autoref{fig:netlib-state-overview}.
 
-\ucfgfx[scale=0.75]{fig:netlib-state-overview}{netlib-state-overview}{the overall state machine for the network library}
+\ucfgfx[scale=0.65]{fig:netlib-state-overview}{netlib-state-overview}{the overall state machine for the network library}
 
 \paragraph{Join mode detail}
 The join mode will be fired when a new node wants to associate to an existing
@@ -206,8 +208,6 @@ receiver to communicate. An optional (as per the setup configuration) will be
 communicated during a join request. The base station will validate the joining
 node and grant or deny access to the WHCS network. This process is necessary to
 provide some assurance and tracking for the active nodes on the network.
-
-\missingfigure{Join mode state machine}
 
 \paragraph{Communicate mode detail}
 Once a node has been successfully joined to the WHCS network, it will be able
@@ -227,7 +227,6 @@ sent, wait for any responses, and generate any actions as required by the
 packets. This loop will be performed by any node with a radio. The base station
 is the only special case as it has to receive from multiple nodes
 simultaneously.
-\missingfigure{Communicate mode state machine}
 
 \paragraph{Idle mode detail}
 The idle mode is the simplest mode for the NetLib. This state is where the
@@ -236,7 +235,6 @@ is free to sleep in order to conserve power usage. Also interrupts would be
 used to avoid polling the radio for new data, which would eat a lot of power.
 When a new packet is received or one needs to be sent, the radio would be woken
 up and enter in to the communication mode.
-\missingfigure{Idle mode state machine}
 
 \paragraph{Leaving mode detail}
 The final mode of the network library is the leaving state. This is the state
@@ -246,8 +244,7 @@ associated with the join to be freed. Additional cleanup will be performed in
 order to get the library ready for a new join request. Any outstanding packet
 sends or received will be canceled harshly and any potential data will be lost.
 A safer shutdown would assert that the radio must be in the idle mode. That way
-no data will be lost to the leave transition.  \missingfigure{Leaving mode
-state machine}
+no data will be lost to the leave transition.
 
 %\begin{table}[H]
 %\centering
@@ -781,7 +778,6 @@ anything else we can think of.
 
 \subsubsection{ILI9341 Driver}
 \label{sec:lcd-driver}
-\todo{2 page}
 
 In order to perform the required operations for drawing pixels to the LCD, we
 need a robust driver to manage the state of the ILI9341 chip. This driver will
@@ -852,8 +848,6 @@ interrupts cannot be used to sense sharp changes. This will add to the
 processing time of the microcontroller's main loop as it will constantly have
 to perform ADC operations and comparisons.
 
-\missingfigure{diagram showing the touchscreen coordinates}
-
 \subsubsection{Graphics Driver}
 Unlike the previous ILI9341 driver, our graphics driver will be in charge of
 taking the low-level primitives exported by the LCD driver and using them to
@@ -894,20 +888,49 @@ font rendering. To save on time, we will use an existing font available online.
 Adafruit also bundles a font in with their graphics library that is implemented
 as a function instead of a block of memory.
 
+Due to the very limited constraints of the microcontrollers, we will have to
+store this character lookup table in PROGMEM. This will embed the bitfile in to
+flash, which then has to be read out using the AVR LDM instruction. This incurs
+a performance hit, but storing the characters in memory is impossible given
+only 2048 bytes for the Atmega32-A.
+
 \subsubsection{UI Library}
 \label{sec:ui-lib}
-\todo{2 page}
+An LCD is nothing without a good library driving it. Even if all possible
+shapes and text can be drawn, without a good user interface library, the system
+is a painting. WHCS aims to have an LCD users \emph{want} to interact with.
+This will be accomplished with a feature rich UI library that enables text,
+buttons, lists, and images to be drawn and organized simply. A sample WHCS home screen is mocked up and shows the required controls in \autoref{fig:ui-mockuo-home}. 
+In normal UI libraries, such as the Android View hierarchy, UI elements can be added on the
+fly. Unfortunately, unless the UI elements for WHCS are extremely low memory,
+storing dynamic UI elements may prove to be too costly for the microcontroller.
+Until further testing is done, there is no way to say that this is possible or
+not beyond data structure size predictions.
 
-\paragraph{ButtonView}
-\paragraph{TextView}
-Properties: length (uint16\_t), width (uint16\_t), depth (uint8\_t), text (16
-bytes),
-\paragraph{ListView}
+\ucfgfx[scale=0.60]{fig:ui-mockup-home}{ui-mockup}{A mockup of WHCS' home screen with each
+control identified}
 
-%\begin{itemize}
-%\item line drawing algorithms
-%\item wow
-%\end{itemize}
+\paragraph{View Abstraction}
+When constructing a UI library, we will use an Object Oriented class hierarchy
+to describe the controls. All drawable controls will have the View class and
+their parent, which will serve to contain all of the common properties that a
+control can have. This includes basic drawing and placement information, such
+as width, height, and X-Y position. This is illustrated in \autoref{fig:ui-generic}.
+
+\ucfgfx[scale=0.80]{fig:ui-generic}{ui-generic}{View abstraction properties}
+
+Making this abstraction allows for code reuse and simplifies the design of
+individual components. Specific components will derive directly from the View
+class or each other to form more and more complex UI elements. Using
+\autoref{fig:ui-mockup-home}, we have created a UML representation of a
+potential view hierarchy, including properties and methods. This can be seen in
+\autoref{fig:ui-lib-uml}.
+
+\ucfgfx[scale=0.63]{fig:ui-lib-uml}{ui-lib-uml}{UML representation of the View hierarchy.}
+
+This hierarchy is modeled after Android's UI abstraction. This is done because
+reinventing the wheel for UI elements would cost developer time. Android has
+more than proven that the hierarchy works in practice as well.
 
 \subsection{Android Application} For most WHCS users the mobile application
 will be the only physical interaction they have with the application. When we
