@@ -10,24 +10,61 @@
 \subsubsection{4PCB}
 
 \subsection{Parts}
+This section will discuss how parts come into the play of the manufacturing of
+our PCB. With parts there is much to consider. In addition to whether or not
+the part performs as we need them to, and whether or not it{}'s these parts are
+in stock we also have to take a look at how this part will need to be
+implemented into our design.
 
 \subsubsection{Footprint (SMD vs Through-Hole)}
-\todo{this isn't complete from Joseph}
-In WHCS we had to consider two construction methods for our base station and
-control module boards; through hole boards, and surface mounted boards. Through
-hole board technology is the older of the two technologies and is currently
-much less popular than surface mounting. One of the of the advantages of
-surface mounting is that it takes up less space allowing more real estate for
-parts for a given board. Because surface mounting does not involve drilling it
-is simpler and faster to construct. Although there are some advantages in
-through hole boards for most applications surface mounted technology wins.
-Therefore in our design we will be using surface mounted technology.
+The footprints of our board will rely mostly on the parts that were chosen to
+be part of our design. The parts needed for a surface mounted board and the
+parts needed for a through hole boards are unique. Therefore in order to
+continue in our design we had to make a design choice. In WHCS we considered
+both through hole boards, and surface mounted boards. Through hole board
+technology is the older of the two technologies and is currently much less
+popular than surface mounting. One of the of the advantages of surface mounting
+is that it takes up less space allowing more real estate for parts for a given
+board. Because surface mounting does not involve drilling it is simpler and
+faster to construct. Although there are some advantages in through hole boards
+for most applications surface mounted technology wins. Therefore in our design
+we will be using surface mounted technology. With the exception of the power
+board which will indeed use through hole. The footprints in our control module
+and base station will therefore use parts that are SMT.
 
 \subsection{Construction}
+In this section we will be discussing the assembly of our project. This
+involves decisions that were made for the board construction of our boards
+along with the construction of the displays that will be used to show how WHCS
+operates.
 
 \subsubsection{Soldering}
+Once we receive our etched boards it will be time for us to solder on the
+components. There are various methods that can be used to accomplish soldering.
+Note that any of the methodologies described can be used to accomplish the
+task. The method that we choose, will be the one that is most
+convenient/easiest to implement and seems to do the most professional job. The
+first of the methods to be described is the use of hand soldering. This is by
+far the simplest and the easiest conceptually for our group to implement. Every
+member of our group has some experience soldering by hand. This method is cheap
+as it only really requires a soldering iron, which most if not all members in
+our group own.  The main takeback with this method is that while it is easy by
+methodology it is difficult in the fact that it is extremely time consuming.
+Also since everything is done by hand this method tends to be a little messy
+and may tend to look less professional, because in reality it is. This is even
+more so the case if we make use of flux, which can tend to make the board look
+dirty. To be honest this method is the the last resort method. In the case that
+there is a problem in the soldering job of some kind of a different method,
+this method will be used to repair any mishaps.
 
 \subsubsection{Reflow Oven}
+Reflow methods are different from hand soldering in that it separates the
+placement of the components from the soldering. It tends to be less time
+consuming and does a more consistent professional looking job. There are
+various method that our group could use to reflow the solder for our PCBs. The
+UCF amateur radio club has access to a professional reflow oven if we were to
+head in this direction. Additionally, there are online methods describing how
+to use a toaster oven to achieve the same affect.
 
 \subsubsection{Proto-Panel}
 \label{sec:proto-panel}

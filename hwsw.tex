@@ -1737,7 +1737,49 @@ therefore have a safer
 design.\footnote{\url{http://www.tortech.com.au/isocompare)}}
 
 
-\subsubsection{Simulation Testing}
+\subsubsection{Simulation}
+In this section we will be doing preliminary testing of the systems that are
+part of the power circuit. This will be accomplished using Multisim. Multisim
+is a highly capable simulation software that is freely available to engineering
+students at any of the computers in the engineering department at UCF.
+Simulation is an important step to take in project design because it is a very
+low risk method for checking if circuits work in the same manner that they are
+expected to work in. Although multisim may not be able to account for
+everything it prevents us from making silly mistakes at an early stage in our
+design process. Mistakes made while prototyping virtually are much better than
+mistakes discovered in actual physical prototyping or in our worse in our final
+project. Simulation may be an extra step, yet we expect it to save us time in
+the long run by allowing us to avoid mistakes that can be easily overlooked.
+
+One of the things that is of interest in our design is the ripple. In multisim
+we can rebuild the circuit and test to see what ripple values we are returning.
+Using multisim allows us to reconfirm our assumptions made in our calculations.
+The circuit found in the \autoref{fig:power-hw-sim-ripple} below shows the expected ripple
+value with a drawn current of approximately 500mA. If we compare this to our
+calculations we find that the resulted ripple is a little larger than what we
+expected. What we expected was a ripple of approximately 1 volt, and what we
+got was a ripple about 1.6 volts.  Now this could mean that there is an error
+in our calculation of the expected ripple or it could just be due to error.
+Regardless if we now have two sources that tell us that the ripple is below 2V,
+and since this voltage is still going to go through a DC to DC regulator this
+level of ripple is still acceptable.
+
+\ucfgfx[width=15.24cm,height=6.914cm]{fig:power-hw-sim-ripple}{a668Simulation-img001.png}
+{Multisim showing the expected ripple of our design}
+
+There are many other things that could also be tested in Multisim. One of the
+things that would have been nice to have tested would have been the integrity
+of the 5 V line after having gone through the buck regulator. Unfortunately
+Multisim is a little limited in part numbers and they didn{}'t have the buck
+regulator we wanted to test the LM2576 regulator. In fact we had a hard time
+finding any switching regulator in multisim.
+
+Regardless testing things first in multisim will give an extra way to test the
+design. In addition to avoiding mistakes made in the actual prototyping, it
+will allow us to troubleshoot. If the prototype is not working as it ought too,
+yet the simulation is working correctly, then we can test the current and
+voltage levels for the nodes in multisim and the nodes in our design and see
+how they compare.
 
 \subsubsection{Power Through Hole Board}
 \label{sec:power-through}
