@@ -75,7 +75,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Color Palette
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % Code Colors
 \definecolor{CommentGreen}{rgb}{0,0.6,0}
 \definecolor{numbering}{gray}{0.5}
@@ -146,10 +145,19 @@ pdfauthor={Grant Hernandez},
 % Section Heading Customization
 \ifdefined\printable
 \else
-  \newcommand\titlebar{%
-    \input{section-heading.tex}
-  }
-  \titleformat{\section}{\bfseries\Large}{\color{white}\titlebar}{0.1cm}{}
+  \ifdefined\enabledraft
+  \else
+    \newcommand\titlebar{%
+      \input{section-heading.tex}
+    }
+    \titleformat{\section}{\bfseries\Large}{\color{white}\titlebar}{0.1cm}{}
+  \fi
+\fi
+
+% Disable images on draft mode
+\ifdefined\enabledraft
+  \renewcommand{\includegraphics}[2][]{}
+\else
 \fi
 
 \renewcommand*{\thesection}{\arabic{section}}
