@@ -1712,6 +1712,30 @@ around 5V. The output current of the device can be as large as 500mA, which is
 about 10 times what we need.
 
 \subsubsection{Isolation}
+There are a few different interpretations for what is meant by isolation when
+we are discussing electronics. Isolation can sometimes be used to describe the
+ability to couple two wires together without the use of wire connections. But
+for the sake of this paper we are discussing isolation as a means of safety. A
+proper definition of the word isolation would be the electrical or physical
+separation from an electrical circuit. Isolation is important not only to stop
+two wires from interfering with one another, but also to prevent dangerous
+human encounters with circuits. There are a few isolation design considerations
+we will make in our power board in order to keep safe operation. The first
+things are actually accounted for by using a design software to construct our
+boards. The built in Design Rule Checking (DRC) will ensure that our wires are
+not too closely placed together, thus ensuring we are isolating our wires
+correctly. Next we should discuss the isolation of our transformer. We must
+discuss isolation transformer and  autotransformers. The main difference
+between an autotransformer and a isolation transformer is that in an isolation
+transformer there are two separate winding, while with an autotransformer the
+primary and secondary coils share their winding. Autotransformers may be
+smaller but they have less isolation. Isolation transformers keep the input
+ground and the output ground separate. Isolation transformers protect voltage
+spikes from crossing the primary coil to the secondary coil. For our design we
+will be using an isolation transformer in order to provide more isolation and
+therefore have a safer
+design.\footnote{\url{http://www.tortech.com.au/isocompare)}}
+
 
 \subsubsection{Simulation Testing}
 
