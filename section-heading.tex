@@ -1,0 +1,67 @@
+\tikz[baseline,trim left=3.1cm,trim right=3cm,shift={(0cm,0.65ex)}] {
+    \foreach \s/\c in {0cm/FF2A2A,0.4cm/FF6600,0.8cm/FFD42A,1.2cm/2AFF2A} {
+      \definecolor{curColor}{HTML}{\c}
+
+      \foreach \d in {3cm,7cm,11cm,15cm} {
+        % Last iteration?
+        \ifthenelse{\equal{\d}{15cm}}{
+        \draw[ultra thick, curColor]
+        (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0);
+        }{
+        \draw[ultra thick, curColor]
+        (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0) sin (\d+3cm+\s,-1) cos (\d+4cm+\s,0);
+        }
+      };
+    };
+}%
+
+\tikz[baseline,trim left=3.1cm,trim right=3cm] {
+    \fill [whcs-accent!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
+    \node [
+        fill=whcs-accent!60!white,
+        anchor= base east,
+        rounded rectangle,
+        minimum height=3.5ex] at (3cm,0) {
+        \textbf{\thesection}
+    };
+}%
+
+% 3D version
+%\tikz[baseline,trim left=3.1cm,trim right=3cm] {
+%    \fill [whcs-accent!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
+%    \foreach \s/\c in {0cm/FF2A2A,0.4cm/FF6600,0.8cm/FFD42A,1.2cm/2AFF2A} {
+%      %\pgfmathparse{\colorPallete[\s]}
+%      %\definecolor{curColor}{HTML}{\pgfmathresult}
+%      \definecolor{curColor}{HTML}{\c}
+%      \foreach \d in {3cm,7cm,11cm,15cm} {
+%
+%      % Last iteration?
+%      \ifthenelse{\equal{\d}{15cm}}{
+%      \draw[ultra thick, curColor]
+%      (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0);
+%      }{
+%      \draw[ultra thick, curColor]
+%      (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0) sin (\d+3cm+\s,-1) cos (\d+4cm+\s,0);
+%      }
+%
+%      % Check for the boundary cases
+%      \ifthenelse{\equal{\d}{3cm}}{
+%      \fill [whcs-accent!25] (\d-1ex,-1ex) rectangle ++(2.4cm,3.5ex);
+%      }{}
+%
+%      \fill [whcs-accent!25] (\d+1.6cm,-1ex) rectangle (\d+3.4cm,2.5ex);
+%      %\fill [whcs-accent!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
+%      %\draw[ultra thick, curColor]
+%      %  (3cm+\s,0) sin (4cm+\s,1) cos (5cm+\s,0) sin (6cm+\s,-1) cos (7cm+\s,0)
+%      %        sin (8cm+\s,1) cos (9cm+\s,0) sin (10cm+\s,-1) cos (11cm+\s,0);
+%            };
+%      %\pgfmathsetlengthmacro\stride{\stride*2pt}
+%    };
+%    \node [
+%        fill=whcs-accent!60!white,
+%        anchor= base east,
+%        rounded rectangle,
+%        minimum height=3.5ex] at (3cm,0) {
+%        \textbf{\thesection}
+%    };
+%}%

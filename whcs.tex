@@ -49,6 +49,8 @@
 \usepackage{listings}
 % Keep floats in check with [H]
 \usepackage{float}
+% Fancy if statements
+\usepackage{ifthen}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Hyperref should be last
@@ -89,6 +91,15 @@
 
 % Customize hyperref
 \urlstyle{same} % remove monospaced links
+\ifdefined\printable
+\hypersetup{pdfnewwindow=true, % prevent the user from leaving the paper
+hidelinks,
+% PDF Meta
+pdftitle={Wireless Home Control System - UCF Senior Design I},
+pdfsubject={University of Central Florida Senior Design 2015},
+pdfauthor={Grant Hernandez},
+}
+\else
 \hypersetup{pdfnewwindow=true, % prevent the user from leaving the paper
 colorlinks,
 linkcolor={whcs-accent!80!black},
@@ -99,6 +110,7 @@ pdftitle={Wireless Home Control System - UCF Senior Design I},
 pdfsubject={University of Central Florida Senior Design 2015},
 pdfauthor={Grant Hernandez},
 }
+\fi
 
 % Customize autoref names
 % See page 16 of hyperref manual
@@ -129,19 +141,14 @@ pdfauthor={Grant Hernandez},
 \newcommand{\tbw}{\emph{This section is in the process of being written.}}
 
 % Section Heading Customization
-\newcommand\titlebar{%
-\tikz[baseline,trim left=3.1cm,trim right=3cm] {
-    \fill [whcs-accent!25] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);
-    \node [
-        fill=whcs-accent!60!white,
-        anchor= base east,
-        rounded rectangle,
-        minimum height=3.5ex] at (3cm,0) {
-        \textbf{\thesection}
-    };
-}%
-}
-\titleformat{\section}{\bfseries\Large}{\titlebar}{0.1cm}{}
+\ifdefined\printable
+\else
+  \newcommand\titlebar{%
+    \input{section-heading.tex}
+  }
+  \titleformat{\section}{\bfseries\Large}{\color{white}\titlebar}{0.1cm}{}
+\fi
+
 \renewcommand*{\thesection}{\arabic{section}}
 
 % A custom listing format
