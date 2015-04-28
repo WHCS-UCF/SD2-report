@@ -21,5 +21,8 @@ quick:
 clean:
 	-rm -f *.aux *.log
 
-latest: final
+latest: clean final
 	cp whcs.pdf export/latest.pdf
+
+latest-print: clean final-print
+	cp whcs.pdf export/latest-print.pdf
