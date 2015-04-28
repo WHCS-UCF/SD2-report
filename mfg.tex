@@ -31,4 +31,95 @@ Therefore in our design we will be using surface mounted technology.
 
 \subsubsection{Proto-Panel}
 \label{sec:proto-panel}
+In this section we will focus on some of the details of the construction of our
+design, the general overview of how the display board is to be put together is
+given in \autoref{sec:proto-panel-proto} This section will not explain how the
+proto{}-panel will come together, rather it will explain the non obvious
+construction details.We will discuss the design considerations that have to be
+accounted for. This section will take into consideration the norms that go into
+home construction. This will go into the specifics of safety precautions as
+well as regular sizes and spacing used in a home.
 
+First let{}'s talk about the wiring. The amount of current that can be drawn
+from an outlet is 15 amps if not 20 amps, therefore we will have no problem in
+drawing enough current from the outlet to power our board. 15 amps is more than
+enough to satisfy our needs even if the current is divided into five different
+applications. Other things to consider is the gauge of the wire used. The gauge
+of the wire is dependent on the amount of current it can safely handle. As
+discussed previously 1 amp is larger than anything we expect to see from our
+circuit. Therefore if we design our wire gauge for 1 amp we should be fine.
+However as stated before most homes are designed to be able to draw 15 if not
+20 amps. This level of amperable is equivalent with wire of gauge 14 and 12. A
+common brand of wiring used for these tyes of applications is Romex. Just for
+the sake of being consistent with what is used in the home we{}'ll use 12 or 14
+gauge wire. To splice the wire we could either solder it or we could use a wire
+nut. Both are an acceptable method for joining the wires, and both are used in
+homes. Wire nuts are considered to be an easier/ faster method for doing the
+job. While soldering and using a heat sink is seen as the higher performing
+link. We will make our link by soldering because it is slightly more
+professional than using a wire nut but really this is simply a matter of
+preference.
+
+When wiring something it is often a good idea to attach your wire at more
+locations than simply the location where the connection is made. This way if
+for whatever reason the wire is pulled the stress will not go completely to the
+connection. Before splicing the wire and connecting the wires to the different
+control modules and base station, it would be a smart safety precaution to run
+the unspliced wire through the wood framing and attach it. After splitting the
+wire it would also be a smart idea to continue the practice of attaching the
+wire at more places than the connections. Although not completely necessary it
+would be nice if the color of our wires followed the understood meanings of
+wire colors in home wiring. In our design we have a single phase hot and
+neutral and ground. In the US the ground wire matches with green, the black
+wire matches with the hot wire, and the white wire matches with neutral.
+\footnote{\url{http://www.allaboutcircuits.com/vol_5/chpt_2/2.html}}
+Using these color codes will make it easier to keep the project neat and
+organized. It will make it easier to avoid mistakes made in wiring a circuit
+
+Now let{}'s discuss the boards themselves and how they will be placed into the
+framework of our wall. The boards will require some sort of casing that can
+hopefully easily be attached to the framework of the home. The less the number
+of things needed for installation the better. The easiest way to do this will
+be to attach them to or place them inside of the electrical boxes that we are
+using for our applications. Having only one thing to install per control module
+or base station will make real installation of our device more realistic for
+actual use in the future. In our design we will make use of electrical boxes
+since they are used in home electrical wiring. The boxes can be either metal or
+plastic, yet plastic boxes are a little easier to work with as they the holes
+are easier to punch out.
+\footnote{\url{http://homerenovations.about.com/od/electrical/a/artelecbox.htm}}
+
+There are some specific considerations that must be made with the different
+control modules. First off for the light it is important that we use an actual
+wall mounted light, as this is the type of light fixture that we are hoping to
+be controlling in an actual home. It is important that it is not simply a plug,
+because this would defeat the purpose of having light fixture control module.
+The wall mounted light should come with three wires; a hot, a neutral, and a
+ground wire. From these three wires we will be able to install the fixture in
+the same way as what would be expected in a real home. The hot wire is the wire
+that we will be interrupting with the relay in order to switch the light on and
+off.
+
+The outlet we will be using is a GFIC. GFIC stands for ground fault
+interrupter. Using this outlet will provide extra safety precaution. What a
+GFIC outlet does is constantly compare the output current from the neutral wire
+to the input current from the hot wire. If there{}'s a difference in current,
+within the range of a few milliamps, the outlet will shut off in 20-30
+milliseconds. In the case that someone were to be electrocuted by this outlet,
+the current that goes into their body would cause a current leakage that would
+cause the GFIC to have a current difference and thus shut off.  GFIC outlet are
+normally required for kitchen and bathrooms. Since none of the members in our
+group have extensive experience in working with AC power it is best that we
+take every safety precaution available. We do not expect that homes that
+actually implement our design to use GFIC outlets, it is simply an extra safety
+precaution that our group decided to take. \footnote{\url{http://diy.stackexchange.com/questions/15684/what-is-a-gfi-outlet-used-for-and-where-should-i-install-them}}
+
+
+For the door control module we decided to make our own door of the size 18'{}'
+by 18.'{}' Since we are not buying the door but are custom making it ourselves
+we need to cut the holes ourselves. The first order of business is cutting the
+door to length and leaving a frame of the right size. To cut the hole of the
+latch we will need to use a $\frac78$'' spade bit. The hole for the door knob
+will have to be made with 2-$\frac18$'' diameter hole saw. A 1'' wide chisel is
+used to cut out the recess of the latch. We are now able to install the door
+knob.
