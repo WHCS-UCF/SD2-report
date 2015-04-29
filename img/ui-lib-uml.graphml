@@ -22,7 +22,7 @@
           <y:Geometry height="199.25" width="171.0" x="350.0" y="256.99999999999994"/>
           <y:Fill color="#FFCC66" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="39.34375" x="65.828125" y="3.0">View<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="15" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.4609375" modelName="custom" textColor="#000000" visible="true" width="44.78125" x="63.109375" y="3.0">View<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -61,7 +61,7 @@ onClick : callback_t</y:AttributeLabel>
           <y:Geometry height="89.5" width="171.0" x="589.5" y="506.5"/>
           <y:Fill color="#FFCC66" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="71.6279296875" x="49.68603515625" y="3.0">TextView<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="15" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.4609375" modelName="custom" textColor="#000000" visible="true" width="82.0322265625" x="44.48388671875" y="3.0">TextView<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -92,7 +92,7 @@ onClick : callback_t</y:AttributeLabel>
           <y:Geometry height="157.0" width="171.0" x="110.5" y="506.5"/>
           <y:Fill color="#FFCC66" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="66.03564453125" x="52.482177734375" y="3.0">ListView<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="15" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.4609375" modelName="custom" textColor="#000000" visible="true" width="75.57958984375" x="47.710205078125" y="3.0">ListView<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -127,7 +127,7 @@ scrollY : uint16_t</y:AttributeLabel>
           <y:Geometry height="132.0" width="171.0" x="589.5" y="656.25"/>
           <y:Fill color="#FFCC66" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="89.1220703125" x="40.93896484375" y="3.0">ButtonView<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="15" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.4609375" modelName="custom" textColor="#000000" visible="true" width="102.2177734375" x="34.39111328125" y="3.0">ButtonView<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -157,17 +157,17 @@ state : button_state_t</y:AttributeLabel>
       <data key="d5"/>
       <data key="d6">
         <y:UMLClassNode>
-          <y:Geometry height="99.5" width="171.0" x="350.0" y="506.5"/>
+          <y:Geometry height="105.75" width="171.0" x="350.0" y="506.5"/>
           <y:Fill color="#FFCC66" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="84.62158203125" x="43.189208984375" y="3.0">ImageView<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="15" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.4609375" modelName="custom" textColor="#000000" visible="true" width="97.02490234375" x="36.987548828125" y="3.0">ImageView<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
               <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="-0.03703090122767855" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
             </y:ModelParameter>
           </y:NodeLabel>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="48.185546875" x="61.4072265625" y="40.765625">lkjlkjljlk<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="48.185546875" x="61.4072265625" y="43.890625">lkjlkjljlk<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
@@ -191,7 +191,7 @@ state : button_state_t</y:AttributeLabel>
           <y:Geometry height="99.5" width="171.0" x="350.0" y="672.5"/>
           <y:Fill color="#FFCC66" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
-          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="19.1328125" modelName="custom" textColor="#000000" visible="true" width="99.05615234375" x="35.971923828125" y="3.0">ImageButton<y:LabelModel>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="15" fontStyle="bold" hasBackgroundColor="false" hasLineColor="false" height="21.4609375" modelName="custom" textColor="#000000" visible="true" width="113.68017578125" x="28.659912109375" y="3.0">ImageButton<y:LabelModel>
               <y:SmartNodeLabelModel distance="4.0"/>
             </y:LabelModel>
             <y:ModelParameter>
