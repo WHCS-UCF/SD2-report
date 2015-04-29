@@ -1457,12 +1457,11 @@ power failure.
 
 Here we will consider different designs to make a backup battery. We{}'ll start
 with the circuit that was actually selected to be used in our design. The
-circuit below was made in Easy Circuit. The idea for the design came from the
-following link
+circuit below in \autoref{fig:pwr-hw-bat} was made in Multisim.
+\footnote{\url{http://www.instructables.com/id/Simple-5v-battery-backup-circuit/}}
 
-\ucfgfx[width=12cm]{fig:backup-bat-circuit}{a563expected2pagesBackBattery-img001.png}{chosen backup-battery configuration\protect\footnotemark}
-
-\footnotetext{Design idea taken from \url{http://www.instructables.com/id/Simple-5v-battery-backup-circuit/}. Circuit remade.}
+\ucfgfx[width=12.726cm,height=6.879cm]{fig:pwr-hw-bat}{a664expected2pagesBackBattery-img001.png}
+{First possible design for the backup battery}
 
 This design is simple. The circuit being open indicates when there is a power
 failure, while a closed circuit signifies normal operation. The circuit shows
@@ -1471,7 +1470,7 @@ acts as the primary source and a secondary lower backup voltage source. Since
 the secondary source is of lower voltage it will not discharge until the
 voltage of the first source drops below a certain level. This is how tradeoff
 occurs.  The secondary source has no potential until the first sources
-potential drops below a certain level. In \autoref{fig:backup-bat-circuit} we see that
+potential drops below a certain level. In \autoref{fig:pwr-hw-bat} we see that
 during normal operation (closed switch) that this design will recharge the
 batteries, that is if the batteries are rechargeable. This feature can easily
 be taken out by removing the diode and the resistor that feed into the
@@ -1516,7 +1515,7 @@ alternative design would have to be used. There are a few other design
 possibilities that were explored.
 
 Another design that was explored was to use a relay in order to drive the
-switch. In \autoref{fig:backup-bat2} current flows from the primary source to
+switch. In \autoref{fig:pwr-hw-bat2} current flows from the primary source to
 ground which activates the relay allowing the primary source to power the load.
 If there were a power failure in the primary source the relay would switch to
 circuit with the backup battery and thus the secondary source would take over.
@@ -1525,12 +1524,17 @@ to ground, thus wasting energy. The effect of this can be lessened by choosing
 a large resistor value. Yet in the end we decided to go with the first design
 because it provides the simplest solution.
 
-\ucfgfx[scale=0.5]{fig:backup-bat2}{a563expected2pagesBackBattery-img002.png}{another backup battery configuration\protect\footnotemark}
+\ucfgfx[width=8.89cm,height=7.011cm]{fig:pwr-hw-bat2}{a664expected2pagesBackBattery-img002.png}
+{Possible design for back up battery\protect\footnotemark}
 
-\footnotetext{This schematic was constructed using Easy Circuit, and the idea for the
-schematic came from a
-\href{http://electronics.stackexchange.com/questions/96632/12v-battery-backup-supply-for-gprs-tracker}{StackExchange
-post}.}
+\footnotetext{\url{http://electronics.stackexchange.com/questions/96632/12v-battery-backup-supply-for-gprs-tracker}}
+
+%\ucfgfx[scale=0.5]{fig:backup-bat2}{a563expected2pagesBackBattery-img002.png}{another backup battery configuration\protect\footnotemark}
+%
+%\footnotetext{This schematic was constructed using Easy Circuit, and the idea for the
+%schematic came from a
+%\href{http://electronics.stackexchange.com/questions/96632/12v-battery-backup-supply-for-gprs-tracker}{StackExchange
+%post}.}
 
 \subsubsection{Transformer Choice}
 One of the basic requirements for our project is to have a transformer to
