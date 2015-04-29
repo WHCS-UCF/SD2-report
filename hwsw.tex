@@ -518,7 +518,7 @@ must be set through a programmer connected to the microcontroller. The
 datasheets for the microcontrollers have a fuse list that can be used to make
 the proper alterations for incorporating an external crystal into the design.
 There is also a free online fuse calculator tool for AVR microcontrollers at
-\url{http://www.engbedded.com/fusecalc/} that can be used to quickly get the
+\cite{link2} that can be used to quickly get the
 necessary fuses that must be changed for any sort of microcontroller alteration
 such as changing the operating frequency.
 
@@ -699,16 +699,16 @@ way to control and query their home without having to find their phone.
 To make this a reality, we have chosen the versatile, premade, and well
 supported Adafruit 2.8" TFT LCD\footnotemark{} with a resistive touchscreen.
 Internally, the display is driven by the feature-rich
-\href{http://www.newhavendisplay.com/app_notes/ILI9341.pdf}{ILI9341 chipset}.
+ILI9341 chipset.\cite{link22}
 This chip is specifically created for a 240x320 pixel LCD with a focus on
 small, power-conscious mobile devices. Another reason we chose to buy this from
 Adafruit and not integrate the chip directly is due to the complexity of the
 design. Also, with the abstracted product, there are
-\href{https://github.com/adafruit/Adafruit_ILI9341/tree/master/examples}{plenty
-of usage examples} and Adafruit's
-\href{https://learn.adafruit.com/adafruit-2-dot-8-color-tft-touchscreen-breakout-v2}{excellent
-technical documentation}. This combined with Adafruit's
-\href{https://github.com/adafruit/Adafruit_ILI9341}{libraries}, assure
+plenty
+of usage examples\cite{link23}and Adafruit's
+excellent
+technical documentation.\cite{link24} This combined with Adafruit's
+libraries\cite{link25}, assure
 that integrating the LCD will be straight forward. The one issue with
 this solution is with the ILI9341 driver code: it was written to target the
 Arduino platform. Now, the Arduino platform is fairly close to bare AVR, minus
@@ -718,7 +718,7 @@ along with the chip datasheet to create a library specific to our needs. That
 way we get full control over the port placement and the experience of creating
 an LCD driver.
 
-\footnotetext{\url{https://www.adafruit.com/products/1770}}
+\footnotetext{\cite{link3}}
 
 \subsubsection{Capabilities}
 In terms of capabilities, we have summarized the main features of the LCD module in \autoref{tab:lcd-features}
@@ -866,8 +866,8 @@ valuable time for building out the library.
 \paragraph{Algorithms Necessary}
 The functionality of graphics driver depends on some core algorithms for
 efficiently creating meaningful screen objects. One of these core algorithms is
-\href{https://en.wikipedia.org/wiki/Bresenham\%27s_line_algorithm}{Bresenham's
-line algorithm}. This algorithm needs to be efficiently implemented as it will
+Bresenham's
+line algorithm.\cite{link26} This algorithm needs to be efficiently implemented as it will
 be the base for nearly every derived graphics operation. For example, a
 transparent rectangle has four sides which results in four calls to this line
 drawing function.
@@ -1458,7 +1458,7 @@ power failure.
 Here we will consider different designs to make a backup battery. We{}'ll start
 with the circuit that was actually selected to be used in our design. The
 circuit below in \autoref{fig:pwr-hw-bat} was made in Multisim.
-\footnote{\url{http://www.instructables.com/id/Simple-5v-battery-backup-circuit/}}
+\footnote{\cite{link4}}
 
 \ucfgfx[width=12.726cm,height=6.879cm]{fig:pwr-hw-bat}{a664expected2pagesBackBattery-img001.png}
 {First possible design for the backup battery}
@@ -1527,14 +1527,7 @@ because it provides the simplest solution.
 \ucfgfx[width=8.89cm,height=7.011cm]{fig:pwr-hw-bat2}{a664expected2pagesBackBattery-img002.png}
 {Possible design for back up battery\protect\footnotemark}
 
-\footnotetext{\url{http://electronics.stackexchange.com/questions/96632/12v-battery-backup-supply-for-gprs-tracker}}
-
-%\ucfgfx[scale=0.5]{fig:backup-bat2}{a563expected2pagesBackBattery-img002.png}{another backup battery configuration\protect\footnotemark}
-%
-%\footnotetext{This schematic was constructed using Easy Circuit, and the idea for the
-%schematic came from a
-%\href{http://electronics.stackexchange.com/questions/96632/12v-battery-backup-supply-for-gprs-tracker}{StackExchange
-%post}.}
+\footnotetext{\cite{link16}}
 
 \subsubsection{Transformer Choice}
 One of the basic requirements for our project is to have a transformer to
@@ -1649,7 +1642,7 @@ There are many types of capacitors. Yet the capacitor that we are most likely
 to use an electrolytic capacitor. These capacitors are highly used in
 rectifier circuits due to the fact that they have a small size for their level
 of capacitance.
-\footnote{\url{http://www.electronics-tutorials.ws/capacitor/cap_2.html}} The capacitor
+\footnote{\cite{link6}} The capacitor
 that we will be using in our board will be a through hole capacitor. Using two
 2200 microfarad capacitors we{}'ll have a capacitance of 4400 microfarads. The
 main thing that we must take into consideration is if the capacitor will be
@@ -1677,7 +1670,7 @@ that we will be using. There will also be a diode in the DC to DC converter
 should we choose to design this ourselves. This diode however does have a much
 stricter requirement for diode speeds. In this case we will be required to use
 a schottky diode.
-\footnote{\url{http://www.diodes.com/datasheets/ds28002.pdf}}
+\footnote{\cite{link7}}
 
 \paragraph{Relay}
 Next let us discuss the relay. The requirements of the relays used in our power
@@ -1696,7 +1689,7 @@ and could require heat sinks. Electromechanical relays are better for
 applications where there is a potential of large current or voltage surges.
 Both could be used in our design, however for our design we decided to use a
 solid state relay rather than an electromechanical one.
-\footnote{\url{http://electronicdesign.com/components/electromechanical-relays-versus-solid-state-each-has-its-place}}
+\footnote{\cite{link8}}
 
 \paragraph{Linear Regulators}
 There are two types of linear regulators standard regulators an LDO regulators.
@@ -1709,7 +1702,7 @@ however you are using a drop out voltage large enough to use a standard linear
 regulator, using an LDO won{}'t have much of an impact on efficiency. We will
 need a linear regulator in order to drop 5V down to 3.3V for use with our
 bluetooth module as well as with the nRF chip.
-\footnote{\url{http://focus.ti.com/download/trng/docs/seminar/Topic\%209\%20-\%20Understanding\%20LDO\%20dropout.pdf}}
+\footnote{\cite{link9}}
 
 Converting 5.5V to 3.3V is a voltage drop of 2.2V. For this application we
 could use either a standard regulator or a linear regulator as long as the
@@ -1747,7 +1740,7 @@ ground and the output ground separate. Isolation transformers protect voltage
 spikes from crossing the primary coil to the secondary coil. For our design we
 will be using an isolation transformer in order to provide more isolation and
 therefore have a safer
-design.\footnote{\url{http://www.tortech.com.au/isocompare)}}
+design.\footnote{\cite{link10}}
 
 
 \subsubsection{Simulation}
