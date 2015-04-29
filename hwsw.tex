@@ -1823,7 +1823,26 @@ typically used for high frequency applications. Building this board from
 scratch will give added experience to the members of the group, which is the
 ultimate goal of this project.
 
-\subsubsection{Schematic}
+\subsubsection{Schematic Breakdown}
+This section breaks down the full schematic of our power board (full schematic
+is available in \autoref{apx:power-board-sch}). Although the different control
+modules and the base station power board designs are slightly different in what
+they require to operate, below is a design that has all the components of all
+the boards. If we were to choose that we only wanted to make one power board
+design so that everything is consistent, this board design could definitely be
+used. Alternatively we could also only attach the components needed per
+application. As you can see from \autoref{fig:pwr-sch-ac-rect}, our power board
+as a trivial AC to DC section.
+
+% Initial AC rectification
+\ucfgfx[trim=3in 4.75in 3.1in 2.2in,clip,width=0.9\textwidth]
+{fig:pwr-sch-ac-rect}{power-board.pdf}{Power board AC rectification}
+
+Our base station and control modules require a mix of 5V, 3.3V, and 12V (for the electronic strike). You can see the regulators and extra components required to create these voltages in \autoref{fig:pwr-sch-ac-rect2}.
+
+% DC-DC
+\ucfgfx[trim=3in 2.75in 2.1in 3.72in,clip,width=0.9\textwidth]
+{fig:pwr-sch-ac-rect2}{power-board.pdf}{Power board AC rectification}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -2431,7 +2450,7 @@ Wiring Schematic for Solid State Relay}
 The control modules for WHCS have to be able to support communication via a
 radio transceiver as well as interaction with their target endpoints.
 \autoref{fig:ctrl-mod-sch} shows the schematic for the control modules that will be
-implemented in WHCS. The main component of the schematic is the ATmega328.
+implemented in WHCS. The full schematic is available for viewing in \autoref{apx:control-module-sch}. The main component of the schematic is the ATmega328.
 Everything in the schematic is connected to the microcontroller in some way. In
 the schematic three different VCC lines are shown. This is because the control
 modules will have to access to a 3.3V line, a 5V line, and a 12V line. The
