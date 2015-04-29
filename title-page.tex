@@ -42,14 +42,20 @@
       \coordinate (bottomRight) at (current page.south east);
 
       % draw horizontal names
-      \path (1\paperwidth/6, 0.15\paperheight) node [align=center] {\huge Grant Hernandez\\\Large\emph{Computer Engineer}}
+      \path (1\paperwidth/6, 0.16\paperheight) node [align=center] {\huge Grant Hernandez\\\Large\emph{Computer Engineer}}
       ++ (2\paperwidth/6, 0) node [align=center] {\huge Joseph Love\\\Large\emph{Electrical Engineer}}
       ++ (2\paperwidth/6, 0) node [align=center] {\huge Jimmy Campbell\\\Large\emph{Computer Engineer}};
 
       % draw school banner
-      \path (\paperwidth/6, 0.05\paperheight) node [shift={(1.5cm, 0cm)}] {\huge University of Central Florida}
+      \path (\paperwidth/6, 0.06\paperheight) node [shift={(1.5cm, 0cm)}] {\huge University of Central Florida}
       ++ (2\paperwidth/6, 0) node {\includegraphics[height=0.65in]{ucf-pegasus-bw}}
-      ++ (2\paperwidth/6, 0) node [shift={(-1.9cm, 0)}] {\huge Senior Design Group \#5};
+      ++ (2\paperwidth/6, 0) node [shift={(-1.9cm, 0)}] {\huge Senior Design
+      I Group \texttt{\#}5};
+
+      \path (0.23\paperwidth, 0.035\paperheight) node [shift={(0cm, 0cm)}]
+      {\emph{\today}};
+      \path (0.74\paperwidth, 0.035\paperheight) node [shift={(0cm, 0cm)}]
+      {\emph{Sponsored in part by Boeing}};
     \end{tikzpicture}
   };
 \end{tikzpicture}
