@@ -787,7 +787,7 @@ display parameters. One of these commands will set the window in which pixel
 data is drawn. Before a batch drawing operation, a window is selected by
 specifying the column and page addresses. These are set using the
 \textbf{Column Address Set (0x2A)} and the \textbf{Page Address Set (0x2B)}
-commands. From this point, the RAMWR command is send followed by \emph{N}
+commands. From this point, the RAMWR command is sent followed by \emph{N}
 different 16-bit pixel colors. This scheme of setting the window and filling
 the pixels is why the graphics transfers end up being so slow, which is
 discussed more in \autoref{par:lcd-perf}.
@@ -1227,15 +1227,6 @@ application.
 \subsection{Power Hardware}
 \label{sec:power-hw}
 
-Throughout this section we will be discussing all that deals with the power.
-For reasons that will be discussed in greater detail in
-\autoref{sec:power-through} we decided that each control module and the base
-station would have a power board that would be separate from the PCB of the
-control modules and base station.  The reason for each power board is to
-convert 120VAC to DC lines of 3.3V 5V and 12V. We will also need to be able to
-switch on and off 120VAC for the outlet and light switching control modules as
-well switch on and off the 12V used to operate the strike.
-
 Throughout this section we will be discussing all that deals with the
 power. For reasons that will be discussed in greater detail in
 \autoref{sec:power-through} we decided that each control module and the base
@@ -1304,8 +1295,7 @@ continue completing tasks such as checking the state of the system.
 Another control module that must be discussed is the temperature
 sensor control module. There is no flowchart used to explain the module of
 the temperature sensors. This module really only needs the basic design of
-the black line that provides the microcontroller with 5V. Yet it too like the
-green and blue line is equipped with a back up battery. This way the
+the black line that provides the microcontroller with 5V. This way the
 information about the temperature of the home can still be gathered from the
 sensors even if there is a power failure.
 
@@ -1398,7 +1388,7 @@ clock speed of 16MHz.
 
 Note that the microcontroller of the control modules shows both an active and a
 power saving mode. When the module is in operation it will run in active mode,
-however since our microcontroller has the capability to run switch into a less
+however since our microcontroller has the capability switch into a less
 consuming power mode, we will utilize this mode in order to save power. The
 microcontroller for the base station also has a low power setting for idle use,
 yet we will not be running in this mode for the base station because it is
@@ -1408,11 +1398,11 @@ limit. For example the LCD (most of it{}'s current will be drawn from the
 backlight) only gave a description of the LDO that would be 3.3V at 150mA.
 Therefore we were able to assume that the current would not surpass 150mA.
 
-As you can see the components in WHCS do not draw a lot of power. Not because
-of smart design choices, but mostly because the things that our project must
-execute does not require a lot of power. Based on the fact that Power =
-Voltage*Current and that not all these devices will be used at a time. We can
-see that the devices themselves will never really draw that much power.
+As you can see the components in WHCS do not draw a lot of power. This is
+because the components that constitute the system are all intrinsically low power
+devices.  Based on the fact that Power = Voltage*Current and that not all these
+devices will be used at a time. We can see that the devices themselves will
+never really draw that much power.
 
 Now that this data has been presented it can be used as a reference later when
 the amount of power drawn plays a part in design decisions. Again this section
@@ -1552,7 +1542,7 @@ much current will our load draw. We first consider the amount of current drawn
 so that we can determine the VA (volt amperes) rating. The VA rating is an
 actual specification of the transformers that will help us make our decision.
 Volt amperes is different from watts in that it is the {}``apparent power{}''
-instead of the {}``real power{}''. In order find the VA rating we will need the
+instead of the {}``real power{}''. In order to find the VA rating we will need the
 currents and voltages used in our system.
 
 The devices that our system powers will all need to be taken
@@ -1652,7 +1642,7 @@ quite unnecessary though, we{}'ll do fine to get away with using a smaller
 capacitor. Yet using two 2200 microfarads would also do the trick.
 
 There are many types of capacitors. Yet the capacitor that we are most likely
-to use is a electrolytic capacitor. These capacitors are highly used in
+to use an electrolytic capacitor. These capacitors are highly used in
 rectifier circuits due to the fact that they have a small size for their level
 of capacitance.
 \footnote{\url{http://www.electronics-tutorials.ws/capacitor/cap_2.html}} The capacitor
@@ -1915,7 +1905,7 @@ power. The power down mode is great for saving watts, but has very poor
 performance for quickly responding to new packets.
 
 The BlueTooth module won't require as much time to service as the other modules
-due to the low data rate. It will connected directly to the hardware UART of
+due to the low data rate. It will be connected directly to the hardware UART of
 the base station, instead of the normal serial debugger. This will have to be
 connected to some free GPIO ports and software serial will be used. This is
 unfortunate as ``bit banging'' serial isn't efficient and will take up many
@@ -1979,7 +1969,7 @@ would control its function in relation to the base station.
 
 \subsubsection{Subsystems}
 The base station has the hardest job in the entire WHCS architecture. It has to
-juggle a lot data with limited memory and processing speed. Packets need to be
+juggle a lot of data with limited memory and processing speed. Packets need to be
 processed and queued to keep the pipeline flowing smoothly. The following
 sections will break down the individual subsystems and how they work in concert
 to make the base station a well oiled microcontroller.
