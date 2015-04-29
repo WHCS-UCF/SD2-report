@@ -697,7 +697,7 @@ thermostats. With a simple LCD combined with a touchscreen, users would have a
 way to control and query their home without having to find their phone.
 
 To make this a reality, we have chosen the versatile, premade, and well
-supported Adafruit 2.8" TFT LCD\footnotemark{} with a resistive touchscreen.
+supported Adafruit 2.8" TFT LCD\cite{link3} with a resistive touchscreen.
 Internally, the display is driven by the feature-rich
 ILI9341 chipset.\cite{link22}
 This chip is specifically created for a 240x320 pixel LCD with a focus on
@@ -717,8 +717,6 @@ library would be a feasible solution. Our plan is to use the existing driver
 along with the chip datasheet to create a library specific to our needs. That
 way we get full control over the port placement and the experience of creating
 an LCD driver.
-
-\footnotetext{\cite{link3}}
 
 \subsubsection{Capabilities}
 In terms of capabilities, we have summarized the main features of the LCD module in \autoref{tab:lcd-features}
@@ -1458,7 +1456,7 @@ power failure.
 Here we will consider different designs to make a backup battery. We{}'ll start
 with the circuit that was actually selected to be used in our design. The
 circuit below in \autoref{fig:pwr-hw-bat} was made in Multisim.
-\footnote{\cite{link4}}
+\cite{link4}
 
 \ucfgfx[width=12.726cm,height=6.879cm]{fig:pwr-hw-bat}{a664expected2pagesBackBattery-img001.png}
 {First possible design for the backup battery}
@@ -1525,9 +1523,7 @@ a large resistor value. Yet in the end we decided to go with the first design
 because it provides the simplest solution.
 
 \ucfgfx[width=8.89cm,height=7.011cm]{fig:pwr-hw-bat2}{a664expected2pagesBackBattery-img002.png}
-{Possible design for back up battery\protect\footnotemark}
-
-\footnotetext{\cite{link16}}
+{Possible design for back up battery\protect\cite{link16}}
 
 \subsubsection{Transformer Choice}
 One of the basic requirements for our project is to have a transformer to
@@ -1641,8 +1637,8 @@ capacitor. Yet using two 2200 microfarads would also do the trick.
 There are many types of capacitors. Yet the capacitor that we are most likely
 to use an electrolytic capacitor. These capacitors are highly used in
 rectifier circuits due to the fact that they have a small size for their level
-of capacitance.
-\footnote{\cite{link6}} The capacitor
+of capacitance.\cite{link6} 
+The capacitor
 that we will be using in our board will be a through hole capacitor. Using two
 2200 microfarad capacitors we{}'ll have a capacitance of 4400 microfarads. The
 main thing that we must take into consideration is if the capacitor will be
@@ -1670,7 +1666,7 @@ that we will be using. There will also be a diode in the DC to DC converter
 should we choose to design this ourselves. This diode however does have a much
 stricter requirement for diode speeds. In this case we will be required to use
 a schottky diode.
-\footnote{\cite{link7}}
+\cite{link7}
 
 \paragraph{Relay}
 Next let us discuss the relay. The requirements of the relays used in our power
@@ -1689,7 +1685,7 @@ and could require heat sinks. Electromechanical relays are better for
 applications where there is a potential of large current or voltage surges.
 Both could be used in our design, however for our design we decided to use a
 solid state relay rather than an electromechanical one.
-\footnote{\cite{link8}}
+\cite{link8}
 
 \paragraph{Linear Regulators}
 There are two types of linear regulators standard regulators an LDO regulators.
@@ -1702,7 +1698,7 @@ however you are using a drop out voltage large enough to use a standard linear
 regulator, using an LDO won{}'t have much of an impact on efficiency. We will
 need a linear regulator in order to drop 5V down to 3.3V for use with our
 bluetooth module as well as with the nRF chip.
-\footnote{\cite{link9}}
+\cite{link9}
 
 Converting 5.5V to 3.3V is a voltage drop of 2.2V. For this application we
 could use either a standard regulator or a linear regulator as long as the
@@ -1740,7 +1736,7 @@ ground and the output ground separate. Isolation transformers protect voltage
 spikes from crossing the primary coil to the secondary coil. For our design we
 will be using an isolation transformer in order to provide more isolation and
 therefore have a safer
-design.\footnote{\cite{link10}}
+design.\cite{link10}
 
 
 \subsubsection{Simulation}
