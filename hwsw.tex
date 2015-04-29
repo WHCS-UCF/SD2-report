@@ -2119,10 +2119,77 @@ handled in different ways. Further details are discussed in
 \autoref{sec:ui-lib} for the UI library.
 
 \paragraph{Timers: Interaction}
+Accurate timing is one of the tasks microcontrollers excel at. The WHCS base
+station will be using timers to schedule periodic events, wake up from sleep
+modes, to provide automated send and resend delays, and much more. A simple
+Timer class will serve as the mechanism and state for a single Timer object.
+These objects will b e kept track of in a global list and ticked every loop.
+When a timer reaches the number of ticks or has simply expired, then it will be
+fired. This firing may cause an action to occur, which is programmable to the
+specific need. This action may be something like scheduling a network health
+check or to increase the step of an LCD graphics animation. A UML representation of the WHCS timer class is shown in \autoref{fig:timer-uml}.
 
-\paragraph{Networking State Machine}
+\ucfgfx[scale=0.8]{fig:timer-uml}{timer-uml}{A UML representation of the Timer class}
 
 \subsubsection{Schematic Breakdown}
+To tie the whole design of the base station together, the schematic, created in KiCad is broken down below. The full schematic is available for viewing in \autoref{apx:base-station-sch}.
+
+In \autoref{fig:bs-sch-crystal} we see a focused view of the Atmega32-A
+microcontroller with an attached 16MHz crystal and power passives. The crystal
+has two capacitors that are dependent on the target crystal. These are required
+to get the correct oscillation for the external crystal. Also the AREF, VCC,
+and AVCC lines of the MCU have decoupling capacitors. These are used to make
+sure that the base station performs well under a large current spike. When
+designing the board, these capacitors should be placed as close as possible to
+the MCU to avoid a long high-current path through the ground plane. The
+capacitor on the analog reference pin (AREF) is used to stabilize the reference
+to make ADC conversions more accurate.
+
+% Zoom in on the crystal setup and decoupling caps
+\ucfgfx[trim=1in 5.0in 5.1in 0.5in,clip,width=0.9\textwidth]
+{fig:bs-sch-crystal}{base-station.pdf}{Base Station crystal and decoupling capacitors}
+
+In \autoref{fig:bs-sch-lcd-header} we see the buses used to connect the LCD to the
+MCU. This is the most pin heavy component and care must be taken not to mix up
+any of the signal paths. All of the data control signals are connected to PORTD
+of the MCU, the touchpanel signals to PORTA (ADC), and the 8-bit parallel data
+bus completely uses PORTC. There are a few one off signals such as LITE which
+is a PWM input to control the LCD's backlight brightness.
+
+% Zoom on the LCD header
+\ucfgfx[trim=4.2in 3.3in 2.5in 1.55in,clip,width=0.65\textwidth]
+{fig:bs-sch-lcd-header}{base-station.pdf}{Base Station LCD header to MCU}
+
+In \autoref{fig:bs-sch-pwr-nrf} we see the 3.3V 3 terminal regulator converting the
+5V VCC line down. Additionally, we see the external RESET pull-up resistor and
+a manual reset push button. The left corner has the pinout for the NRF breakout
+board we will be using.
+
+% Zoom on the power section and NRF
+\ucfgfx[trim=5.9in 1.3in 1.2in 5.0in,clip,width=0.65\textwidth]
+{fig:bs-sch-pwr-nrf}{base-station.pdf}{Base Station power schematic and NRF header}
+
+In \autoref{fig:bs-sch-hc-05} we see the header for the HC-05. We examine this
+further because of the unique electrical characteristics of the HC-05 module.
+The module only accepts 3.3V power and logic. Our MCU will be running at 5V,
+which means we need a 5V to 3.3V logic shifter. To simply implement this, we
+used a resistor voltage divider which will provide the required logic level for
+the TX pin. The RX pin does not need a shifter because 3.3V is still above the
+$V_{IH}$ minimum for the MCU.
+
+% Zoom on the HC-05
+\ucfgfx[trim=1.0in 1.0in 7.5in 5.0in,clip,width=0.6\textwidth]
+{fig:bs-sch-hc-05}{base-station.pdf}{Base Station HC-05 header}
+
+Finally, in \autoref{fig:bs-sch-isp} we see the standard ICSP header that most
+AVR line microcontrollers use. This pin array will serve as a quick and easy
+way to connect an external programmer to our base station while in the field.
+In this schematic revision, this header can provide power directly to the 3.3V
+regulator and MCU.
+
+% Zoom on ISP header
+\ucfgfx[trim=1.2in 3.8in 8.2in 4.0in,clip,width=0.4\textwidth]
+{fig:bs-sch-isp}{base-station.pdf}{Base Station ISP header}
 
 % % % % % % % % % % % % % % % % % % % % %
 
