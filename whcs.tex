@@ -190,7 +190,7 @@ pdfauthor={Grant Hernandez},
 \begin{document}
 
 % We want this depth for our TOC
-\setcounter{secnumdepth}{4}
+\setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{4}
 
 % Start roman numerals as per the spec
@@ -215,17 +215,5 @@ pdfauthor={Grant Hernandez},
 % BEGIN SECTION LISTING
 %\onehalfspacing
 \import{./}{toc.tex}
-
-% BEGIN BIBLIOGRAPHY
-\newpage
-\clearpage
-\thispagestyle{empty}
-\pagestyle{empty}
-
-% Actual References
-\todo[inline]{Must have an ``old style'' reference section}
-\renewcommand{\refname}{\centerline{\Large\bf References Cited}}
-\bibliographystyle{simple}
-\bibliography{./ref}
 
 \end{document}

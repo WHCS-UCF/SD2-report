@@ -50,14 +50,40 @@ we{}'ll be sure to put in a backup battery of a sufficient enough size to
 account for whatever the results may be.
 
 \subsection{Base Station}
-\todo{1 page}
+The base station is the most complex item to test and verify functionality.
+There are a lot of modules working together to make the base station work with
+the WHCS network. This is why testing these certain aspects of the system will
+help ensure good performance and prove that the individual subsystems are
+functioning properly.
 
 \subsubsection{LCD Control}
+Controlling the WHCS network from the LCD is a key part of the design. The base
+station should be able to accept touch inputs from the resistive touch screen
+on top of the LCD, dispatch that event to an underlying UI element, and cause
+some action to occur. If the button to command the control module that is
+responsible for the electronic door strike is pressed, this information must
+flow quickly and correctly through the base station's code. A simpler test
+would be the toggling of a remote LED by hitting a button on the LCD. This test
+would prove many things correct simultaneously.
 
 \subsubsection{LCD and NRF Simultaneous}
+One consideration that was discussed earlier was the fact that the base
+station's microcontroller has a limited speed. The NRF, LCD, and BlueTooth
+modules will need to be serviced as quickly as possible by the base station
+MCU. If there were to be an error in the code that handles the LCD drawing,
+such as a slow graphics drawing loop, then the performance of all the other
+modules would suffer. In order to stress test the system, a test case where
+many packets are being sent and received over the NRF radio, while an expensive
+graphics drawing operation is occurring. If either module takes too much
+execution such that the other suffers, then the code structure will have to be
+rethought and designed in order to avoid this starvation. A solution to this
+problem if it arises would be to have points in either process where the action
+can be paused or canceled to be resumed at a later time. That way the MCU can
+perform the most important task at any one time. This would be partially
+handled by the NRF radio generating interrupts when a new packet has been
+delievered, but the packet still needs to be fetched and processed.
 
 \subsubsection{UART and Software Serial}
-
 The UART is a quintessential part of a microcontroller development system
 because it allows for easy debugging and testing. The UART can be used to log
 information to a screen to show the internal state of the microcontroller and
@@ -96,6 +122,11 @@ microcontroller. It is possible that we will only need half-duplex operation to
 confirm all of our test-cases and debugging.
 
 \subsection{Control Module}
+The control modules are significantly easier to test than the base station
+because of the usage of a single major module - the NRF radio. Some control
+modules will have specific roles that require specialized testing, but the
+common functionality is the most important to be tested. All other verification
+will build off of the results of this initial testing.
 
 \subsubsection{UART Chip Testing/Debugging}
 Unlike the base station the control modules will not have a BlueTooth module
@@ -165,7 +196,12 @@ ensure the proper operation of the control modules for WHCS.
 \end{table}
 
 \subsection{Door Access}
-\tbw
+One of the most critical functions for WHCS is the control over a door.
+WHCS must verify that the door can be correctly engaged and disengaged
+wirelessly from commands by the base station LCD or Android phone. Both paths
+of execution need to be tested and verified for correct functionality in these
+areas to ensure that no homeowner will be left stranded with out a way in to
+their home.
 
 \subsection{Android To Base Station Communication}
 Once all of the independent components of the base station have been tested and
@@ -252,10 +288,3 @@ results in the LED on state as well as the LED off state.
 \caption{LED Activation Test Commands}
 \label{tab:test-led-act}
 \end{table}
-
-\subsection{Base Station to Control Module Communication}
-
-\subsubsection{LED Toggle}
-
-\subsubsection{UART to Hyperterm}
-

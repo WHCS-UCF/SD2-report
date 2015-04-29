@@ -1949,7 +1949,7 @@ be visualized in \autoref{fig:ctrl-mod-hierarchy}. The
 details of a network structure that would enable this clean interface is
 further described in \autoref{sec:network-library}.
 
-\ucfgfx[scale=0.75]{fig:ctrl-mod-hierarchy}{control-module-hierarchy}{showing the control
+\ucfgfx[scale=0.67]{fig:ctrl-mod-hierarchy}{control-module-hierarchy}{showing the control
 module hierarchy for WHCS}
 
 Beyond sending packets, the base station must accurately record and update
@@ -1974,7 +1974,7 @@ processed and queued to keep the pipeline flowing smoothly. The following
 sections will break down the individual subsystems and how they work in concert
 to make the base station a well oiled microcontroller.
 
-\paragraph{NRF24L01+: Interaction}
+\paragraph{NRF24L01+}
 The NRF radio will be directly connected to the Atmega32-A microcontroller
 which will control its state. This module will be constantly listening for new
 packets from the control modules and sending responses in turn. Due to this
@@ -2022,7 +2022,7 @@ net code. The high-level interface that the BS will know about will be
 sufficient and feature rich enough to carry out all of the actions required for
 WHCS to come to fruition.
 
-\paragraph{HC-05: Interaction}
+\paragraph{HC-05}
 The HC-05 BlueTooth module is quite simple in its operations. Data is sent over
 a two line serial bus and if there is an active connection to a bluetooth
 enabled device, it will be able to easily receive the data and handle it. In
@@ -2065,7 +2065,7 @@ interaction would have to asynchronously tracked until the request was
 fulfilled. This would complicate the system, but would allow for more advanced
 queries and commands.
 
-\paragraph{LCD: Interaction}
+\paragraph{LCD}
 In what could be considered the ``face of WHCS'', the LCD module, which will be
 situated directly over the Atmega32-A, will have the tough job of accurately
 and quickly conveying any desired information about the state of WHCS' control
@@ -2097,7 +2097,7 @@ to be power efficient. Despite not needing to worry about power, this function
 would be simple to implement as only one microcontroller pin is required to
 control the screen brightness.
 
-\paragraph{Touchpanel: Interaction}
+\paragraph{Touchpanel}
 In order to provide a way for an end user to be able to control WHCS from the
 LCD unit, there is a requirement to poll for touch events.
 This subsystem can be considered a part of the LCD, but the driver is independent
@@ -2118,7 +2118,7 @@ Depending on the LCD scene (i.e main menu, boot screen), this event will be
 handled in different ways. Further details are discussed in
 \autoref{sec:ui-lib} for the UI library.
 
-\paragraph{Timers: Interaction}
+\paragraph{Timers}
 Accurate timing is one of the tasks microcontrollers excel at. The WHCS base
 station will be using timers to schedule periodic events, wake up from sleep
 modes, to provide automated send and resend delays, and much more. A simple
