@@ -1,7 +1,7 @@
-# WHCS Senior Design I Research Report
+# WHCS Senior Design II Research Report
 
 The source files, build scripts, and source images with references for our
-UCF Senior Design I report.
+UCF Senior Design II report.
 
 For the work-in-progress, you may view the [latest build](/export/latest.pdf?raw=true)
 There is also a [printable version](/export/latest-print.pdf?raw=true).
