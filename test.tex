@@ -1,53 +1,43 @@
 \subsection{Power Supply}
 When in the process of building something it is important to check to see if
 what you designed for is similar to the results you are receiving. That is why
-it is important to run test occasionally to see if the results match. In this
-section we will be going through the steps that would be taken in order to
-verify the accuracy of our designed power supply. It is of great importance
-that the power supply works as expected otherwise the entire project would fail
+it was important to run test occasionally to see if the results matched. In this
+section we will be going through the steps that we took in order to
+verify the accuracy of our designed power supply. It was of great importance
+that the power supply worked as expected otherwise the entire project would fail
 to work properly. Our power supply consists of various lines each operating at
-different voltage levels. It is important that we check each level to see if
-they are as we anticipate them to be.
+different voltage levels. It was important that we checked each level to see if
+they were as we anticipate them to be.
 
 \subsubsection{Line Integrity}
 For our boards we have a 12V line, a 12V line, a 5V line, a 3.3V line, and
-another line at 120VAC. Each line can and should be tested and measured.
-Ideally this testing will be done during the prototyping stage of assembling
-our design.  The earlier we test the boards the better. If we continue to
+another line at 120VAC. Each line had to be tested and measured.
+This testing was done as early a the prototyping stage of assembling
+our design.  The earlier boards are tested the better. We intended to
 recheck our values at each progression (from one type of prototyping to
-another) then we can ensure that nothing abnormal happens as we continue to
-make changes. The first level of prototyping will occur at the breadboard
-level. At this stage we have nothing more than the parts we wish to put on the
-board along with the breadboard. First we will hook up the AC power to the
-transformer, on the other end of the transformer we can check to see if the
-120VAC was converted as expected into 24VAC. Although this could be done using
+another) by doing this we could ensure that nothing abnormal happened as we continue to
+make changes. The first level of prototyping that could have occurred was at the breadboard
+level. At this stage we would have had nothing more than the parts we wish to put on the
+board along with the breadboard. First we would hook up the AC power to the
+transformer, on the other end of the transformer we could check to see if the
+120VAC was converted as expected into 14VAC. Although this could be done using
 a basic multimeter, using an oscilloscope is nice because it allows us to see
-the entire waveform. Next we can test the circuit after the rectifying diodes.
-Once the voltage is measured we should expect to see values close to 33.9V
+the entire waveform. Next we were also able to test the circuit after the rectifying diodes.
+Once the voltage was measured we saw voltages of about 20V
 since the AC voltage level does not translate exactly into the DC values. At
-this point we can also see what our ripple is, either by using traces or by
-having the oscilloscope give the max and min values of the circuit. Finally we
-can test to see if the DC buck regulators are working as expected. Since we are
-using the same adjustable part for the DC to DC converter we really need to buy
-one LM2576 switching regulator for the sake of prototyping. The 5V buck
-regulator feeds into the linear regulator that will also be tested. At the
-breadboard level we can use the probes to pinch the circuit, once we are
-prototyping with practiced etched boards we will need to hold the probes onto
+this point we could see what our ripple was, either by having the oscilloscope give the max and min values of the circuit. Finally we were able to test if the DC buck regulators were working as expected. At the
+breadboard level we were able to use the probes to pinch the circuit, yet once we were
+testing our fabricated boards we needed to hold the probes onto
 wire of the boards.
 
 \subsubsection{Battery Backup}
-The backup battery is another power source that will need to be checked.
+If we had implemented it the backup battery would have been another power source that would have needed to be checked.
 Usually for most buck regulators there is a minimum voltage level that they
 will accept in order to convert that voltage to the level that they are
-designed to yield on the output. The only buck regulator that we will need to
-use is the 5V regulator. We need to make sure that the battery that we are
-providing is of a sufficient size such that the regulator is still able to
-accept that voltage and convert it into the desired output signal. Although we
-have the information from the datasheet on what values of voltages it will
-accept, it still is good idea for us to test different input voltage levels to
-see what the cutoff is for our specific regulator. With that information
-we{}'ll be sure to put in a backup battery of a sufficient enough size to
-account for whatever the results may be.
+designed to yield on the output. The only buck regulator that we would have needed to
+use with the backup battery would have been the 5V regulator. We would have wanted to test the back up battery to make sure that the battery that we used was a high enough voltage to be steped down by the buck regulator. Although this information can be found in the datasheet, it would have still been a good idea for us to test different input voltage levels to
+see what the cutoff would be for our specific regulator. With that information
+we could have made sure to put in a backup battery of a high enough voltage. However since a back up battery was never placed in our design we never had to worry about testing it.
 
 \subsection{Base Station}
 The base station is the most complex item to test and verify functionality.
