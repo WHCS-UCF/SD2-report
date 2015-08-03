@@ -33,18 +33,18 @@ Overall, OSH park is the best choice for WHCS' budget and technical
 requirements. Its fast shipping time will ensure that we have plenty of time to test our board and make any additional runs if the worst happens.
 
 \subsection{Parts}
-This section will discuss how parts come into the play of the manufacturing of
-our PCB. With parts there is much to consider. In addition to whether or not
-the part performs as we need them to, and whether or not it{}'s these parts are
-in stock we also have to take a look at how this part will need to be
+This section discusses how parts came into play of the manufacturing of
+our PCB. With choosing parts there was much to consider. In addition to whether or not
+the part performs as we needed them to, and whether or not these parts were
+in stock we also had to take a look at how each part would be
 implemented into our design.
 
 \subsubsection{Footprint (SMD vs Through-Hole)}
-The footprints of our board will rely mostly on the parts that were chosen to
+The footprints of our board relied mostly on the parts that were chosen to
 be part of our design. The parts needed for a surface mounted board and the
-parts needed for a through hole boards are unique. Therefore in order to
-continue in our design we had to make a design choice. In WHCS we considered
-both through hole boards, and surface mounted boards. Through hole board
+parts needed for a through hole boards are different. Therefore in order to
+continue make our boards we had to make a design choice. In WHCS we considered
+both through hole boards and surface mounted boards. Through hole board
 technology is the older of the two technologies and is currently much less
 popular than surface mounting. One of the of the advantages of surface mounting
 is that it takes up less space allowing more real estate for parts for a given
@@ -52,71 +52,68 @@ board. Because surface mounting does not involve drilling it is simpler and
 faster to construct. Although there are some advantages in through hole boards
 for most applications surface mounted technology wins. Therefore in our design
 we will be using surface mounted technology. With the exception of the power
-board which will indeed use through hole. The footprints in our control module
-and base station will therefore use parts that are SMT.
+board which will indeed take advantage of through hole for our heavier components. The footprints in our control module.
 
 \subsection{Construction}
-In this section we will be discussing the assembly of our project. This
-involves decisions that were made for the board construction of our boards
-along with the construction of the displays that will be used to show how WHCS
+In this section discuss the assembly of our project. This
+involves decisions that were made for the PCB board construction 
+along with the construction of the display that shows how WHCS
 operates.
 
 \subsubsection{Soldering}
-Once we receive our etched boards it will be time for us to solder on the
+Once we received our etched boards we had to consider methods to solder on the
 components. There are various methods that can be used to accomplish soldering.
-Note that any of the methodologies described can be used to accomplish the
-task. The method that we choose, will be the one that is most
-convenient/easiest to implement and seems to do the most professional job. The
+Note that any of the methodologies described could have been used to accomplish the
+task. The
 first of the methods to be described is the use of hand soldering. This is by
 far the simplest and the easiest conceptually for our group to implement. Every
 member of our group has some experience soldering by hand. This method is cheap
 as it only really requires a soldering iron, which most if not all members in
-our group own.  The main takeback with this method is that while it is easy by
-methodology it is difficult in the fact that it is extremely time consuming.
+our group own.  The main take back with this method is that while it is easy by
+methodology it is difficult in the fact that it can be time consuming.
 Also since everything is done by hand this method tends to be a little messy
-and may tend to look less professional, because in reality it is. This is even
+and may tend to look less professional. This is even
 more so the case if we make use of flux, which can tend to make the board look
-dirty. To be honest this method is the the last resort method. In the case that
-there is a problem in the soldering job of some kind of a different method,
-this method will be used to repair any mishaps.
+dirty. We initially wanted to use this method as a last resort.
 
 \subsubsection{Reflow Oven}
-Reflow methods are different from hand soldering in that it separates the
+We also considered refow. Reflow methods are different from hand soldering in that it separates the
 placement of the components from the soldering. It tends to be less time
 consuming and does a more consistent professional looking job. There are
 various method that our group could use to reflow the solder for our PCBs. The
-UCF amateur radio club has access to a professional reflow oven if we were to
-head in this direction. Additionally, there are online methods describing how
+UCF amateur radio club has access to a professional reflow oven that we could have taken advantage of. Additionally, there are online methods describing how
 to use a toaster oven to achieve the same affect.
+
+In the end we actually did a combination of both reflow and hand soldering. We achieved the reflow by using solder paste and a heat gun. Hand soldering SMD parts was actually easier than expected with the use of magnifying glass.  
 
 \subsubsection{Proto-Panel}
 \label{sec:proto-panel}
 In this section we will focus on some of the details of the construction of our
-design, the general overview of how the display board is to be put together is
+design, the general overview of how the display board was put together is
 given in \autoref{sec:proto-panel-proto} This section will not explain how the
-proto{}-panel will come together, rather it will explain the non obvious
-construction details.We will discuss the design considerations that have to be
-accounted for. This section will take into consideration the norms that go into
-home construction. This will go into the specifics of safety precautions as
+proto{}-panel came together, rather it will explain the non obvious
+construction details. We discuss the design considerations that had to be
+accounted for. This section takes into consideration the norms that go into
+home construction. It also goes into the specifics of safety precautions as
 well as regular sizes and spacing used in a home.
 
 First let{}'s talk about the wiring. The amount of current that can be drawn
-from an outlet is 15 amps if not 20 amps, therefore we will have no problem in
+from an outlet is 15 amps if not 20 amps, therefore we had no problems in
 drawing enough current from the outlet to power our board. 15 amps is more than
-enough to satisfy our needs even if the current is divided into five different
-applications. Other things to consider is the gauge of the wire used. The gauge
-of the wire is dependent on the amount of current it can safely handle. As
-discussed previously 1 amp is larger than anything we expect to see from our
-circuit. Therefore if we design our wire gauge for 1 amp we should be fine.
+enough to satisfy our needs even when the current is divided into five different
+applications. Something we had to consider was the gauge of the wire used. The gauge
+of the wire dependents on the amount of current it can safely handle. As
+discussed previously 1 amp is larger than anything we ever see from our
+circuit. Therefore we designed our wire gauge for 1 amp.
 However as stated before most homes are designed to be able to draw 15 if not
 20 amps. This level of amperable is equivalent with wire of gauge 14 and 12. A
 common brand of wiring used for these tyes of applications is Romex. Just for
-the sake of being consistent with what is used in the home we{}'ll use 12 or 14
-gauge wire. To splice the wire we could either solder it or we could use a wire
-nut. Both are an acceptable method for joining the wires, and both are used in
+the sake of being consistent with what is used in the home we used 14
+gauge wire. To splice the wire we considered either hand soldering it or we using a wire
+nut. Both are an acceptable methods for joining the wires, and both are used in
 homes. Wire nuts are considered to be an easier/ faster method for doing the
-job. While soldering and using a heat sink is seen as the higher performing
-link. We will make our link by soldering because it is slightly more
+job. While soldering is seen as the higher performing
+link. We will made our links by soldering them because it is slightly more
 professional than using a wire nut but really this is simply a matter of
 preference.
 
@@ -124,44 +121,39 @@ When wiring something it is often a good idea to attach your wire at more
 locations than simply the location where the connection is made. This way if
 for whatever reason the wire is pulled the stress will not go completely to the
 connection. Before splicing the wire and connecting the wires to the different
-control modules and base station, it would be a smart safety precaution to run
-the unspliced wire through the wood framing and attach it. After splitting the
-wire it would also be a smart idea to continue the practice of attaching the
-wire at more places than the connections. Although not completely necessary it
-would be nice if the color of our wires followed the understood meanings of
-wire colors in home wiring. In our design we have a single phase hot and
+control modules and base station, it was a smart safety precaution to run
+the unspliced wire through the wood framing and attaching it. After splitting the
+wire it was a smart idea to continue the practice of attaching the
+wire at more places than the connections. While doing our wiring we made sure to match the understood color scheme. In our design we have a single phase hot and
 neutral and ground. In the US the ground wire matches with green, the black
 wire matches with the hot wire, and the white wire matches with neutral.
 \cite{link14}
-Using these color codes will make it easier to keep the project neat and
-organized. It will make it easier to avoid mistakes made in wiring a circuit
+Using these color codes made it easier to keep the project neat and
+organized. It made it easier to avoid making mistakes in wiring our circuits.
 
-Now let{}'s discuss the boards themselves and how they will be placed into the
-framework of our wall. The boards will require some sort of casing that can
-hopefully easily be attached to the framework of the home. The less the number
-of things needed for installation the better. The easiest way to do this will
-be to attach them to or place them inside of the electrical boxes that we are
-using for our applications. Having only one thing to install per control module
-or base station will make real installation of our device more realistic for
-actual use in the future. In our design we will make use of electrical boxes
+Now let{}'s discuss the boards themselves and how they were placed into the
+framework of our wall. originally we wanted to place the boards in some sort of casing that would easily be attached to the framework of the home. Our thinking was the less the number
+of things needed for installation the better. The easiest way to do this would have been to attach them to or place them inside of the electrical boxes. Having only one thing to install per control module
+or base station would have made real installation of our device more realistic for
+actual use in the future. In our design we wanted to make use of electrical boxes
 since they are used in home electrical wiring. The boxes can be either metal or
 plastic, yet plastic boxes are a little easier to work with as they the holes
-are easier to punch out.
+are easier to punch out. In the end we just mounted the boards to the frame, yet if we had more time we would have made some sort of casing similar to what was described. 
 \cite{link15}
 
-There are some specific considerations that must be made with the different
-control modules. First off for the light it is important that we use an actual
-wall mounted light, as this is the type of light fixture that we are hoping to
-be controlling in an actual home. It is important that it is not simply a plug,
-because this would defeat the purpose of having light fixture control module.
-The wall mounted light should come with three wires; a hot, a neutral, and a
-ground wire. From these three wires we will be able to install the fixture in
+There are some specific considerations that were made with the different
+control modules. First off for the light it was important that we used an actual
+wall mounted light, as this is the type of light fixture that we would
+be controlling in an actual home. It was important that it was not simply a plug in light,
+because this would defeat the purpose of having light fixture control module. It would have been the same thing as the outlet module.
+The wall mounted light we used came with three wires; a hot, a neutral, and a
+ground wire. From these three wires we were able to install the fixture in
 the same way as what would be expected in a real home. The hot wire is the wire
-that we will be interrupting with the relay in order to switch the light on and
+that we interrupted with the relay in order to switch the light on and
 off.
 
-The outlet we will be using is a GFIC. GFIC stands for ground fault
-interrupter. Using this outlet will provide extra safety precaution. What a
+The outlet we used was a GFIC. GFIC stands for ground fault
+interrupter. Using this outlet provided an extra safety precaution. What a
 GFIC outlet does is constantly compare the output current from the neutral wire
 to the input current from the hot wire. If there{}'s a difference in current,
 within the range of a few milliamps, the outlet will shut off in 20-30
@@ -169,17 +161,16 @@ milliseconds. In the case that someone were to be electrocuted by this outlet,
 the current that goes into their body would cause a current leakage that would
 cause the GFIC to have a current difference and thus shut off.  GFIC outlet are
 normally required for kitchen and bathrooms. Since none of the members in our
-group have extensive experience in working with AC power it is best that we
-take every safety precaution available. We do not expect that homes that
-actually implement our design to use GFIC outlets, it is simply an extra safety
+group have extensive experience in working with AC power it was best that we
+took every safety precaution available. We do not expect that homes that
+actually implement our design will use GFIC outlets, it is simply an extra safety
 precaution that our group decided to take. \cite{link16}
 
 
-For the door control module we decided to make our own door of the size 18'{}'
-by 18.'{}' Since we are not buying the door but are custom making it ourselves
-we need to cut the holes ourselves. The first order of business is cutting the
+For the door control module we decided to make our own door with a 2'' by 12'' piece of wood. Since we did not buy the door but are custom made it ourselves
+we needed to cut the holes ourselves. The first order of business is cutting the
 door to length and leaving a frame of the right size. To cut the hole of the
-latch we will need to use a $\frac78$'' spade bit. The hole for the door knob
-will have to be made with 2-$\frac18$'' diameter hole saw. A 1'' wide chisel is
-used to cut out the recess of the latch. We are now able to install the door
+latch we will needed to use a $\frac78$'' spade bit. The hole for the door knob
+will had to be made with 2-$\frac18$'' diameter hole saw. A 1'' wide chisel was
+used to cut out the recess of the latch. After all that cutting we were able to install the door
 knob.
