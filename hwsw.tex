@@ -1,8 +1,8 @@
 \subsection{Radio Transceiver}
-For the radio transceiver of WHCS the chip that we decided to use is Nordic
-Semiconductor{}'s NRF24L01+. This chip meets all the requirements that we set
+For the radio transceiver of WHCS the chip that we decided to use was Nordic
+Semiconductor{}'s NRF24L01+. This chip met all the requirements that we set
 for our radio transceiver. The NRF is also a very popular chip that is easy to
-find and rarely out of stock. This is a benefit to the manufacturability of
+find and rarely out of stock. This was a benefit to the manufacturability of
 WHCS because NRFs are cheap and easy to buy in bulk. Alternatively we could
 have chosen to use an XBee radio device which implements the zigbee 802.15.4
 IEEE standard, however we did not see the need for this. XBee devices are also
@@ -11,89 +11,90 @@ more expensive than the NRF chips that we have decided to utilize.
 \subsubsection{Operating Principles and Usability of NRF24L01+}
 The NRF24L01+ is a radio transceiver that operates in the ISM (Industrial,
 Scientific, and Medical) radio band. The range of channels for the NRF is
-2.4GHz to 2.527 GHz, however because the designated ISM band that we are using
-only ranges from 2.4GHz to 2.5GHz we will not be able to use all of the NRF{}'s
-available channels. With the NRF we are capable of sending payloads with a
-maximum size of 32 bytes per transmission from module to module. We will be
+2.4GHz to 2.527 GHz, however because the designated ISM band that we used 
+only ranges from 2.4GHz to 2.5GHz we were not be able to use all of the NRF{}'s
+available channels. With the NRF we were capable of sending payloads with a
+maximum size of 32 bytes per transmission from module to module. We were
 able to change the data length from 1 to 32 bytes in order to find the optimal
 mix between reliability and speed. Every NRF chip has the ability to
 simultaneously store 1 transmission address and 6 receiving addresses. The
 first receiving address is utilized if the auto{}-acknowledgement feature is
-enabled, so effectively there are 5 receiving addresses.  This capability gives
-us flexibility for implementing our network because we make decisions such as
+enabled, so effectively there are 5 receiving addresses.  This capability gave
+us flexibility for implementing our network because we could make decisions such as
 having a dedicated address to each node in the network as well as an address
 for broadcasts of certain types. The addresses of the NRF are 5 bytes wide so
-we will be able to have many NRF modules within the network. A very useful
+we were be able to have many NRF modules within the network. A very useful
 feature of the NRF is the ability to enable auto{}-acknowledgement. When this
 feature is activated the receipt of a transmission from one NRF to the other is
-auto{}-acked without the need from any upper level software. This simplifies
-the work necessary for creating our own network of NRF chips. We will be able
+auto{}-acked without the need from any upper level software. This simplified 
+the work necessary for creating our own network of NRF chips. We were able
 to confirm the receipt of data therefore increasing reliability.  This
 auto{}-ack also allows the NRF to perform retries up to a given limit, so just
 in case there is noise during the transmission the NRF will repeatedly try to
 transmit again. The NRF also allows for low power mode and long range mode.
-For WHCS we will be able to tweak whether or not to use long range mode or not
+For WHCS we are able to tweak whether or not to use long range mode or not
 depending on the performance of the system within its environment.
 
-The NRF requires 3.3v of electricity to operate so all parts of WHCS will
+The NRF requires 3.3v of electricity to operate so all parts of WHCS 
 require a 3.3v line. The datasheet lists the current consumption while in
-receive mode as 18mA. This will be the most common mode for the NRF chips
+receive mode as 18mA. This is the most common mode for the NRF chips
 present in WHCS so they can be ready to receive commands at any time. The chip
 receives commands from a microcontroller through SPI (Serial Peripheral
-Interface). This is great because the NRF design philosophy fits perfectly with
+Interface). This is great because the NRF design philosophy fit perfectly with
 our microcontroller based base station and control modules. Beside the standard
 MOSI, MISO, and SCK for SPI, the NRF also has a csn pin for telling it to
 receive commands, ce pin for telling to transmit or receive at that moment,
 and an interrupt pin for notifying the microcontroller of important situations.
-The csn pin will allow the SPI bus to be shared with other components such as
+The csn pin allows the SPI bus to be shared with other components such as
 the LCD being used for the base station. The interrupt wire pin can be
 monitored in order to listen for data received, data sent, and data failed to
-send notifications. In total the NRF will take up 6 pins whilst three of the
-pins will be shareable with other SPI components.
+send notifications. In total the NRF takes up 6 pins whilst three of the
+pins are shareable with other SPI components.
 
 \subsubsection{Driver Use Case}
-The NRF chip that we have decided to use for communication in WHCS will need to
-have a driver written for it. This will help keep the way we interface with the
-NRF consistent and will provide clean code. All of the network code that we
-write for the base station and the control modules will be relying on the
-integrity of the NRF driver that we write.  The driver provides the foundation
-and if it is not reliable then none of the code we write for our system will be
-reliable. The focus for the development of the NRF driver is elegance. We want
-everything the NRF driver offers to be simple yet accomplish everything
-necessary. We have developed the use case diagram pictured in
+The NRF chip that we decided to use for communication in WHCS needed to
+have a driver written for it. This was to help keep the way we interface with the
+NRF consistent and to provide clean code. All of the network code that we
+write for the base station and the control modules was relying on the
+integrity of the NRF driver that we wrote.  The driver provides the foundation
+and if it is not reliable then none of the code we wrote for our system would have been
+reliable. The focus for the development of the NRF driver was elegance. We wanted 
+everything the NRF driver offered to be simple yet accomplish everything
+necessary. We developed the use case diagram pictured in
 \autoref{fig:nrf-usecase-diagram} as a guideline for the development of the NRF
-driver. The NRF driver should provide the functionality included in the use
-case diagram in an easy to use format.  These will be the most common uses of
+driver. The NRF driver provides the functionality included in the use
+case diagram in an easy to use format.  These are the most common uses of
 the NRF.
 
 \ucfgfx[scale=0.4]{fig:nrf-usecase-diagram}{a51-img001.png}{NRF Driver Use-case Diagram}
 
 The core use of the NRF driver is transmitting and receiving payloads. Every
 other use case is a supporting role for the final goal of transmission. The
-basis of the driver will be reading and writing registers. Everything will
-build off of this capability, especially reading and writing the payload for
+basis of the driver is reading and writing registers. Everything builds off of this capability, especially reading and writing the payload for
 transmission. Other use cases such as changing power mode, checking the status
-of the chip, and changing from a transmitter to a receiver will be special
+of the chip, and changing from a transmitter to a receiver are special
 forms of writing to a register. Thus reading and writing to registers is a use
-of the driver, however it will be abstracted in a way that provides ease of
-use. A user of the NRF driver will spend most of the time setting addresses,
+of the driver, however it is abstracted in a way that provides ease of
+use. A user of the NRF driver spends most of the time setting addresses,
 writing payloads, transmitting payloads, and analyzing interrupts. These use
-cases need to be implemented perfectly to provide a strong foundation for the
+cases needed to be implemented perfectly to provide a strong foundation for the
 networking of WHCS.
+
+Originally it was our plan to develop a NRF driver from the ground up to fully utilize the communication capabilities provided by the chip. We made good progress on this endeavor and were already able to access a large amount of the NRF's capabilities. At some point during the development process we found that there was a library called RF24 that was designed for use with NRF chips on Arduino boards. Since the microcontroller family that we used in WHCS was the same family that Arduino uses we thought that we would be able to port this library and compile it with AVR-GCC. We had to stub out and replace Arduino specific functions like digitalwrite() and timer calls. We also had to write an underlying SPI library for the RF24 register read and write functions to call upon. We were able to get the RF24 library fully ported and working with our base station and microcontroller. This saved us a large amount of time during the development process.
 
 \subsubsection{Driver Class Diagram}
 It was decided that the best design approach for implementing the NRF driver
-was as a class in C++. We will be using Atmel ATMega microcontrollers in WHCS so C++
-is supported as a development language. Using C++ allows us to create a class
+was as a class in C++. We used Atmel ATMega microcontrollers in WHCS so C++
+was supported as a development language. Using C++ allowed us to create a class
 that can leverage object oriented programming techniques such as encapsulation.
 The class diagram for the driver is shown in \autoref{fig:nrf-class-diagram}.
 Primitive functions such as ReadByte and WriteByte can be hidden from a user
-while PowerUp will be exposed as a public function. Using C++ also gives us the
+while PowerUp will be exposed as a public function. Using C++ also gave us the
 ability to use a constructor when using the WHCSNrf class, and in this
 constructor we can assign the only thing varying between uses of the NRF, the
 chip enable pin and the chip select not pin. Assigning the ce pin and the csn
 pin are the first step of using the NRF driver. Any communication between the
-microcontroller and the NRF will rely on the proper assignment of these pins.
+microcontroller and the NRF relies on the proper assignment of these pins.
 
 %\begin{wrapfigure}{r}{0.5\textwidth}
 %  \begin{center}
@@ -104,19 +105,21 @@ microcontroller and the NRF will rely on the proper assignment of these pins.
 %\end{wrapfigure}
 \ucfgfx[scale=0.5]{fig:nrf-class-diagram}{a51-img002.png}{NRF Class Diagram}
 
-Usage of the NRF driver will involve first constructing the class by telling
-the microcontroller which pins the NRF is connected to. Then the user will be
-doing everything necessary to customize the way that data is transmitted and
+Usage of the NRF driver involves first constructing the class by telling
+the microcontroller which pins the NRF is connected to. Then the user 
+does everything necessary to customize the way that data is transmitted and
 received. The driver exposes the common settings in an easy to access manner.
 Enabling things such as auto{}-acknowledgement and the number of retries for
-the transceiver can be done with the call of a function with simple parameters.
-Setting the address for receiving and transmitting data can be done in one line
+the transceiver is done with the call of a function with simple parameters.
+Setting the address for receiving and transmitting data is done in one line
 of code. The SetTxAddr function will be one of the most utilized function for
 an NRF involved in a network constantly sending payloads to other chips. A
 typical use will involve powering up the NRF with the PowerUp call, setting the
 transmission address, writing a payload, and then transmitting a payload. With
 this driver, the user does not need to know the registers involved with the
 NRF. The hardware interactions with the chip are all abstracted away.
+
+In the final version of WHCS the driver that we used for the NRF was actually very close to this initial class design. The RF24 library used a C++ class and fully encapsulated the logic needed to operate the NRF. Our WHCSNrf class would have been a great solution to using the NRF but there was no need to continue implementing it once we found we were able to port the RF24 library.
 
 \subsubsection{Network Library}
 \label{sec:network-library}
@@ -261,11 +264,11 @@ no data would be lost to the leave transition.
 %\end{table}
 
 \subsection{Microcontrollers}
-For the proper operation of WHCS, microcontrollers need to be installed
-in to all of the control modules as well as the base station. This meant
+For the proper operation of WHCS, microcontrollers needed to be installed
+into all of the control modules as well as the base station. This meant
 research was needed to choose what the best microcontroller for each of the
-modules was. The base station is a bit more hefty than the control modules so
-the design considerations are different for the two. The first step was to
+modules was.  The base station is a bit more hefty than the control modules so
+the design considerations were different for the two.  The first step was to
 figure out what family of microcontrollers to use.
 
 \subsubsection{Microcontroller Brand}
@@ -478,17 +481,17 @@ was the best choice for developing for our Atmel microcontrollers.
 \end{table}
 
 \subsubsection{Microcontroller Additions}
-To ensure that the microcontrollers we use on the base station and the control
-modules are operating at their full capabilities we will be adding external
-crystals to their circuits. The external crystals will boost the
+To ensure that the microcontrollers we used on the base station and the control
+modules were operating at their full capabilities we added external
+crystals to their circuits. The external crystals boosted the
 microcontrollers operating frequency from their factory ratings of 1 MHz to the
 native frequency of the crystal.  Because the lowest max operating frequency
 for the microcontrollers we chose is 16 MHz this is the frequency we looked for
-when choosing a crystal to use for the microcontrollers. We have decided to use
+when choosing a crystal to use for the microcontrollers. We decided to use
 the NDK NX5032GA{}-16.000000MHZ{}-LN{}-CD{}-1 as the crystal for our
-microcontrollers. This microcontroller has a 16 MHz operating frequency and has
+microcontrollers. This crystal has a 16 MHz operating frequency and has
 the simple two connection design. For adding the crystal to our microcontroller
-we will be using the circuit pictured in \autoref{fig:mcu-crystal}. The crystal
+we used the circuit pictured in \autoref{fig:mcu-crystal}. The crystal
 connects to the XTAL pins on the microcontroller and the microcontroller gets
 its driving wave from the crystal. As the diagram shows there are two
 capacitors that must be utilized to get the circuit working. These capacitors
@@ -514,25 +517,25 @@ $C_{1}$ and $C_{2}$ necessary in the crystal circuit was
 \end{equation}
 
 To make the external crystals work with the microcontrollers, certain fuses
-must be set through a programmer connected to the microcontroller. The
-datasheets for the microcontrollers have a fuse list that can be used to make
+needed to be set through a programmer connected to the microcontroller. The
+datasheets for the microcontrollers have a fuse list that were used to make
 the proper alterations for incorporating an external crystal into the design.
 There is also a free online fuse calculator tool for AVR microcontrollers at
 \cite{link2} that can be used to quickly get the
 necessary fuses that must be changed for any sort of microcontroller alteration
 such as changing the operating frequency.
 
-To get the microcontrollers running the code we right needs to be programmed
+To get the microcontrollers running, the code we write needed to be programmed
 onto the chips flash memory. Atmega microcontrollers use SPI to transfer
 programs to the chip. There are different programmers that can be used to
 complete the task of uploading code to the microcontroller. We put research
 into which programmer to use in order to be the most cost effective with our
 design. The two programmers that our decision came down to are listed in
 \autoref{tab:comparison-of-prog}. Atmel has a programmer called the AVRISP mkII. This
-programmer is supported by the designers of the chips so it is sure to work
-when ordered however it also comes with a large price tag compared to other
+programmer is supported by the designers of the chips so it was sure to work
+when ordered however it also came with a large price tag compared to other
 options. The online vendor SparkFun offers a product called AVR Pocket
-Programmer for \$15 that accomplishes all that we need to get our programs onto
+Programmer for \$15 that accomplished all that we needed to get our programs onto
 our microcontrollers. The programmer relies on an open source program called
 AVRDUDE to get the hex file from the development computer to the chips flash
 memory. The program is free and the pocket programmer is much cheaper than the
@@ -562,7 +565,7 @@ for our microcontrollers.
 \end{table}
 
 \subsection{BlueTooth Chip}
-The BlueTooth device for WHCS will enable the base station to communicate with
+The BlueTooth device for WHCS enables the base station to communicate with
 the mobile phone controller. Our guidelines for choosing a BlueTooth device
 included ease of use, reliability, size, cost, availability, and documentation.
 There were a multitude of BlueTooth devices to choose from. Special attention
@@ -975,43 +978,41 @@ writing our code we could easily submit our changes to a remote Git repository.
 the state of certain devices within the home and monitoring certain states.
 For example a user of WHCS will spend most of the time turning on lights,
 checking whether a light is on, or checking the temperature reading of a
-certain sensor. There are certain other use cases that are necessary in order
+certain sensor. There are certain other use cases that were necessary in order
 for WHCS to be a functioning application, as well as to make it have a robust
 feel. Features like speech activation and creating endpoint groups are
 usability features that are not necessary in order to accomplish the central
-goals of WHCS.  Connecting to the base station the first time you use the
-application is a necessary use case that must be incorporated into the
+goals of WHCS but add to the applications value.  Connecting to the base station the first time you use the
+application was a necessary use case that had to be incorporated into the
 application. \autoref{fig:android-usecase} shows the use case diagram for the
 WHCS application.
 
-The design for the WHCS application involves making sure that performing the
-common use cases such as checking status and toggling endpoints are very fast.
-The user should be able to perform these tasks without having any knowledge of
-how the application works. Speech recognition will be a supporting feature so
-it does not need to be a central focus like the area that will visualize the
-control modules. When the user wants to perform speech activation it will
-involve pressing a button to prompt the speech recognizer, and then giving a
-command to the WHCS. In order to make the speech activation feature more
-promising, the user will have the ability to rename endpoints for activation.
-Creating endpoint groups will be a feature that is not used frequently but adds
-a lot of value to the application. Users will only have to create an endpoint
-group once for it to last in the application. Creating an endpoint group will
-be a simple task involving assigning a group number to endpoints. That number
-will be the endpoint group, then that endpoint groups state can be toggled.
+The design for the WHCS application involved making sure that performing the
+common use cases such as checking status and toggling endpoints were very fast.
+It was our intent for the user to be able to perform these tasks without having any knowledge of
+how the application works. Speech recognition is a supporting feature so
+it did not need to be a central focus like the area that will visualize the
+control modules. When the user wants to perform speech activation it 
+involves pressing a button to prompt the speech recognizer, and then giving a
+command to WHCS. In order to make the speech activation feature more
+promising, the user has the ability to rename endpoints for activation.
+Creating endpoint groups is a feature that is not used frequently but adds
+a lot of value to the application. Users only have to create an endpoint
+group once for it to last in the application. Creating an endpoint group is a simple task involving assigning a group number to endpoints. That number
+is the endpoint group, then that endpoint group's state can be toggled.
 
 \ucfgfx[scale=0.45]{fig:android-usecase}{a55-img002.png}{Android App Use-case diagram}
 
-\subsubsection{Speech Recognition} The Android application for WHCS will offer
-speech activation capabilities. These will be on top of GUI activation
+\subsubsection{Speech Recognition} The Android application for WHCS offers
+speech activation capabilities. These are on top of GUI activation
 capabilities. The speech activation sequence begins with the press of a button
-to start the speech recognition. The user will be prompted with a microphone
-and can then give his command. The commands will be formatted like {}``light
+to start the speech recognition. The user is prompted with a microphone
+and can then give his command. The commands are formatted like {}``light
 one on.'' When the user gives commands using the speech method, a notification
-will be given indicating the success of interpreting the speech into a known
-command. If the user{}'s speech does not match a known command, the speech will
-be shown back to the user to show what went wrong. We are predicting that the
+is given indicating the success of interpreting the speech into a known
+command. If the user{}'s speech does not match a known command, the speech is  shown back to the user to show what went wrong. We predicted that the
 most frequent cause of this will be the Android phone mishearing the user. In
-the event that the speech matches a command, the application will display the
+the event that the speech matches a command, the application displays the
 command to the user and then perform it. The following flow chart in
 \autoref{fig:android-speech} displays the sequence of events happening when a
 user performs speech activation.
@@ -1020,95 +1021,94 @@ user performs speech activation.
 chart}
 
 The goal of the speech activation feature is to be easy to use. In order to
-promote the usage of this feature we will add the ability for users to rename
-the endpoints that the speech commands will target. For example the user could
-change {}``light 1'' into {}``living room light.'' This way the user could say
+promote the usage of this feature we added the ability for users to rename
+the endpoints that the speech commands can target. For example the user can
+change {}``light 1'' into {}``living room light.'' This way the user can say
 {}``living room light on{}'' to the application in order to turn on the living
-room light. To do this data structures will need to be stored in the
+room light. To do this, data structures need to be stored in the
 application which hold the preferred name of each type of endpoint. Endpoints
 can be distinguished by the type they are, their individual identifier number
-and their preferred name. The preferred name should be stored when the
-application is closed so a permanent source of storage is needed to do this.
-The file system can be used or possibly a SQLite database.
+and their preferred name. The preferred name is stored when the
+application is closed so a permanent source of storage is needed to do this. The solution that we use for permanent storage is a SQLite database which is a common tool in Android applications.
 
-In the code for our application we will be using the Android speech recognition
+In the code for our application we use the Android speech recognition
 API (Application Program Interface).  Android has a speech recognition service
-that can be started by requesting it within an application. We will request
+that can be started by requesting it within an application. We request
 this service to be run by using an Android construct called an intent,
-specifically the recognizer intent. Once the request the service to be run it
+specifically the recognizer intent. Once we request the service to be run, it
 gives us the text that it produced from listening to the user{}'s speech. The
 code that performs this process ends up bloating up the application so we
 sought to develop a wrapper class in order to perform the request for the
 speech service and simply hand back the text. However because of the Android
 design philosophy, creating a wrapper class to start the speech recognition
-service was not easy enough to make it a worthwhile endeavour. Thus we
+service was not easy enough to make it a worthwhile endeavor. Thus we
 concluded the best approach is to keep the calls to the Android speech
 recognition API within the class we use for our main activity.
 
-\subsubsection{BlueTooth Software Design} BlueTooth will be the technology that
+\subsubsection{BlueTooth Software Design} Bluetooth is the technology that
 allows WHCS users to interact with the base station from the mobile phone. This
-means that proper functioning BlueTooth software must be written to ensure that
-users can interact with WHCS. From the user{}'s standpoint the only knowledge
-of BlueTooth required will be the ability to perform an initial connection to
+means that proper functioning BlueTooth software needed to be written to ensure that
+users could interact with WHCS. From the user{}'s standpoint the only knowledge
+of Bluetooth required is the ability to perform an initial connection to
 the base station. Once a user has connected to the base station once through
-the WHCS app we will be able to cache the base station device and allow for
+the WHCS app we are able to cache the base station device and allow for
 automatic reconnection every time the application is launched. This is an
 important abstraction for the user because the user should not have to spend
 time handling BlueTooth connections every time they open the application.
 \autoref{fig:android-bluetooth-start} shows what the BlueTooth software will be
 doing whenever the user opens the Android application.
 
-\ucfgfx[scale=0.4]{fig:android-bluetooth-start}{a55-img004.png}{Android BlueTooth Startup
+\ucfgfx[scale=0.4]{fig:android-bluetooth-start}{a55-img004.png}{Android Bluetooth Startup
 Flowchart}
 
 In \autoref{fig:android-bluetooth-start} we see that the first check that is
-made is to ensure that BlueTooth is enabled. The Android operating system
-requires applications to ask the user whether they want to activate BlueTooth
+made is to ensure that Bluetooth is enabled. The Android operating system
+requires applications to ask the user whether they want to activate Bluetooth
 or not. It cannot just be turned on. If the WHCS application is opened and
-BlueTooth is off we will prompt to the user to turn it on and if they refuse we
-will exit the application. When it has confirmed that BlueTooth is on, the
+Bluetooth is off we prompt to the user to turn it on and if they refuse we
+exit the application. When it has confirmed that Bluetooth is on, the
 application can check to see if it knows the base station device. If the base
 station device is known then the application can skip asking the user what to
 connect to and can perform the connection automatically. This is what should be
 happening most of the time. If the base station is not stored in the
 applications data then the application will have to prompt the user to connect
 to a base station. When connecting to a device there are two possibilities for
-connection, paired devices and non{}-paired devices. The application will first
-show the user all devices that their phone has paired with previously, in case
+connection, paired devices and non{}-paired devices. The application first
+shows the user all devices that their phone has paired with previously, in case
 the application somehow forgot the base station. If the base station does not
-show up in the paired devices list, the user will be able to search for active
-BlueTooth devices and select the base station. At the end of this start up
-cycle the WHCS application will have an active BlueTooth connection with the
+show up in the paired devices list, the user is able to search for active
+Bluetooth devices and select the base station. At the end of this start up
+cycle the WHCS application has an active Bluetooth connection with the
 base station that can be used for full duplex communication.
 
-Our application will be leveraging the API and design guideline for using
-BlueTooth from Android phones. The underlying driver for BlueTooth
+Our application leverages the API and design guideline for using
+Bluetooth from Android phones. The underlying driver for Bluetooth
 communication utilizes sockets similar to network sockets in other languages.
 Android offers a class named BluetoothDevice which contains all the address
 information necessary for opening a socket. When our application scans for
 devices or asks the user to pick an option from the list of paired devices this
-will be to get the BluetoothDevice to open a socket from. Once we have obtained
-that BluetoothDevice we can create a BluetoothSocket through one of its
-methods. Once a BluetoothSocket has been opened through calling connect, an
-input and output stream become available that allow us to send and receive raw
+is to get the BluetoothDevice to open a socket from. Once we have obtained
+that BluetoothDevice we create a BluetoothSocket through one of its
+methods. Once a BluetoothSocket has been opened through calling connect, 
+input and output streams become available that allow us to send and receive raw
 byte data. This is a primitive form of communication but it is also exactly
-what we want. All data that we send or receive from the base station over
-BlueTooth will be in the form of a byte array. This form of primitive data
-transmission allows us to implement certain communication protocols between the
-Android base station.
+what we wanted. All data that we send or receive from the base station over
+Bluetooth is in the form of a byte array. This form of primitive data
+transmission allowed us to implement certain communication protocols between the
+Android application and base station.
 
 Once a BluetoothSocket has been opened on the Android device the application
-can begin communicating with the base station. We will use a communication
+can begin communicating with the base station. We use a custom communication
 protocol between the Android device to ensure the base station can properly
-interact with the application. This protocol will allow the Android application
+interact with the application. This protocol allows the Android application
 to give commands to the base station such as inquire about the state of the
 control modules or to toggle state within the system. Whenever the Android
-application wants to send a message to the base station the software will
-create a packet with a certain structure. The packet will contain a byte for
+application wants to send a message to the base station the software 
+creates a packet with a certain structure. The packet contains a byte for
 letting the base station know that a command is being given, the command
 itself, any variables for the command, and then a byte for finishing the
-command. The base station will receive one byte at a time due to the serial
-nature of BlueTooth communication but it will be able to parse the packets it
+command. The base station receives one byte at a time due to the serial
+nature of Bluetooth communication but it is able to parse the packets it
 receives in order to figure out what action the application is trying to
 perform. \autoref{fig:android-comm} shows a visual representation of the
 communication between the aplication and the base station.
@@ -1118,59 +1118,53 @@ Android Device and Base Station}
 
 \subsubsection{GUI Philosophy} Our goal for the development of the user
 interface was to make something simple that users could navigate quickly and
-efficiently. There is no need for the UI to be deep or hold the user{}'s
+efficiently. There was no need for the UI to be deep or hold the user{}'s
 attention. The only purpose of the GUI is to provide intuitive visuals for
 interacting with WHCS. When we developed the GUI we wanted to minimize the time
 it took for the user to open the application and make a change within the
 system. For example the user should be able to open the application and turn a
 light on or off in the shortest time possible. This means opening up to a
 screen that lists all possible end points in the system that can be targeted by
-a command. The top right layout in \autoref{fig:android-gui} shows the view
-that would list all of the accessible control modules in the system.
+a command. The middle layout in \autoref{fig:android-gui} shows the view
+that lists all of the accessible control modules in the system.
 
-\ucfgfx[scale=0.55]{fig:android-gui}{a55-img006.png}{Android GUI Layout}
+\ucfgfx[scale=0.50]{fig:android-gui}{GUI_FLOW.png}{Android GUI Layout}
 
 As shown in \autoref{fig:android-gui} there are layouts that provide support
-around the main list layout. The first two layouts in the upper left and upper
-middle are the what the user would see when the base station is not known to
+around the main list layout. The first layout in the left side of the figure is what the user would see when the base station is not known to
 the application yet. The user would need to select the base station from a list
 of paired devices or perform a BlueTooth scan for active devices. Once the user
 has selected a base station then the base station can be saved in the
-application and the user should be able to avoid seeing these screens again.
+application and the user should be able to avoid seeing this screen again.
 The user would be viewing the main list layout at this point. From the main
-list layout the user can navigate to the individual control module viewer. This
-will be achievable by clicking on the name of a control module or by clicking
-the edit button. The individual detail viewer will allow the user to toggle the
+list layout the user can navigate to the individual control module viewer. This 
+is achievable by clicking on the name of a control module. The individual detail viewer allows the user to toggle the
 state of the control module, change the speech recognition name of the control
-module, and assign the control module to a group. The detail viewer will also
-list the current state of the control module.
+module, and assign the control module to a group. The detail viewer also
+lists the current state of the control module.
 
 In Android different aspects of a GUI can be created in two different ways,
 fragments and activities. Typically fragments are used when two different
 screens serve very similar purposes or are trying to accomplish a shared goal.
 Fragments are typically used when exchanges are meant to be done very fast
-between screens. In the case of our application we will be using separate
+between screens. In the case of our application we use separate
 activities for each of the screens. This is a logical approach because the
-layouts in our application are independent of one another. The main list layout
-will serve as the root activity and any other screen will be an activity that
+layouts in our application are independent of one another. The base station connection layout  
+serves as the root activity and any other screen is an activity that
 is placed upon it. For example when the application opens up the first time it
-will try to open the list activity but will notice that it is not connected to
-the base station. This will cause the paired devices activity to stack on top
-of the list activity. When the base station is selected the paired devices
-activity can return the result of the selection to the list activity and the
-list activity can function normally. When the detail viewer activity is called
+tries to open the connection activity and if it successfully connects it places the list activity on the top of the GUI stack. When the detail viewer activity is called
 it stacks on top of the list activity and when the user is done with it, it
-will be removed off of the stack.
+is removed off of the stack.
 
-To make our list activity look clean and function effectively we will create a
+To make our list activity look clean and function effectively we created a
 custom adapter. In Android, adapters are the classes that allow objects to be
 transformed into data that a listview can turn into list items to be displayed
-to the user. The name of the adapter will be cmAdapter. The cmAdapter that we
-create will have an array of control modules as one of its fields, as well as a
+to the user. The name of the adapter is cmAdapter. The cmAdapter that we
+created has an array of control modules as one of its fields, as well as a
 function named getRow that it inherits from its base class Adapter. The
-cmAdapter will know how to get the data from a control module object necessary
-to populate the main list. The main list activity will constantly call the
-getRow method that will be present in our adapter to fill the list. This
+cmAdapter knows how to get the data from a control module object necessary
+to populate the main list. The main list activity constantly calls the
+getRow method that is present in our adapter to fill the list. This
 creates a nice object oriented design for listing all of our control modules.
 If we want to display different data for control modules, we can simply alter
 the getRow method that is implemented in cmAdapter.
@@ -1184,7 +1178,7 @@ Diagram}
 \subsubsection{BlueTooth Listener Class} When the WHCS application is
 communicating with the base station it is easy for the base station to be
 interrupted and start parsing communication using the UART interrupt vectors on
-the microcontroller. We want our application to possess the same event driven
+the microcontroller. We wanted our application to possess the same event driven
 capability so we created the BlueToothListener class. This class handles
 listening for any incoming BlueTooth communication aimed at the phone. The
 class must be initialized by telling it what BlueTooth device it should be
@@ -2201,7 +2195,7 @@ After designing the PCB to the layout specification, the front and back images b
 \subsection{Control Module}
 What can be thought of as the ``arms of WHCS'', the control modules serve as
 the main devices that seed the network with data. This data is specific to the
-control module that is emitting it. The base station is more more complex than
+control module that is emitting it. The base station is more complex than
 an individual control module because it needs to be\footnote{Seriously, it really needs to be. Take our word for it.}
 . The control modules should
 be as lightweight as possible to save cost and keep power usage down. If the
@@ -2320,58 +2314,57 @@ an electric strike and a door knob with a lock is used.
 \ucfgfx[scale=0.5]{fig:electric-strike-entry}{a584expected2pagesElectricStike-img002.png}{electric strike entry methods}
 
 \subsubsection{Sensor Data Collection}
-The control modules of WHCS will not only be used for switching things on and
-off. They will also provide a foundation for sensing data around the house. For
+The control modules of WHCS are not only used for switching things on and
+off. They also provide a foundation for sensing data around the house. For
 example any sensor that can turn physical data into an analog or digital signal
-could be connected to a control module and then be a part of WHCS. Examples of
-these would be temperature sensors and humidity sensors. For our project we
-will specifically be using a temperature sensor to demonstrate WHCS data
-collection. With the way the circuit will be designed only the sensor chip
+can be connected to a control module and then be a part of WHCS. Examples of
+these would be temperature sensors and humidity sensors. For our project's prototype we used a temperature sensor to demonstrate WHCS's data
+collection. With the way the circuit was designed only the sensor chip
 would need to be removed and any other sensor would be able to be hooked up.
 
-The temperature sensor that we have decided to use for WHCS is the TMP36. The
+The temperature sensor that we decided to use for WHCS was the TMP36. The
 TMP36 is widely available and comes in through hole and smd packages. The
 temperature sensor is simple in design as it has only three pins that require
 connection. The schematic shown in \autoref{fig:temp-sensor-connect} shows how the
-temperature sensor would be connected to the ATmega328 on the control modules.
+temperature sensor is connected to the ATmega328 on the control modules.
 The VOUT pin of the TMP36 outputs a voltage signal that varies based on the
 temperature surrounding the component. The voltage range is between 2.7 to 5.5
-volts which will be suppliable through or logic level voltage lines. This model
+volts which is suppliable through or logic level voltage lines. This model
 of temperature sensor is capable of sensing temperatures within the range of
 {}-40 to 125 degrees Celsius. This covers all the temperatures that one would
-encounter in a home and more. Connecting to the analog sensor will require the
+encounter in a home and more. Connecting to the analog sensor required the
 use of one of the ATmega328's ADC (Analog to Digital Conversion) pins for
-converting the analog signal to a digital signal. There are plenty of ADC pins
-available on the microcontroller and even when one pin on the ADC port is
-connected for conversion the other pins can still be used as GPIO pins. The
+converting the analog signal to a digital signal. There were plenty of ADC pins
+available on the microcontroller and even when one pin on the ADC port was
+connected for conversion the other pins could still be used as GPIO pins. The
 schematic shows the output of the temperature sensor going to pin ACD0 but any
-ADC pin will be able to accomplish converting the signal to digital.
+ADC pin would be able to accomplish converting the signal to digital.
 
 \ucfgfx[width=13.944cm,height=6.8cm]{fig:temp-sensor-connect}
 {a683SensorCollectionexpected2pages-img001.png}{Temperature Sensor Connection Schematic}
 
-Utilizing the ADC pins will require working with special registers inside the
+Utilizing the ADC pins required working with special registers inside the
 microcontroller. The ADMUX register allows for selecting which pin out of the 8
 ADC pins should be connected to the internal hardware for doing the conversion.
 This register also holds bits necessary for setting up the reference values
-used in the conversion. The reference voltage in the conversion is important
-because the digital value that is obtained is a result of where that voltage
-level falls in between ground and the reference voltage that is supplied. For
-our design we will be using the power supply of the microcontroller as the
-reference for the ADC which means setting bits 7 and 6 of the microcontroller
-to 0. The ADCSRA register is also very important because this is where we set
-the prescaler that will divide the clock rate of the chip into the frequency
-that we want to use for ADC. We are running our microcontrollers at 16 MHz in
-WHCS which is too fast for good accuracy in the ADC. We will set the prescaler
+used in the conversion. The reference voltage in the conversion was important
+because the digital value that was obtained was a result of where that voltage
+level fell in between ground and the reference voltage that was supplied. For
+our design we used the power supply of the microcontroller as the
+reference for the ADC which meant setting bits 7 and 6 of the microcontroller
+to 0. The ADCSRA register was also very important because this is where we set
+the prescaler that divided the clock rate of the chip into the frequency
+that we wanted to use for ADC. We are ran our microcontrollers at 16 MHz in
+WHCS which is too fast for good accuracy in the ADC. We set the prescaler
 in the ADCSRA register to 128 in order to achieve an ADC sampling rate that
-provides reliable accuracy.
+provided reliable accuracy.
 
 \subsubsection{Light and Outlet Control}
-The control modules of WHCS will be capable of controlling lights and outlets
+The control modules of WHCS are capable of controlling lights and outlets
 around the home. To be able to support this functionality the control modules
-need to be able to switch 120V AC circuits. A simple circuit with a transistor
-is not capable of switching such high voltages using the logic voltage levels
-of microcontrollers. In order to switch such high voltages relays can be used.
+needed to be able to switch 120V AC circuits. A simple circuit with a transistor
+was not capable of switching such high voltages using the logic voltage levels
+of microcontrollers. In order to switch such high voltages we used relays.
 There are two different forms of relays, mechanical and solid state. For our
 purposes we investigated both to see which would be the best option. We
 originally considered mechanical relays in our design. For mechanical relays an
@@ -2386,19 +2379,19 @@ using one would limit us to not being able to directly activate the relay from
 our microcontroller. The required current and voltage to activate a mechanical
 relay is too high for any of our microcontrollers to supply.
 
-We want to be able to control the relay that is switching 120V AC directly from
+We wanted to be able to control the relay that is switching 120V AC directly from
 the control module microcontroller{}'s GPIO pins. We concluded that this would
 not be achievable through the use of mechanical relays. A mechanical relay
 would require extra transistors to switch another voltage source to the relay.
-Solid state relays solve the problem of supply voltage and current which is
+Solid state relays solved the problem of supply voltage and current which is
 posed by mechanical relays. Solid state relays do not move any physical
 components to switch a circuit, instead they operate through semiconductors. As
 a result they require much less input to complete the circuit for the load
 voltage. One tradeoff for solid state relays is that they are generally more
 expensive than their mechanical counterparts. In this situation the price jump
-is not large enough dissuade us from utilizing SSRs (Solid State Relays)
+was not large enough dissuade us from utilizing SSRs (Solid State Relays)
 instead of mechanical relays. If we decided to use mechanical instead of solid
-state we would not get the behavior that we desired in our circuit so the
+state we would not have gotten the behavior that we desired in our circuit so the
 decision is easy to make.
 
 Once we narrowed down our solution to controlling lights and outlets through
@@ -2408,11 +2401,11 @@ are using for the control modules are capable of outputting a maximum of 40mA
 DC current. We needed a solid state relay that had a tolerance for 120V AC as a
 load voltage, could be supplied by 5V, and needed less than 40mA for
 activation/forward current. We found a solid state relay made by Sharp
-Microelectronics with the part number S108T02F that met all the requirements
+Microelectronics with the part number S116T02F that met all the requirements
 that we set. We confirmed that the chip is in stock and suppliable by digikey.
 The chip is available at an affordable price of \$5.10. \autoref{fig:wiring-sch-ssr}
 Shows a schematic using this solid state relay. The schematic for the control
-module would mimic the one shown in this figure. The activation input would be
+module mimics the one shown in this figure. The activation input is 
 directly connected to the microcontroller{}'s GPIO pin in order to toggle on
 and off the state of the relay. This particular relay has an activation voltage
 of 1.2V DC which means that when the relay is on this is the voltage across the
@@ -2422,7 +2415,7 @@ requires at least 15mA for activation. The microcontroller{}'s pins are
 adequate for supplying this low current. When the microcontroller{}'s
 activation pin, pin PB1 in the figure, is set to high, the 120V AC is free to
 flow through the triac of the SSR and power the component in place of the load
-resistor. In WHCS the load resistor RL in the figure will be replaced with an
+resistor. In WHCS the load resistor RL in the figure is replaced with an
 outlet or a light. Whenever the microcontroller pin goes high, the light or
 outlet will receive the power it normally would from the household main.
 
@@ -2430,14 +2423,14 @@ outlet will receive the power it normally would from the household main.
 Wiring Schematic for Solid State Relay}
 
 \subsubsection{Schematic Breakdown}
-The control modules for WHCS have to be able to support communication via a
+The control modules for WHCS had to be able to support communication via a
 radio transceiver as well as interaction with their target endpoints.
-\autoref{fig:ctrl-mod-sch} shows the schematic for the control modules that will be
+\autoref{fig:ctrl-mod-sch} shows the schematic for the control modules that was 
 implemented in WHCS. The full schematic is available for viewing in \autoref{apx:control-module-sch}. The main component of the schematic is the ATmega328.
 Everything in the schematic is connected to the microcontroller in some way. In
 the schematic three different VCC lines are shown. This is because the control
-modules will have to access to a 3.3V line, a 5V line, and a 12V line. The
-power board will supply these power lines to the control module. The 5V and
+modules have to access to a 3.3V line, a 5V line, and a 12V line. The
+power board supplies these power lines to the control module. The 5V and
 3.3V lines are necessary because they provide power to the logic chips like the
 microcontroller and the radio transceiver. The 12V line is necessary solely for
 the electronic strike that we have chosen.
@@ -2448,7 +2441,7 @@ the electronic strike that we have chosen.
 All the control module endpoint targets are featured in this
 schematic. In the upper right of the schematic you can see the TMP36
 temperature sensor, the electronic strike representation, and the solid state
-relay for switching AC. We will be able to create all the control modules
+relay for switching AC. We are able to create all the control modules
 with the same design and just put whichever parts we want onto each
 individual control module based on which one of the three endpoint types it
 will be targeting. One option we were thinking of during design for
@@ -2457,7 +2450,7 @@ for interacting with endpoint targets directly on the control module PCB, we
 could put a section on each control module that acted similarly to a
 breadboard. This way we could shrink the size of the control module PCB
 because the circuit for each target would not be on every control module. A
-smaller PCB means less money spent ordering it to be made. The issue with the
+smaller PCB meant less money spent ordering it to be made. The issue with the
 breadboard imitation design is it does not look as good and it allows for
 mistakes to be made when soldering the circuit to the PCB. When we weighed
 the two options we decided that just having every circuit on each control
@@ -2465,21 +2458,21 @@ module and only soldering the parts on to the circuit we were utilizing was the
 best option.
 
 The control module schematic is quite similar to the base
-station schematic. It is missing the BlueTooth module and replaces that with
+station schematic. It is missing the Bluetooth module and replaces that with
 all the different circuits for interacting with appliances around the house.
 The microcontroller is also smaller. The crystal that is shown in the figure
-will be the same on the base station and the control module. Our goal during
+is the same on the base station and the control module. Our goal during
 design was to make the boards for the control module and the base station to
-be as similar as possible.  There is no reason to make them very different
-and it saves research and development time for us to be able to recycle
+be as similar as possible.  There was no reason to make them very different
+and it saved research and development time for us to be able to recycle
 footprints and things of that nature. One thing we realized when we were
 designing the control module and referencing other PCB designs is the
 importance of an indicator LED. We originally did not have any indicator LEDs
-in our design.  Now we will have an indicator LED in every PCB we create if
-there is a pin available. The indicator LED for the control module is shown
+in our design.  We ended up having an indicator LED in every PCB we created if
+there was a pin available. The indicator LED for the control module is shown
 in \autoref{fig:ctrl-mod-led} along with the resistor necessary for forward biasing
 it. The LED indicator is valuable for showing that the board is getting power
-which can same a large amount of time during testing. The LED can also be
+which can save a large amount of time during testing. The LED can also be
 programmed to blink while the control module is in certain states. The
 usefulness of the indicator LED should not be underestimated.
 
@@ -2487,15 +2480,15 @@ usefulness of the indicator LED should not be underestimated.
 {Control Module Indicator LED}
 
 The areas where we connect the electronic strike and the AC
-voltage to the control module will be screw terminals. This is the best way
-we found to connect these components. The electronic strike will not be able
+voltage to the control module are screw terminals. This is the best way
+we found to connect these components. The electronic strike is not able
 to be mounted directly to the control module because of it{}'s large size, so
 wires will have to go from the screw terminals to the leads on the strike.
-Using the screw terminals for the AC voltage allows us to shorten the traces
-carrying that voltage on our PCB because we can put the terminal wherever we
-wish. Similarly to the base station the NRF radio transceiver will be
+Using the screw terminals for the AC voltage allowed us to shorten the traces
+carrying that voltage on our PCB because we could put the terminal wherever we
+wish. Similarly to the base station the NRF radio transceiver is
 connected to the board via female pin headers. The NRF comes with a breakout
-option so this will be the easiest way to get it on our board from the
+option so this is the easiest way to get it on our board from the
 prototyping phase.
 
 \subsubsection{Board Layout}

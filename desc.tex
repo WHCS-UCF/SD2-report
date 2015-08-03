@@ -1,5 +1,5 @@
 \subsection{Motivation}
-The goal of this project is to improve the quality of life for people in their
+The goal of this project was to improve the quality of life for people in their
 homes. Imagine sitting on the couch at home about to watch a movie, but all the
 lights are on and it{}'s a little warm inside. It is irksome to have to get up
 and turn off every individual light. With the technology existing today it is
@@ -10,17 +10,16 @@ lack mass implementation. By creating a wireless home control base station that
 a mobile phone could connect to these visions can be realized. The need to get
 up and physically interact with an appliance can be made a thing of the past.
 
-We want to develop an easy to use system that allows people at their home to
+We developed an easy to use system that allows people at their home to
 interact with their appliances without having to be in front of them. Our aim
-is for the solution to be reliable and low cost. The use case scenarios should
-be intuitive so that even someone who was just visiting could utilize the
-system. A person using WHCS should be able to turn on their lights or an outlet
+was for the solution to be reliable and low cost. The use case scenarios were  intuitive so that even someone who was just visiting could utilize the
+system. A person using WHCS can turn on their lights or an outlet
 with the press of a button or with a voice command from their mobile phone.
-They should also be able to turn on their coffee pot from their phone when they
-first wake up. If someone knocks on the door the person should be able to
+They can also turn on their coffee pot from their phone when they
+first wake up. If someone knocks on the door the person can
 unlock the door without having to get up. With the activation capabilities of
 WHCS there is an opportunity to utilize a foundation that can be expanded upon.
-We will have the infrastructure for integrating different types of sensors into
+We created the infrastructure for integrating different types of sensors into
 the home to provide users with information about things like temperature or air
 quality.
 
@@ -28,25 +27,23 @@ quality.
 The diagram pictured in \autoref{fig:whcs-overview} shows the highest level
 overview of WHCS.  When the user wants to begin interacting with WHCS he has
 the option of choosing to use a mobile phone or the included LCD screen. Both
-options will provide full capabilities for interacting with the system. The
-phone will be attached to the system through a BlueTooth connection that is
-created by the user in the WHCS application. Using the phone will be a more
+options provide full capabilities for interacting with the system. The
+phone is connected to the system through a BlueTooth connection that is
+created by the user in the WHCS application. Using the phone is a more
 mobile and easy method for access because the LCD will be connected to the
-central component of WHCS, the base station. The base station will be the
-brains of WHCS. It will be the base station{}'s job to take commands from the
+central component of WHCS, the base station. The base station is the
+brain of WHCS. It is the base station{}'s job to take commands from the
 user and relay them to the endpoints, while also displaying the state of the
-system. The base station will have a list of endpoints, also called control
-modules, that can be targeted by the system. This list will be dynamic and
+system. The base station has a list of endpoints, also called control
+modules, that can be targeted by the system. This list is dynamic and
 allow for endpoints to be added or removed from the system during operation.
-Together the base station and the control modules will form a network through a
-home and will communicate wirelessly to one another through radio transceivers.
+Together the base station and the control modules form a network through a
+home and communicate wirelessly to one another through radio transceivers.
 
-The control modules designed for WHCS will allow for all the activation of
-appliances around the house. These endpoints will be listening for commands
-from the base station via a radio transceiver. Each control module will be
-tailored for interacting with a certain device. There will be control modules
+The control modules designed for WHCS allow for all the activation of
+appliances around the house. These endpoints are constantly listening for commands from the base station via a radio transceiver. Each control module is tailored for interacting with a certain device. There are control modules
 for toggling outlets, toggling lights, unlocking the front door, and also for
-monitoring sensors. The control modules will be as similar as possible with a
+monitoring sensors. The control modules are as similar as possible with a
 designated area that allows for assigning specific roles to the control
 modules.
 
@@ -140,11 +137,11 @@ of graphs and tables. It would also serve as the basis for a set of descriptive
 statistics for display to the user. No graphs or tables were implemented.
 
 \subsection{Requirements and Specifications}
-For WHCS to become the product that we want it to be, it must adhere to a strict
-set of requirements and specifications.  We have identified certain
-requirements for subsystems involved in our system that we must fulfill in the
+For WHCS to become the product that we wanted it to be we needed to adhere to a strict
+set of requirements and specifications.  We identified certain
+requirements for subsystems involved in our system that we desired to fulfill in the
 development process. The following section is devoted to identifying
-requirements that we must meet to completely reach our goals for WHCS.
+requirements that we needed to meet to completely reach our goals for WHCS.
 
 \subsubsection{Mobile Application}
 
@@ -245,7 +242,7 @@ of standoffs.
 
 \subsection{Research of Related Products}
 In order to have a successful product, the WHCS has done background research on
-products tha thave similar goals to WHCS. There is a lot to be learned from the
+products that have similar goals to WHCS. There is a lot to be learned from the
 ``big players'' in the industry. Through a survey of the below companies, we
 have a better idea of some of the features WHCS could offer and what the other
 companies aren't. This allows us to make new innovations and avoid mistakes
@@ -266,10 +263,10 @@ offers a door lock that can be controlled from a mobile phone due to its
 implementation of Z{}-Wave technology.
 
 In relation to our product Z{}-Wave is similar to our
-implementation of a wireless network. Our Wireless Home Control System will
-feature radio transceivers that use a proprietary protocol to exchange
-information. Only components within our system will be able to communicate
-within the network. The network will also allow user{}'s mobile phones to join
+implementation of a wireless network. Our Wireless Home Control System 
+features radio transceivers that use a proprietary protocol to exchange
+information. Only components within our system are able to communicate
+within the network. The network also allows user{}'s mobile phones to join
 in. So WHCS implements a tiny version of Z{}-Wave within the whole product.
 Z{}-Wave takes the networking to an extreme and offers it as a platform for
 vendors to create home automation equipment. For WHCS the network is a means to
@@ -278,11 +275,11 @@ providing a foundation for others to build into.
 
 {\color{black}
 Z{}-Wave has a great feature called {}``scenes.'' Scenes allow users to create groups of devices around the house and
-specify certain states for those devices that can be activated at the touch of a button. WHCS will also implement a
-feature similar to this. With the ability to control multiple devices around the home it will be a common use case for
+specify certain states for those devices that can be activated at the touch of a button. WHCS implements a
+feature similar to this. With the ability to control multiple devices around the home it is a common use case for
 the user to change the state of the system to certain common configurations. For example, a user might want to turn off
-all the lights in the house with a {}``sleep mode{}'' every night. This will be achievable through the hardware that
-WHCS will create for the house.}
+all the lights in the house with a {}``sleep mode{}'' every night. This is achievable through the hardware that
+WHCS creates for the house.}
 
 \subsubsection{Belkin}
 Belkin has a brand of home automation products called WeMo. The WeMo brand
@@ -300,14 +297,14 @@ One notable difference between Belkin{}'s line of WeMo products
 and our solution is how outlets are handled. WeMo offers outlet plugins that
 are put directly into the outlet and then expose an outlet facade for a user to
 insert into. Rather than completely turning off the outlet that is connected to
-the household main like WHCS will be doing, WeMo shuts off the insert that has
+the household main like WHCS does, WeMo shuts off the insert that has
 been put into the outlet as a middleman. This type of design is great for ease
 of installation but also clutters the outlet. When a WHCS outlet is installed
-it will not be noticeable from the outside and it will be a permanent addition
+it is not be noticeable from the outside and it will be a permanent addition
 to the household. Belkin also has a solution for toggling the state of lights
 with their WeMo light switches. These light switches are different from the
 outlets because they actually require the stock light switch in the home to be
-replaced with the WeMo product. Our version of light control will leave the
+replaced with the WeMo product. Our version of light control leaves the
 stock light switch of the home intact.
 
 \subsubsection{Apple HomeKit}
@@ -327,7 +324,7 @@ the hardware.
 
 With HomeKit multiple developers could develop independent applications all
 targeting the same hardware and users could choose which application they like
-best. Our WHCS solution for home automation will feature things that Apple
+best. Our WHCS solution for home automation features things that Apple
 HomeKit does except they will all be internal to us who are developing the
 system. There will need to be libraries that interact with the hardware but
 they will be proprietary and we will not expose them to developers. Together
