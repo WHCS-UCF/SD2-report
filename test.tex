@@ -129,42 +129,42 @@ common functionality is the most important to be tested. All other verification
 will build off of the results of this initial testing.
 
 \subsubsection{UART Chip Testing/Debugging}
-Unlike the base station the control modules will not have a BlueTooth module
+Unlike the base station the control modules do not have a Bluetooth module
 attached to the UART that can be used for debugging. The absence of the
-BlueTooth module frees the Rx and Tx lines of the control module
-microcontroller{}'s UART. This means that the FT232RL FTDI chip that will be
-used for debugging and testing the base station when the BlueTooth module is
-unavailable will be a suitable option for the control modules. The ATmega328
-registers for operating the UART will be fully operational for debugging and
+Bluetooth module frees the Rx and Tx lines of the control module
+microcontroller{}'s UART. This means that the FT232RL FTDI chip that is 
+used for debugging and testing the base station when the Bluetooth module is
+unavailable is a suitable option for the control modules. The ATmega328
+registers for operating the UART are fully operational for debugging and
 testing and we can even leave the serial module in circuit for UART debugging
-access at any time. This is because there will be no other need to use the Rx
+access at any time. This is because there is no other need to use the Rx
 and Tx pins of the control module microcontrollers. Unlike the base station the
-control modules will suffer no limitations from the implementation of software
-serial routines. The control modules will be able to operate in full{}-duplex
-mode. In full{}-duplex mode we will be able to give commands to the control
+control modules suffer no limitations from the implementation of software
+serial routines. The control modules are able to operate in full{}-duplex
+mode. In full{}-duplex mode we are able to give commands to the control
 modules that would otherwise have to be received from the base station through
-the radio transceiver. This will allow for ease of development and testing.
+the radio transceiver. This allows for ease of development and testing.
 
 \subsubsection{Command Execution}
 
-The control modules will frequently be receiving commands from the base
-station. There will be different types of control modules that execute
+The control modules frequently receive commands from the base
+station. There are different types of control modules that execute
 different commands. Whenever the control module receives data from the base
 station that signifies that a command should be executed the control module
-should carry out certain operations to fulfill the request. Tests will need to
+should carry out certain operations to fulfill the request. Tests need to
 be carried out when the control modules are setup so we know that the control
 modules are all capable of completely executing the command sets that are
-available to them. The tests will need to be decoupled from the communication
+available to them. The tests need to be decoupled from the communication
 pipeline of the base station in order to ensure that no factors outside of the
 control modules scope are interfering with the test. Command execution testing
-will be executed through the microcontroller{}'s UART port. Commands will be
+is executed through the microcontroller{}'s UART port. Commands are 
 given just as they would be given via the base station, the only difference
 will be the method through which the control module receives the command.
 
-For each type of control module the full set of actions available to it will be
+For each type of control module the full set of actions available to it is 
 listed. From the list for each control module the commands to perform those
-actions will be given through the UART. The tester will document the success of
-each individual command given. The command execution tests will pass once the
+actions are given through the UART. The tester documents the success of
+each individual command given. The command execution tests are passed once the
 control modules for every independent role can perform their tasks completely
 and without error. The known control modules roles and actions available to
 them are listed in \autoref{tab:ctrl-mod-role}. All of the actions listed in the
@@ -217,13 +217,13 @@ The simplest method we have for full{}-duplex communication between the base
 station and an Android phone is BlueTerm.  BlueTerm is a free terminal
 application on Android. It allows for scanning for BlueTooth devices,
 connecting to other devices, and setting up the framing of packets. Using
-BlueTerm we will be able to connect to the HC{}-05 on the base station and send
-serial data to the microcontroller. The microcontroller will be able to receive
+BlueTerm we are able to connect to the HC{}-05 on the base station and send
+serial data to the microcontroller. The microcontroller is able to receive
 the data from BlueTerm and also reply with data by using the HC{}-05. By
 writing a simple echo routine on the base station microcontroller that receives
 data from the UART and then echoing it back out of the UART we can test whether
 or not the BlueTooth communication is working. With this simple test setup we
-will be able to quickly test the functionality of our circuits once we create
+are able to quickly test the functionality of our circuits once we create
 our printed circuit boards. We just need to open up BlueTerm, connect to the
 HC{}-05 module, and then type any letter into BlueTerm while awaiting the
 letter to be echoed back. If the letter is echoed back then we know that the
@@ -234,23 +234,23 @@ connection, or the BlueTooth module, but most likely if this test fails it will
 be because of the base stations circuit connections.
 
 \subsubsection{BlueToothListener}
-BlueTerm will be a very useful application that we can rely on to ensure that
+BlueTerm is a very useful application that we can rely on to ensure that
 the link between the Android device and the base station is functional.
 BlueTerm will not suffice to ensure that our application can communicate to the
-base station. In our application we will be using raw BlueTooth sockets for
-data exchange with the base station. The main class that will handle
+base station. In our application we use raw BlueTooth sockets for
+data exchange with the base station. The main class that handles
 communicating to the base station is the BlueToothListener which is mentioned
-in the Android application section of this document. Testing this class will be
+in the Android application section of this document. Testing this class is
 essential to ensure that the communication link is working correctly for our
-application. BlueToothListener will have access to the socket that wraps the
+application. BlueToothListener has access to the socket that wraps the
 buffers for communicating with the base station microcontroller so writing to
-and reading from this socket will need to be performed. When we have tested and
+and reading from this socket needs to be performed. When we have tested and
 confirmed that we are able to use the socket in the BlueToothListener class for
 full{}-duplex communication then we know that our application is fully capable
 of sending whatever data we wish to exchange.
 
 The BlueToothListener class is decoupled from other classes that handle what is
-done with the data received. This design will allow for modularity in testing.
+done with the data received. This design allows for modularity in testing.
 We can make a test class that subscribes to the BlueToothListener class{}'s
 data received event and then asserts that the data is what we expected. Then
 when we want to use the BlueToothListener for the actual application and not
@@ -258,18 +258,18 @@ just testing we can simply unsubscribe the test asserting class from the data
 received event.
 
 \subsubsection{LED activation test}
-Activating an LED will be a standard test that we use during prototyping and
+Activating an LED is a standard test that we used during prototyping and
 testing for WHCS. For Android to base station communication testing, activating
-an LED ensures that the base station is able to perform commands based on the
+an LED ensured that the base station was able to perform commands based on the
 data exchanged between the Android device and the microcontroller. The LED
 activation test can be performed through BlueTerm or through the raw BlueTooth
-socket that is present in the BlueToothListener class. This will model
+socket that is present in the BlueToothListener class. This models
 situations where the user of WHCS wants to alter the state of the system from
 the Android phone. Toggling the state of an LED is the simplest form of
-physical state change. When we are able to turn our LED on and off we know that
-the Android to base station communication link is fully operational and we will
+physical state change. When we were able to turn our LED on and off we knew that
+the Android to base station communication link was fully operational and we were
 be able to control the system from the mobile device.  \autoref{tab:test-led-act}
-shows the way the test will be implemented. The microcontroller will receive
+shows the way the test was implemented. The microcontroller receives
 bytes from the mobile device. Based on the byte that we send the
 microcontroller should perform the required action. The table shows what data
 results in the LED on state as well as the LED off state.
