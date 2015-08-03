@@ -28,7 +28,7 @@ quality.
 The diagram pictured in \autoref{fig:whcs-overview} shows the highest level
 overview of WHCS.  When the user wants to begin interacting with WHCS he has
 the option of choosing to use a mobile phone or the included LCD screen. Both
-option will provide full capabilities for interacting with the system. The
+options will provide full capabilities for interacting with the system. The
 phone will be attached to the system through a BlueTooth connection that is
 created by the user in the WHCS application. Using the phone will be a more
 mobile and easy method for access because the LCD will be connected to the
@@ -54,20 +54,20 @@ modules.
 
 \subsection{Objectives}
 In order to enable homeowners to have the best experience with their new WHCS,
-we will explain our core project objectives. These describe what the end-users
-are be able to do with the system at a high level.
+we explain our core project objectives. These describe what the end-users
+are able to do with the system at a high level.
 
 \subsubsection{Voice Control}
-Voice control from a supported, BlueTooth enabled, Android device will allow
+Voice control from a supported, BlueTooth enabled, Android device allows
 the user to remotely activate any part of the home that is integrated with
 WHCS. This would include activating lights, unlocking doors, turning off and on
 appliances (by controlling their respective outlets), querying sensors, and any
 other home specific applications.\footnotemark All of these \emph{actions} and
-\emph{targets} will be able to be used just from the user's voice. Voice
-actions will be specific to each target, but they will consist of verbs such as
-\textbf{turn}, \textbf{query}, \textbf{check}, \textbf{open}, \textbf{close},
-and so on. The list of targets will directly correspond to the number of
-control modules listed in the home and their type.  This will be explained in
+\emph{targets} are able to be used just from the user's voice. Voice
+actions are specific to each target, but they also consist of generic verbs such as
+\textbf{on}, \textbf{off}, \textbf{open}, \textbf{close},
+and so on. The list of targets directly correspond to the number of
+control modules listed in the home and their type. This this explained in
 more detail in \autoref{sec:sys-design}.
 
 \footnotetext{WHCS is an extensible system. Control modules are built with a
@@ -76,17 +76,13 @@ home. This combined with the control module's free breadboard area, new
 applications may be created.}
 
 \subsubsection{Light Activation}
-Through activating lights and querying their status remotely, a homeowner will
-no longer have to be present in the same room as the switch.  By connecting
-lights to WHCS, they will become integrated in to the home network and not be
+Through activating lights and querying their status remotely, a homeowner
+no longer has to be present in the same room as the switch.  By connecting
+lights to WHCS, they become integrated in to the home network and not be
 isolated in each room of the home.  With just a spoken command or a tap on
-their smartphone, lights will be controlled.  By automating the process of
-toggling light switches, WHCS will have the ability to be smart about when they
+their smartphone, lights may be controlled.  By automating the process of
+toggling light switches, WHCS has the ability to be smart about when they
 are ON or OFF, freeing the user from having to think about their state at all.
-In addition, lights, just like all of the other connected control modules in
-the home, will be able to be actuated on a specific schedule. This schedule
-can be designed by the homeowner
-to meet their daily lives or in a special circumstance, such as travel.
 
 \subsubsection{Outlet Activation}
 Lights aren't the only actionable thing in the home. There are a multitude of
@@ -101,9 +97,9 @@ devices' power subsystems, which may be always-on.
 
 \subsubsection{Door Access}
 In addition to controlling home lights and various appliances, giving users
-remote control of their doors is  a goal of WHCS. Through the use of an
-\emph{electronic door strike}, we would provide a specific control module the
-capability of locking and unlocking a door. This functionality would be
+remote control of their doors is a goal of WHCS. Through the use of an
+\emph{electronic door strike}, we provide a specific control module the
+capability of locking and unlocking a door. This functionality is
 demonstrated in Demo \ref{sec:demo-door}. WHCS sees door access as important
 for a home automation system to support because remote access, like a garage
 door, is simple and easy. We want to make opening \emph{any} door simple and
@@ -112,39 +108,39 @@ easy.
 Unlike controlling appliances and reading sensors, correctly managing the
 operation of a safety-critical door must be handled with great care. Any flaw
 in the implementation of the WHCS network would leave a user's home vulnerable
-to outside attack. This is why any control module whose purpose is to control
-doors will support additional security features. These additional features will
-include mechanisms to prevent replay attacks (which garage doors are vulnerable
-to) and also prevent outside attackers from engaging the door opening mechanism
-just by sniffing traffic. For additional details on the security considerations
-of WHCS, please refer to \autoref{sec:safety-sec}.
+to outside attack. Unfortunately due to time constraints, a security framework
+was not build. This is a common problem that also occurs in industry where
+companies do not put adequate enough resources towards securing their systems
+from the start. As a result, WHCS is an unauthenticated network, except for
+the BlueTooth link. WHCS is a prototype and should not be used in a real home.
 
 \subsubsection{Data Collection}
 In order to give users a broad overview of their home's state, WHCS supports
 the collection of data from \emph{arbitrary} sensors. Data collected can
 include temperature, humidity, light level, sound levels, and so on. Each home
 may have sensors throughout collecting various data that the homeowner deems
-useful. The sensor integration with WHCS would be transparent to the user. All
-they would see would be the list of sensors and the corresponding values.
-WHCS's pluggable control module's would be tailored to each sensor or set of
+useful. The sensor integration with WHCS is transparent to the user. All
+they see is the list of sensors and the corresponding values.
+WHCS's pluggable control module's are tailored to each sensor or set of
 sensors, which would relay their data back to the base station. This is
-illustrated in \autoref{fig:many-to-one}. The base station would support
+illustrated in \autoref{fig:many-to-one}. The base station supports
 queries from the LCD interface and simultaneously from a connected phone.
 
 \ucfgfx[scale=0.5]{fig:many-to-one}{many-to-one}{A illustration showing the translation of many different sensor nodes to WHCS' protocol}
 
 Beyond home sensors, all of the other controllable objects in the WHCS
-would have metadata being collected about them at all times. This extra metadata
-would include \textbf{connection status} and \textbf{power status}. See
+could have metadata being collected about them at all times. This extra metadata
+could include \textbf{connection status} and \textbf{power status}. See
 \autoref{sec:network-library} for a more detailed description of the supported
-network packets and the type of fields they support.
+network packets and the type of fields they support. This extra metadata was not
+implemented due to time constraints.
 
 All of this raw data being collected could be displayed to the user in the form
 of graphs and tables. It would also serve as the basis for a set of descriptive
-statistics for display to the user.
+statistics for display to the user. No graphs or tables were implemented.
 
 \subsection{Requirements and Specifications}
-For WHCS to become the product that we want it to be it must adhere to a strict
+For WHCS to become the product that we want it to be, it must adhere to a strict
 set of requirements and specifications.  We have identified certain
 requirements for subsystems involved in our system that we must fulfill in the
 development process. The following section is devoted to identifying

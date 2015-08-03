@@ -43,7 +43,7 @@ receives commands from a microcontroller through SPI (Serial Peripheral
 Interface). This is great because the NRF design philosophy fits perfectly with
 our microcontroller based base station and control modules. Beside the standard
 MOSI, MISO, and SCK for SPI, the NRF also has a csn pin for telling it to
-receive commands, ce pin for telling to to transmit or receive at that moment,
+receive commands, ce pin for telling to transmit or receive at that moment,
 and an interrupt pin for notifying the microcontroller of important situations.
 The csn pin will allow the SPI bus to be shared with other components such as
 the LCD being used for the base station. The interrupt wire pin can be
@@ -121,47 +121,47 @@ NRF. The hardware interactions with the chip are all abstracted away.
 \subsubsection{Network Library}
 \label{sec:network-library}
 
-In order for WHCS to be networked, a set of networking functions will have to
-be constructed on top of the radio driver to form a network library or
-\textbf{NetLib}. Abstraction of the raw driver will allow for the concept of a
-\textbf{node} to be created. The network will consist of a set of nodes capable
+In order for WHCS to be networked, a set of networking functions have been
+constructed on top of the radio driver to form a network library or
+\textbf{NetLib}. Abstraction of the raw driver allowed for the concept of a
+\textbf{node} to be created. The network consists of a set of nodes capable
 of direct communication and reception of \textbf{logical packets}. These
-packets will contain metadata describing their purpose and the data that they
-contain. By dividing up the required network features of WHCS in to packets, we
-will have a library of datagrams. These datagrams no longer have to worry about
+packets contain metadata describing their purpose and the data that they
+contain. For example, the base station to control module communication includes a "from" field to let the receiver know where the packet is from. By dividing up the required network features of WHCS in to packets, we
+ended up with a library of datagrams. Individula datagrams no longer have to worry about
 low-level details such as when to transmit -- they merely have to worry about
 who they are sending to and receiving from. This can be seen in
 \autoref{fig:netlib-uml}.
 
 \ucfgfx[scale=0.75]{fig:netlib-uml}{netlib-uml}{Network Library Class Diagram}
 
-Similar to network protocols today, WHCS will implement a lightweight protocol
+Similar to network protocols today, WHCS implements a lightweight protocol
 stack similar to the OSI model. The physical layer is handled by the NRF chip
 itself, the logical link layer by the NRF driver, and all other layers by the
-NetLib. In WHCS's case, our version of an ``Internet Protocol'' would be to
+NetLib. In WHCS's case, our version of an ``Internet Protocol'' is to
 assign each node with unique ID that can be targeted by other nodes for sending
-and receiving data. In terms of the transport layer, our application would be
+and receiving data. In terms of the transport layer, our application is
 similar to User Datagram Protocol, which is ``best effort'' in terms of
-reliability. We plan on adding additional code and sequencing to allow for this
-unreliable medium to withstand lost packets. The NRF already provides the
-ability to retransmit on a non-acked frame, but this will just fail after a
-certain amount of attempts. This would handle transient errors, but not a
-complete loss of connectivity, which would occur if the base station lost
+reliability. We planned on adding additional code and sequencing to allow for this
+unreliable medium to withstand lost packets, but ran out of program space before being able to do so. The NRF already provides the
+ability to retransmit on a non-acked frame, but this just fails after a
+certain amount of attempts. This can handle transient errors, but not a
+complete loss of connectivity, which may occur if the base station lost
 power.
 
-In order to keep the network topology simple, we opt to have a simple module to
-base network. This means modules will talk directly to the base station and to
+In order to keep the network topology simple, we opted to have a simple module to
+base network. This means modules talk directly to the base station and to
 no other modules. This is a simplification based on the underlying radio's
-range and our project requirements. We do not need a complicated mesh network
-as all of the nodes will be within range of the base station during their
+range and our project requirements. We did not need a complicated mesh network
+as all of the nodes are within range of the base station during their
 lifetime. For larger or noisier households this architecture would break down,
-but for the purposes of an initial design, this configuration will do the job.
+but for the purposes of an initial design, this configuration does the job.
 Additionally, the network topology is not fixed in hardware - it is merely
 additional code that needs to be written and implemented in to the overall
-design. More research could be done along the direction of a full mesh network,
-but only if necessary for good performance. The direct benefit of this simple
-architecture is that is easy to test and easy to program. The logic will only
-expect transactions to occur between two nodes. That fact will drive the
+design. More research wasn't be done along the direction of a full mesh network,
+as it wasn't necessary for good performance. The direct benefit of this simple
+architecture is that is easy to test and easy to program. The logic only
+expects transactions to occur between two nodes. That fact drives the
 construction of a specific and optimized network communication protocol that
 doesn't waste unnecessary bytes during transmission. The lower the byte count
 for each transmission, the more likely the packet will reach the destination in
@@ -169,7 +169,7 @@ tact.
 
 \paragraph{Modes of operation}
 Before diving in to the specific functions required for implementing a robust
-NetLib, we will discuss the high-level modality of the library. The state of a
+NetLib, we discuss the high-level modality of the library. The state of a
 network link can be broken in to the following modes:
 
 \begin{itemize}
@@ -179,17 +179,17 @@ network link can be broken in to the following modes:
   \item Leaving
 \end{itemize}
 
-The network library will be in the \textbf{joining} mode when it is first
-powered on or in the event of a disassociation. The node will attempt to join
+The network library is in the \textbf{joining} mode when it is first
+powered on or in the event of a disassociation. A node shall attempt to join
 on to a local network of nodes through a master node that is defined at the
-initial hardware configuration of the network. The joining process will have
+initial hardware configuration of the network. The joining process has
 its own state machine describing the required processes for association on the
-WHCS network. The \textbf{communicating} mode will be active if the node is
+WHCS network. The \textbf{communicating} mode is active if the node is
 joined to a network and if there are data to be sent or received. Otherwise the
-node will be in the \textbf{idling} state, which will include a reduction in
+node is in the \textbf{idling} state, which includes a reduction in
 power consumption. If for some reason the network needs to be reconfigured
 dynamically, the base station or a control module can begin the
-\textbf{leaving} mode. This will free any resources present for maintaining
+\textbf{leaving} mode. This frees any resources present for maintaining
 state on the active network join and prevent the leaving node from
 communicating on the network. A graphical overview of the NetLib modes and the
 transitions between modes is shown in \autoref{fig:netlib-state-overview}.
@@ -197,53 +197,53 @@ transitions between modes is shown in \autoref{fig:netlib-state-overview}.
 \ucfgfx[scale=0.65]{fig:netlib-state-overview}{netlib-state-overview}{the overall state machine for the network library}
 
 \paragraph{Join mode detail}
-The join mode will be fired when a new node wants to associate to an existing
-WHCS network as maintained by a base station. The base station will be the
-arbiter of all communication for the WHCS network and as such will also handle
+The join mode is fired when a new node wants to associate to an existing
+WHCS network as maintained by a base station. The base station is the
+arbiter of all communication for the WHCS network and as such, handles
 initial join requests. It is the node's responsibility to know and maintain any
 necessary access tokens for a join request along with the required channel of
 the network. Having the required channel is required for the sender and
-receiver to communicate. An optional (as per the setup configuration) will be
-communicated during a join request. The base station will validate the joining
-node and grant or deny access to the WHCS network. This process is necessary to
+receiver to communicate. The base station validates the joining
+node and grants or denies access to the WHCS network. This process is necessary to
 provide some assurance and tracking for the active nodes on the network.
 
 \paragraph{Communicate mode detail}
-Once a node has been successfully joined to the WHCS network, it will be able
+Once a node has been successfully joined to the WHCS network, it is able
 to communicate directly with the base station as its network gateway. All
-communication will flow through this node, which will process the data, and if
-required, generate a response. This response may be directed back at the
+communication flows through this node, which processes the data, and if
+required, generates a response. This response may be directed back at the
 transmitting node, such as an acknowledgement of the packet. Packets of control
 modules have the ability to change state in the base station through the use of
-``update packets.'' These packets will provide some periodic or event
-information about the transmitting node. This could include arbitrary data an
-is parsed based off of the node type. For example, a temperature node will have
-a specific data format that the base station will know how to unmarshal and
+``update packets.'' These packets provide some periodic or event
+information about the transmitting node. This includes arbitrary data and
+is parsed based off of the node type. For example, a temperature node has
+a specific data format that the base station knows how to unmarshal and
 store.
 
-The overall flow of the communicate mode will be to pump out packets to be
+The overall flow of the communicate mode is to pump out packets to be
 sent, wait for any responses, and generate any actions as required by the
-packets. This loop will be performed by any node with a radio. The base station
+packets. This loop is performed by any node with a radio. The base station
 is the only special case as it has to receive from multiple nodes
-simultaneously.
+simultaneously. Therefore some packet dispatching is required in order to
+make sure the appropriate packed reaches the target data structures.
 
 \paragraph{Idle mode detail}
 The idle mode is the simplest mode for the NetLib. This state is where the
 library has no data to send or receive. During this mode, the underlying radio
-is free to sleep in order to conserve power usage. Also interrupts would be
+is free to sleep in order to conserve power usage. Also interrupts are
 used to avoid polling the radio for new data, which would eat a lot of power.
-When a new packet is received or one needs to be sent, the radio would be woken
-up and enter in to the communication mode.
+When a new packet is received or one needs to be sent, the radio wakes up
+and enters in to the communication mode.
 
 \paragraph{Leaving mode detail}
 The final mode of the network library is the leaving state. This is the state
-where the node decided or is ordered to leave the network. It will disassociate
+where the node decided or is ordered to leave the network. It disassociates
 from the WHCS network thereby causing its state and all of the resources
-associated with the join to be freed. Additional cleanup will be performed in
+associated with the join to be freed. Additional cleanup may be performed in
 order to get the library ready for a new join request. Any outstanding packet
-sends or received will be canceled harshly and any potential data will be lost.
+sends or received are dropped and any potential data is lost.
 A safer shutdown would assert that the radio must be in the idle mode. That way
-no data will be lost to the leave transition.
+no data would be lost to the leave transition.
 
 %\begin{table}[H]
 %\centering
@@ -261,11 +261,11 @@ no data will be lost to the leave transition.
 %\end{table}
 
 \subsection{Microcontrollers}
-For the proper operation of WHCS microcontrollers will need to be installed
-into all of the control modules as well as the base station. This meant
+For the proper operation of WHCS, microcontrollers need to be installed
+in to all of the control modules as well as the base station. This meant
 research was needed to choose what the best microcontroller for each of the
-modules was.  The base station is a bit more hefty than the control modules so
-the design considerations are different for the two.  The first step was to
+modules was. The base station is a bit more hefty than the control modules so
+the design considerations are different for the two. The first step was to
 figure out what family of microcontrollers to use.
 
 \subsubsection{Microcontroller Brand}
@@ -664,12 +664,13 @@ RN{}-41. The RN{}-41 is the second best choice and can serve as a fallback if
 HC{}-05 chips went out of stock or an unforeseen circumstance occurred.
 
 \begin{table}[H]
+\centering
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
  &
 {\bfseries Cost} &
 {\bfseries Range (meters)} &
-{\bfseries Breakout Option} &
+{\bfseries Breakout?} &
 {\bfseries Configurable} &
 {\bfseries Size}\\\hline
 {\color{black} RN{}-41} &
@@ -692,11 +693,11 @@ HC{}-05 chips went out of stock or an unforeseen circumstance occurred.
 \subsection{LCD}
 Being able to interface with WHCS like a normal wall thermostat is one of our
 project goals. Having a centralized display that can quickly display the most
-important information for homeowners would be step up from traditional ``dumb''
-thermostats. With a simple LCD combined with a touchscreen, users would have a
+important information for homeowners is step up from traditional ``dumb''
+thermostats. With a simple LCD combined with a touchscreen, users can have a
 way to control and query their home without having to find their phone.
 
-To make this a reality, we have chosen the versatile, premade, and well
+To make this a reality, we chose the versatile, premade, and well
 supported Adafruit 2.8" TFT LCD\cite{link3} with a resistive touchscreen.
 Internally, the display is driven by the feature-rich
 ILI9341 chipset.\cite{link22}
@@ -708,18 +709,17 @@ plenty
 of usage examples\cite{link23}and Adafruit's
 excellent
 technical documentation.\cite{link24} This combined with Adafruit's
-libraries\cite{link25}, assure
-that integrating the LCD will be straight forward. The one issue with
-this solution is with the ILI9341 driver code: it was written to target the
-Arduino platform. Now, the Arduino platform is fairly close to bare AVR, minus
+libraries\cite{link25}, assured
+that integrating the LCD was straight forward. The one issue with
+this solution was with the ILI9341 driver code: it was written to target the
+Arduino platform. Luckily, the Arduino platform is fairly close to bare AVR, minus
 the remapped pin numbers and some support libraries, so porting Adafruit's
-library would be a feasible solution. Our plan is to use the existing driver
-along with the chip datasheet to create a library specific to our needs. That
-way we get full control over the port placement and the experience of creating
-an LCD driver.
+library was a feasible solution. It was also the simplest and most efficient
+solutions, therefore our base station uses a ported Adafruit graphics and ILI9341
+controller library.
 
 \subsubsection{Capabilities}
-In terms of capabilities, we have summarized the main features of the LCD module in \autoref{tab:lcd-features}
+In terms of capabilities, we summarize the main features of the LCD module in \autoref{tab:lcd-features}
 
 \begin{table}[H]
 \centering
@@ -739,49 +739,48 @@ Touchscreen technology & Resistive (one finger)\\
 \label{tab:lcd-features}
 \end{table}
 
-These features are more than sufficient for out application as most of the
-drawing we will be doing will be non-realtime. Nearly all of the displayed
-information will be text and UI element, which don't change often. For an
+These features are more than sufficient for our application as most of the
+drawing we did is non-realtime. Nearly all of the displayed
+information was text and UI elements, which don't change often. For an
 overview of our UI elements, see \autoref{sec:ui-lib}.
 
 One of the beneficial features of the LCD is that it gives developers a choice
 of which interface to use. The broken out interfaces are 4-bit SPI and 8-bit
 parallel. For prototyping, we used the low pin count SPI interface, but for our
-final design, we will be using the 8-bit interface to avoid having to wait for
-lengthy SPI transfers. Also, our NRF radio will be using the SPI bus, which
-should have priority over that channel. You may view a high level overview of
+final design, we used the 8-bit interface to avoid having to wait for
+lengthy SPI transfers. Also, our NRF radio is using the SPI bus, which
+needs priority over that bus. You may view a high level overview of
 the LCD module in \autoref{fig:lcd-high-level}.
 
 \ucfgfx[width=\textwidth]{fig:lcd-high-level}{lcd-high-level}{a high level outline of the LCD pin configuration and specifications}
 
 Another feature of Adafruit's module is the resistive touchscreen present on top of the
 LCD. With this, we don't just have to display information about WHCS, we can
-receive commands as well. Using this simple interface, we plan on creating a
+receive actions as well. Using this simple interface, we created a
 featureful UI library to communicate up-to-date information about the home
 while allowing for user control. The specific interface for the touchscreen
 requires 4 pins, 2 of which must be connected to the MCU's Analog to Digital
-Converter. By reading the resistance of the touchscreen, we would be able to
-calculate the position of a single finger.
+Converter. By reading the resistance of the touchscreen, we were be able to
+calculate the position of a single finger. Using state tracking, we could
+generate separate TOUCH\_DOWN and TOUCH\_UP events for distribution to the
+appropriate UI element.
 
 Finally, one extra component on the LCD module is an SD card slot. We are free
 to read and write directly to this card to store large images, such as logos
-for display on the LCD. We plan on storing at least our logo, but we may also
-store fancy UI badges such as arrows ($\leftarrow,\rightarrow$), X's
-($\otimes$), checkboxes (
-\makebox[0pt][l]{$\square$}\raisebox{.15ex}{\hspace{0.1em}$\checkmark$}), and
-anything else we can think of.
+for display on the LCD. We planned on storing at least our logo, but we didn't
+end up needing this feature as our logo is just text with colored lines;
 
 \subsubsection{ILI9341 Driver}
 \label{sec:lcd-driver}
 
 In order to perform the required operations for drawing pixels to the LCD, we
-need a robust driver to manage the state of the ILI9341 chip. This driver will
-have to implement primitives for choosing a position to draw and the ability to fill
+needed a robust driver to manage the state of the ILI9341 chip. This driver must
+implement primitives for choosing a position to draw and the ability to fill
 pixels.
 
 \paragraph{Choosing where to draw}
 The ILI9341 works like many chips in which it has a command set for controlling
-display parameters. One of these commands will set the window in which pixel
+display parameters. One of these commands sets the window in which pixel
 data is drawn. Before a batch drawing operation, a window is selected by
 specifying the column and page addresses. These are set using the
 \textbf{Column Address Set (0x2A)} and the \textbf{Page Address Set (0x2B)}
@@ -800,25 +799,25 @@ incantation of LCD commands with equally archaic parameters in order to reach
 the initialized zen. Luckily, there are multiple examples of slightly different
 LCD initialization sequences online for reference. In terms of power
 management, the LCD controller provides a command set to set the power mode.
-Although, the base station will be on wall power, being able to dim the screen
-and save energy would be a useful feature.
+Although, the base station is on wall power, dimming the screen
+saves energy and looks professional.
 
 \paragraph{LCD Performance}
 \label{par:lcd-perf}
 Due to the real-time nature of microcontrollers, everything must be juggled as
 quickly as possible in order to have a good responsive design. A user event
-such as a touch event followed by a graphics redraw should never take prioirity
+such as a touch event followed by a graphics redraw never takes prioirity
 over more important operations, such as sending and receving from the radios.
 This is a common theme
 throughout real time environments, so much so that highly specialized Real Time
 Operating Systems have been created to provide \emph{assurance} that some
-operation/action will complete within a specified amount of time. We don't have that luxury -- instead we must consider performance before we hit any performance walls.
+operation/action will complete within a specified amount of time. We didn't have that luxury -- instead we considered performance before hitting any performance walls.
 
-The slowest part about managing the LCD are the synchronous transfer of
+The slowest part about managing the LCD is the synchronous transfer of
 commands and pixel data between the MCU and the graphics controller. Each
 ILI9341 command is 8-bits and before any pixel operation the CAS and PAS
-commands need to be set. These commands have two 16-bit arguments.
-For settting just one arbitrary pixel 104 bits would need to be sent. This is a
+commands need to be set. These commands have two 16-bit arguments each.
+For settting just one arbitrary pixel 104 bits needs to be sent. This is a
 considerable overhead, so care must be taken to perform pixel operations in
 batch. Obviously, an algorithm that generates random pixels on the screen would have very
 low performance.
@@ -831,73 +830,68 @@ tearing and free the developer from having to clear the screen. On modern day
 graphics cards, clearing the screen is an extremely cheap operation -- on the
 ILI9341, it's just as expensive as every other drawing operation.
 
-\missingfigure{class diagram}
-
 \subsubsection{Touchscreen Driver}
-The touchscreen will need code dedicated to polling the X+, X-, Y+, and Y- pins
-of the LCD. These will give voltage readings that can be used to calculate the
-position of a single touch. They can be read by using the built-in ATMega ADC.
-Due to their not being a dedicated touch controller,
-interrupts cannot be used to sense sharp changes. This will add to the
-processing time of the microcontroller's main loop as it will constantly have
-to perform ADC operations and comparisons.
+The touchscreen has code dedicated to polling the X+, X-, Y+, and Y- pins
+of the LCD. These pins give voltage readings that can be used to calculate the
+position of a single touch. They are read by using the built-in ATMega ADC.
+Due to there not being a dedicated touch controller,
+interrupts cannot be used to sense sharp changes (i.e a touch). This added to the
+processing time of the microcontroller's main loop as it has to constantly
+perform ADC operations and comparisons.
 
 \subsubsection{Graphics Driver}
-Unlike the previous ILI9341 driver, our graphics driver will be in charge of
+Unlike the previous ILI9341 driver, our graphics driver is in charge of
 taking the low-level primitives exported by the LCD driver and using them to
 draw useful screen elements. These include text, lines, rectangles, circles,
-and images. The driver will essentially contain a set of routines for drawing
+and images. The driver essentially contain a set of routines for drawing
 these objects given a set of parameters such as length/width for rectangles,
 radius and position for circles, and bitmap lookup-tables for the text. These
-functions and more are already created by Adafruit, but for the experience and
-control of designing the graphics routines, we choose to implement our own.
+functions and more are already created by Adafruit and we decided to go with
+their implementation.
 
 Due to the unique hardware and software constraints (i.e limited clock speed
-and memory), we must take care to not exceed the capabilities of the hardware.
-This means floating point operations, which may be required for shapes such as
-a circle must be optimized or not used at all. A quick optimization for
-floating point operations would be to use a $sin()$ lookup table and only
-integer multiplications. These performance issues will be addressed as needed
-and only if necessary. By avoiding unnecessary optimizations, we will save
-valuable time for building out the library.
+and memory), we took take care to not exceed the capabilities of the hardware.
+This means floating point operations, which are required for shapes such as
+a circle must be optimized or used sparingly. A quick optimization for
+floating point operations, if necessary, would be to use a $sin()$ lookup table and only
+integer multiplications. The performance of the graphics driver was poor
+(50ms for a full screen draw), but given the slow clock rate, there was no
+significant improvements to be made to the library.
 
 \paragraph{Algorithms Necessary}
-The functionality of graphics driver depends on some core algorithms for
+The functionality of the graphics driver depends on some core algorithms for
 efficiently creating meaningful screen objects. One of these core algorithms is
 Bresenham's
-line algorithm.\cite{link26} This algorithm needs to be efficiently implemented as it will
-be the base for nearly every derived graphics operation. For example, a
+line algorithm.\cite{link26} This algorithm needed to be efficiently implemented as it
+serves as the base for nearly every derived graphics operation. For example, a
 transparent rectangle has four sides which results in four calls to this line
 drawing function.
 
-If there were any need for UI elements to be at different depths, then each UI
-element would have to have its
-
 \paragraph{Character Lookup Table}
-In order to convey useful information, we will need to display text to the
-user. This text will be stored in an efficient lookup table for quick drawing
+In order to convey useful information, we display text to the
+user. This text is be stored in an efficient lookup table for quick drawing
 operations similar. On a limited embedded
 system like this, there is a limited amount of time that can be dedicated for
-font rendering. To save on time, we will use an existing font available online.
-Adafruit also bundles a font in with their graphics library that is implemented
-as a function instead of a block of memory.
+font rendering. To save on time, used the existing 5x7 pixel font included in the 
+Adafruit library.
 
-Due to the very limited constraints of the microcontrollers, we will have to
-store this character lookup table in PROGMEM. This will embed the bitfile in to
+Due to the very limited memory constraints of the base station microcontroller, 
+this character lookup table is stored in PROGMEM. This embedded the bitfile in to
 flash, which then has to be read out using the AVR LDM instruction. This incurs
 a performance hit, but storing the characters in memory is impossible given
-only 2048 bytes for the Atmega32-A.
+only 2048 bytes of memory for the Atmega32-A.
 
 \subsubsection{UI Library}
 \label{sec:ui-lib}
-An LCD is nothing without a good library driving it. Even if all possible
+An LCD is nothing without a good library driving it. But even if all possible
 shapes and text can be drawn, without a good user interface library, the system
 is a painting. WHCS aims to have an LCD users \emph{want} to interact with.
-This will be accomplished with a feature rich UI library that enables text,
+This was accomplished with a feature rich UI library that enabled text,
 buttons, lists, and images to be drawn and organized simply. A sample WHCS home screen is mocked up and shows the required controls in \autoref{fig:ui-mockup-home}. 
 In normal UI libraries, such as the Android View hierarchy, UI elements can be added on the
 fly. Unfortunately, unless the UI elements for WHCS are extremely low memory,
 storing dynamic UI elements may prove to be too costly for the microcontroller.
+This is primary due to \texttt{malloc()} (i.e dynamic memory)
 Until further testing is done, there is no way to say that this is possible or
 not beyond data structure size predictions.
 
@@ -905,33 +899,33 @@ not beyond data structure size predictions.
 control identified}
 
 \paragraph{View Abstraction}
-When constructing a UI library, we will use an Object Oriented class hierarchy
-to describe the controls. All drawable controls will have the View class and
-their parent, which will serve to contain all of the common properties that a
+When constructing a UI library, we use an Object Oriented class hierarchy
+to describe the controls. All drawable controls have the View class and
+a parent, which serve to contain all of the common properties that a
 control can have. This includes basic drawing and placement information, such
 as width, height, and X-Y position. This is illustrated in \autoref{fig:ui-generic}.
 
 \ucfgfx[scale=0.80]{fig:ui-generic}{ui-generic}{View abstraction properties}
 
 Making this abstraction allows for code reuse and simplifies the design of
-individual components. Specific components will derive directly from the View
+individual components. Specific components derive directly from the View
 class or each other to form more and more complex UI elements. Using
-\autoref{fig:ui-mockup-home}, we have created a UML representation of a
+\autoref{fig:ui-mockup-home}, created a UML representation of a
 potential view hierarchy, including properties and methods. This can be seen in
 \autoref{fig:ui-lib-uml}.
 
 \ucfgfx[scale=0.63]{fig:ui-lib-uml}{ui-lib-uml}{UML representation of the View hierarchy.}
 
 This hierarchy is modeled after Android's UI abstraction. This is done because
-reinventing the wheel for UI elements would cost developer time. Android has
+reinventing the wheel for UI elements would have cost developer time. Android has
 more than proven that the hierarchy works in practice as well.
 
 \subsection{Android Application} For most WHCS users the mobile application
 will be the only physical interaction they have with the application. When we
-set out for development we wanted to make an easy to use application that would
-attract users to stick with our system.  Operability and usability were
-emphasized in our design process. We wanted an appealing U.I. without
-complexity, after all we are targeting a simple solution to home automation.
+set out for development we made an easy to use application that
+should attract users enough to stick with our system.  Operability and usability are
+emphasized in our design process. We made an appealing U.I. without
+complexity -- after all we are targeting a simple solution to home automation.
 
 \subsubsection{Development Environment} Android is the mobile operating system
 that we chose to utilize for our BlueTooth enabled phone. The Android operating
@@ -1300,7 +1294,7 @@ sensors even if there is a power failure.
 Lastly and arguably the most important is the design of the
 board for the base station. The base station in addition to the
 microcontroller will make use of NRF and Bluetooth which require 3.3V lines.
-The 3.3V line will stem out from the the 5V line as shown in
+The 3.3V line will stem out from the 5V line as shown in
 \autoref{fig:pwr-brd-bs}. In order to make this step down we will be
 using a linear regulator.  Like the temperature sensor module and the door
 access modules, the base station will also be equipped with a backup battery in
@@ -1340,7 +1334,7 @@ current that is to be drawn from the different elements in our design. Note
 that the information from the datasheet about the current drawn for the
 microcontrollers is under a clock speed of 16MHz. We choose to run everything
 at 16 MHz because is was the maximum speed for the Atmega32A. Although the
-Atmega328P can run at a higher clock speed of 20 MHz, we decided to to make
+Atmega328P can run at a higher clock speed of 20 MHz, we decided tomake
 everything consistent to run at 16MHz. The reason why we give ranges for the
 currents and voltages of the microcontrollers is because there are a number of
 different current voltage relationships that can achieve the same clock speed.
@@ -1481,7 +1475,7 @@ believed that this would be a handicap for our project and that a new design
 would have to be used. Yet we realized that there was a way to ensure that the
 primary voltage was higher than the secondary voltage. If we were to place the
 backup battery before the DC to DC converter, and allow the DC to DC converter
-to do a large portion of the voltage step down.  Say we had the the transformer
+to do a large portion of the voltage step down.  Say we had the transformer
 only transform down to 24VAC (roughly equivalent to 34 VDC) then had the DC to
 DC converter bring the voltage down to 5VDC. Our primary voltage would be 34V
 and our secondary backup source could be anything lower than 34V that is
@@ -1676,7 +1670,7 @@ evaluating relays you run into one key design choice, solid state relay or
 electromechanical relay. Let{}'s discuss the advantages and disadvantages of
 each. Electromechanical relays run with actual inductors that pull the switch
 by induction when voltage is applied across the terminals. Because the
-electromechanical relay uses these parts they tend to be much larger than the
+electromechanical relay uses these parts they tend to be much larger than
 the solid state relays. Solid state relays produce very little interference and
 they consume very little power. Solid state relays also have no arc meaning
 that they are very good for situations that require large amounts of isolation.
@@ -1833,6 +1827,18 @@ Our base station and control modules require a mix of 5V, 3.3V, and 12V (for the
 \ucfgfx[trim=3in 2.75in 2.1in 3.72in,clip,width=0.9\textwidth]
 {fig:pwr-sch-ac-rect2}{power-board.pdf}{Power board AC rectification}
 
+\subsubsection{Board Layout}
+After designing the PCB to the layout specification, the front and back images below are the result after sending the Gerbers to OSH park.
+
+\begin{figure}[H]
+\makebox[\linewidth][c] {
+  \includegraphics[width=0.45\linewidth]{board-shots/PB_Front}
+  \includegraphics[width=0.45\linewidth]{board-shots/PB_Back}
+}
+\caption{Power board OSH park PCB layout}
+\label{fig:power-board-pcb}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsection{Base Station}
@@ -1845,7 +1851,7 @@ would cease to function.
 When a new control module is introduced in to the system, it must first pair
 with the BS, which will authenticate it on to the network. Once it joins, the
 control module can be abstracted as an ``API'' meaning, the specific hardware
-details do not have to be considered. This abstraction will be excellent in
+details do not have to be considered. This abstraction is excellent in
 keeping the system clean from one-off cases and allow for a Domain Specific API
 to be formed.
 
@@ -1867,9 +1873,9 @@ drivers.
 The large amount of tasks that are required of the BS become clear when viewing
 \autoref{fig:base-station-flow}.
 
-The base station from reset would first load any saved settings from the
+The base station from reset first loads any saved settings from the
 EEPROM (saved control modules, behavior settings, LCD settings, etc.), then it
-would bring up all of the main modules (radio, LCD, BlueTooth, and UART). If
+brings up all of the main modules (radio, LCD, BlueTooth, and UART). If
 any of these initialization steps were to fail, the BS would indicate through
 an LED or from a UART debug message. An initialization failure shouldn't be
 handled as it's a critical failure of the system along with its assumptions. We
@@ -1883,7 +1889,7 @@ target setup would allow us to have a good working state.
 Each module has a unique sequence of ``commands'' with parameters that are
 required to configure the device. The NRF radio has to have its power, channel,
 payload length, and other parameters set before usage. Once these basic
-options, any further configuration is done at run time. This would include
+options, any further configuration is done at run time. This includes
 switching from listening to transmitting mode and enabling or disabling the
 automatic acknowledgement feature. The built-in Atmel UART only needs to know
 the baud rate at which data will be sent and received. There are also other
@@ -1893,72 +1899,65 @@ The LCD happens to have the most extensive initialization sequence due to
 required screen configuration, gamma settings, pixel order and other more
 archaic options.
 
-Once all of the modules are brought up correctly, the BS would begin the main loop.
-Radio events, BlueTooth events, and LCD state would all be processed as
-required. For both the BlueTooth and radio, new packets would be checked for
-and serviced as needed. From these packets, internal state would updated and any
-response packets would be generated and sent. Internally, WHCS will have an
-internal event queue with different event types. These events will be processed
-and any responses will be generated, if any. These responses could include a
+Once all of the modules are brought up correctly, the BS begins the main loop.
+Radio events, BlueTooth events, and LCD state are all be processed as
+required. For both the BlueTooth and radio, new packets are checked for
+and serviced as needed. From these packets, internal state is updated and any
+response packets are generated and sent. Internally, WHCS has an
+internal event queue with different event types. These events are be processed
+and any responses are generated, if any. These responses include a
 confirmation packet over the NRF radio, or a status update through BlueTooth.
 The base station may also initialize actions despite not receiving events.
-These could be triggered from timers firing.
 
 In terms of the NRF radio, the module we have chosen exports an interrupt pin
-which will fire on the reception of a new packet. This feature is great for the
+which goes low on the reception of a new packet. This feature is great for the
 WHCS architecture as the radio requires a significant amount of power
 while actively receiving SPI commands and transmitting. By avoiding the polling
-of the NRF, the main loops for both the control module and base station will
+of the NRF, the main loops for both the control module and base station
 have more cycles to process more important and intensive tasks. Essentially,
-the NRF will be kept in the listening mode at all times, waiting for a packet
-from a control module to be received. This is in contrast to the control
-modules which will try to avoid the transmitting and listening states to save
-power. The power down mode is great for saving watts, but has very poor
-performance for quickly responding to new packets.
+the NRF is kept in the listening mode at all times, waiting for a packet
+from a control module to be received.
 
 The BlueTooth module won't require as much time to service as the other modules
-due to the low data rate. It will be connected directly to the hardware UART of
-the base station, instead of the normal serial debugger. This will have to be
-connected to some free GPIO ports and software serial will be used. This is
-unfortunate as ``bit banging'' serial isn't efficient and will take up many
-more cycles than just using the hardware UART. If needed, a packet over
-BlueTooth could be sent asynchronously from the main loop due to the hardware
-UART. If the micro loops fast enough, then it would be as if there was no delay
+due to the low data rate. It is connected directly to the hardware UART of
+the base station, instead of the normal serial debugger. This is
+connected to some free GPIO ports and software serial is be used. This is
+unfortunate as ``bit banging'' serial isn't efficient and takes up many
+more cycles than just using the hardware UART. Packets over
+BlueTooth are be sent asynchronously from the main loop due to the hardware
+UART. If the micro loops fast enough, then it is as if there is no delay
 in transmission. Due to the real time nature of the NRF radio and LCD, WHCS
-will take steps to avoid blocking too long on a single activity. Blocking too
-much will lower the overall performance and responsiveness of the system. At
-worst, touch events could be lost and packet buffers could overflow. Until the
-system's code is ready, this worry cannot be confirmed, but an effort will be
-made to profile the main loop's average time using hardware timers.
+takes steps to avoid blocking too long on a single activity. Blocking too
+much lowers the overall performance and responsiveness of the system. At
+worst, touch events could be lost and packet buffers could overflow. An effort
+has been made to profile the main loop's average time using hardware timers.
+This was an invaluable statistic when developing the base station code.
 
 One of the most important parts of WHCS is its usage of timers. A global list
-of timers will be constantly maintained and updated to schedule events
+of timers is constantly maintained and updated to schedule events
 in the future, instead of having to handle them immediately. The granularity of
-the timers will depend on the average execution time of the main loop along
+the timers depends on the average execution time of the main loop along
 with how many timers are processed at once. If the main loop is slow on
-average, then timers will have to wait for extended periods to be serviced
-(starvation). Depending on the criticality of the timer and the event
-associated with it, there may need to be a mechanism for assigning a priority
-for a timer. This will have to be determined during actual system programming
-as it is heavily dependent on the task required.
+average, then timers have to wait for extended periods to be serviced
+(starvation).
 
-All of the above tasks will be executing in the same way as single core CPU
+All of the above tasks are be executing in the same way as single core CPU
 would: in pseudo-parallel. The faster the whole system runs, the better the
 appearance of everything executing at once.
 
 \subsubsection{Control Module Abstraction}
 For WHCS to function smoothly and scale well, a neat and abstracted interface
 must be defined to accept \emph{any} type of control module. New control module
-types should be easily added to the system without affecting older types and
-there should be a set of generic data structures for managing and storing
-information on modules. These structures must be carefully defined to wrap more
+types are  easily added to the system without affecting older types and
+there is be a set of generic data structures for managing and storing
+information on modules. These structures care carefully defined to wrap more
 specific control module packets in all of the shared metadata. Think of it like
 a hierarchy where all of the common attributes and actions shared by control
 modules have packets that can be sent to any module. Whereas the more specific
-packets (get temperature, engage door, etc.) would be wrapped up in the generic
+packets (get temperature, engage door, etc.) is be wrapped up in the generic
 ones (essentially a derived object from the generic control module.) This can
 be visualized in \autoref{fig:ctrl-mod-hierarchy}. The
-details of a network structure that would enable this clean interface is
+details of a network structure that enables this clean interface is
 further described in \autoref{sec:network-library}.
 
 \ucfgfx[scale=0.67]{fig:ctrl-mod-hierarchy}{control-module-hierarchy}{showing the control
@@ -1966,62 +1965,53 @@ module hierarchy for WHCS}
 
 Beyond sending packets, the base station must accurately record and update
 state for all of the control modules. Depending on the control module,
-additional state will need to be stored and functions will need to be written
-to query that state. Each control module would have its own state machine that
-would control its function in relation to the base station.
-
-%\begin{lstlisting}[frame=single]
-%struct control_module {
-%  enum control_state state; // 1 byte of state
-%  uint8_t type; // type of control module - used to delayer *data
-%  void * data;  // the specific data for a control module
-%};
-%
-%\end{lstlisting}
+additional state is needed to be stored and functions were written
+to query that state. Each control module has its own state machine that
+controls its function in relation to the base station.
 
 \subsubsection{Subsystems}
 The base station has the hardest job in the entire WHCS architecture. It has to
-juggle a lot of data with limited memory and processing speed. Packets need to be
+juggle a lot of data with limited memory and processing speed. Packets are
 processed and queued to keep the pipeline flowing smoothly. The following
-sections will break down the individual subsystems and how they work in concert
+sections break down the individual subsystems and how they work in concert
 to make the base station a well oiled microcontroller.
 
 \paragraph{NRF24L01+}
-The NRF radio will be directly connected to the Atmega32-A microcontroller
-which will control its state. This module will be constantly listening for new
+The NRF radio is directly connected to the Atmega32-A microcontroller
+which controls its state. This module is be constantly listening for new
 packets from the control modules and sending responses in turn. Due to this
-link being the most critical for WHCS, it needs to have the most attention to
+link being the most critical for WHCS, it had the most attention to
 detail when constructing the layout and software design. Also, besides the
-expensive drawing operations for the LCD, this may take up the most CPU time to
+expensive drawing operations for the LCD, this takes up the most CPU time to
 process packets and perform data transfers. This is partly due to the slow SPI
-interface that will be used to transfer the data. the NRF24LO1+ breakout board
+interface that is used to transfer the data. the NRF24LO1+ breakout board
 does not offer any other options for transferring data to and from a
-microcontroller. The overall system speed will be limited by the maximum
-transfer speed of this radio. When the considerations for thw WHCS topology are
-brought forward, its is obvious that the organization relies solely on the
-speed of the base station. We have considered this fact throughout the system
+microcontroller. The overall system speed is limited by the maximum
+transfer speed of this radio (2 MBPS). When the considerations for the WHCS topology were
+brought forward, it was obvious that the organization relies solely on the
+speed of the base station. We considered this fact throughout the system
 design - for example, the LCD could have \emph{also} been controlled over SPI,
-but we made a trade off for pin count in order to use the parallel interface.
-This frees up the SPI bus for programming (infrequent) and the NRF.
-Essentially, the NRF has full control over the SPI bus and will receive the
+but we made a trade-off for pin count in order to use the parallel interface.
+This freed up the SPI bus for programming (infrequent) and the NRF.
+Essentially, the NRF has full control over the SPI bus and receives the
 full attention of the microcontroller. 
 
 Assuming the NRF is not limited by the transfer rate of the SPI bus, the
-additional considerations can now be focused on. The microcontroller needs a
+additional considerations can now be focused on. The microcontroller needed a
 way to quickly assess the state of the NRF chip. This state query could include
 the status of the radio's transfer queues - meaning if there is a packet to be
-received or if a packet has been successfully sent. This is something that will
-need to be checked very frequently as the radio usage will increase linearlly
-with the amount of control modules that are apart of WHCS. If any algorithms or
+received or if a packet has been successfully sent. This is something that is
+checked very frequently, as the radio usage will increase linearly
+with the amount of control modules that are a part of WHCS. If any algorithms or
 tight loops in the microcontroller were to \textbf{not} have linear
 performance, then the system speed would suffer as more control modules were
-brought in to the network. We are focusing on WHCS' scalability for more
-complex households that a small demo setup. Of course, once the network becomes
+brought in to the network. Luckily most operations were $O(n)$. We focused on WHCS' scalability for more
+complex households than a small demo setup. Of course, once the network becomes
 too crowded, the somewhat weak Atmega32-A will no longer be able to sustain the
 flood of packets that are required to maintain WHCS. At this point, more base
-stations will need to be operating simultaneously in order to handle the load.
-Our implementation of WHCS briefly considers this fact, but due to the
-prototype nature of this endeavour, we have left these more complicated details
+stations would need to be operating simultaneously in order to handle the load.
+Our implementation of WHCS briefly considered this fact, but due to the
+prototype nature of this endeavour, we left these more complicated details
 to another, more scalable revision of WHCS.
 
 In WHCS' architecture, the main loop of the base station will not be
@@ -2037,72 +2027,63 @@ WHCS to come to fruition.
 \paragraph{HC-05}
 The HC-05 BlueTooth module is quite simple in its operations. Data is sent over
 a two line serial bus and if there is an active connection to a bluetooth
-enabled device, it will be able to easily receive the data and handle it. In
+enabled device, it is able to easily receive the data and handle it. In
 this case the device on the other end is expected to be a phone, but not
 limited to one. As long as the device on the other end of the BlueTooth link
-follows the WHCS BlueTooth application protocol, then WHCS will be able to
+follows the WHCS BlueTooth application protocol, then WHCS is able to
 receive commands from arbitrary devices. Assuming that the only thing that will
 connected to WHCS is a phone, then a suitable protocol for querying and
-changing WHCS' state will need to be derived. This set of functions is
-important for more than just the BlueTooth link - if written correctly, it
+changing WHCS' state has been derived. This set of functions is
+important for more than just the BlueTooth link as it
 could scale to many different consumers and producers of commands. A simple
 diagram showing a very high level interaction of a BT device with the base
 station is for reference in \autoref{fig:bt-bs-seq}. Once again
-this underlying protocol will be made to be abstracted away from the underlying
-hardware. For example, if the HC-05 were to fail to meet WHCS' strict
-requirements, then we would have to switch it for the next best unit - the
-RN-41. If we write the underlying driver to be ``top level'' layer that the
-base station will interact with, then large amount of code and possibly
-architecture will have to be swapped out to meet the needs of another hardware
-device.
+this underlying protocol is abstracted away from the underlying
+hardware. 
 
 \ucfgfx[scale=0.6]{fig:bt-bs-seq}{bluetooth-bs-seq}{an example sequence diagram that could
 occur between a connected bluetooth phone and the base station}
 
-In regards to the application level protocol for WHCS, there will need to be a
+In regards to the application level protocol for WHCS, there is a
 well defined, easy way, for the BlueTooth library to gather information from
 WHCS' state. This can be handled on the top-level flow of the base station by
 gluing together two different libraries without them knowing about each other.
-This is a good approach because it will decouple the two modules from each
+This is a good approach because it decouples the two modules from each
 other, making their individual implementations separate. Two tightly coupled
 modules may start to take on the appearance of a ``ball of mud.'' A connected
 phone will be able to accomplish any task that manually interacting with the
-LCD could handle. This would include controlling the function of individual
-modules and querying their current state. The BT connection would try to avoid
+LCD could handle. This includes controlling the function of individual
+modules and querying their current state. The BT connection try to avoid
 generating too many packets over the NRF radio in response to user events.
-Instead it would merely lookup the cached state from the base station's memory.
-This would be faster and the round trip time would be quick. Also, if a
-bluetooth packet did require a packet to be generated over the NRF radio, this
-interaction would have to asynchronously tracked until the request was
-fulfilled. This would complicate the system, but would allow for more advanced
-queries and commands.
+Instead it  merely looks up the cached state from the base station's memory.
+This is faster and the round trip time is lower.
 
 \paragraph{LCD}
-In what could be considered the ``face of WHCS'', the LCD module, which will be
-situated directly over the Atmega32-A, will have the tough job of accurately
+In what could be considered the ``face of WHCS'', the LCD module, which is
+situated directly over the Atmega32-A, has the tough job of accurately
 and quickly conveying any desired information about the state of WHCS' control
 modules. This is no simple task as not only does it have to display, but with
-an attached touchpanel, it has to react to user touches. What functionality is
+an attached touchpanel, it reacts to user touches. What functionality is
 exported to the LCD is only limited by the underlying processor speed and the
-UI library. The high level design of the WHCS LCD will only have to worry about
+UI library. The high level design of the WHCS LCD only had to worry about
 what the end goals are for its usage. An example of this abstraction may be
 viewed in \autoref{fig:lcd-soft-hier}.
 
 \ucfgfx[scale=0.6]{fig:lcd-soft-hier}{lcd-soft-hier}{the level of abstractions for the LCD
 subsystem}
 
-As the state of the WHCS network changes, the base station will have to fire
-off redraw events in order to keep the LCD up-to-date. These redraws will sync
+As the state of the WHCS network changes, the base station has to fire
+off redraw events in order to keep the LCD up-to-date. These redraws sync
 the internal state of WHCS with the user viewable interface. The physical
-connections to the LCD will consist of data signaling and an 8-bit wide
-parallel data bus. There is an optional reset pin that WHCS will opt to use for
-emergency resets and debugging. The high level interface with the LCD will
-occur directly with the high-level UI library and if necessary the underlying
-graphics library. The base station should never use the direct driver interface
-as this is subject to change in an emergency (if the LCD fails to meet WHCS'
-requirements.) In additiona, a subtle feature that WHCS may choose to implement would be
-dynamic power saving through screen dimming. Although we assume the base
-station will have wall power at all times, there may come a time where the
+connections to the LCD consist of data signaling and an 8-bit wide
+parallel data bus. There is an optional reset pin that WHCS uses for
+emergency resets and debugging. The high level interface with the LCD
+occurs directly with the high-level UI library and if necessary the underlying
+graphics library. The base station never uses the direct driver interface, if it can avoid it,
+as this is subject to change in a new revision. 
+In addition, a subtle feature that WHCS choose to implement was
+dynamic power saving through screen dimming. Although we assumed the base
+station would have wall power at all times, there may come a time where the
 system may migrate over to a lower wattage current source, such as power
 stealing from an HVAC unit. In this case, the system would most certainly have
 to be power efficient. Despite not needing to worry about power, this function
@@ -2113,32 +2094,32 @@ control the screen brightness.
 In order to provide a way for an end user to be able to control WHCS from the
 LCD unit, there is a requirement to poll for touch events.
 This subsystem can be considered a part of the LCD, but the driver is independent
-from the graphics and ILI9431 drivers. These events will be dispatched
+from the graphics and ILI9431 drivers. These events are dispatched
 to the appropriate UI element  based on the X and Y position of the touch
 event. There is also an optional Z ``position'' which represents the pressure
-of the touch event. This could be used to gather more fine grained information
+of the touch event. This is used to gather more fine grained information
 about the touch itself. One of the unfortunate properties of the touchpanel is
 that it must be actively polled for new touches. This requires that the ADC be
 constantly providing conversions, which raises the dynamic power of the MCU.
 This isn't a major concern as the base station is expected to have power from the wall
 most of the time.
 
-The extent of the touchpanel interaction will occur from a \texttt{getTouch()}
-method. This method will return the latest touch event, if any. The base
-station will have full control over where this touch event is dispatched to.
+The extent of the touchpanel interaction occurs from a \texttt{getTouch()}
+method. This method returns the latest touch event, if any. The base
+station has full control over where this touch event is dispatched to.
 Depending on the LCD scene (i.e main menu, boot screen), this event will be
 handled in different ways. Further details are discussed in
 \autoref{sec:ui-lib} for the UI library.
 
 \paragraph{Timers}
 Accurate timing is one of the tasks microcontrollers excel at. The WHCS base
-station will be using timers to schedule periodic events, wake up from sleep
+station is using timers to schedule periodic events, wake up from sleep
 modes, to provide automated send and resend delays, and much more. A simple
-Timer class will serve as the mechanism and state for a single Timer object.
-These objects will b e kept track of in a global list and ticked every loop.
-When a timer reaches the number of ticks or has simply expired, then it will be
+Timer class serves as the mechanism and state for a single Timer object.
+These objects are be kept track of in a global list and ticked every loop.
+When a timer has expired (now() - start > timeToWait), then it will be
 fired. This firing may cause an action to occur, which is programmable to the
-specific need. This action may be something like scheduling a network health
+specific need of the Timer client. This action could be something like scheduling a network health
 check or to increase the step of an LCD graphics animation. A UML representation of the WHCS timer class is shown in \autoref{fig:timer-uml}.
 
 \ucfgfx[scale=0.8]{fig:timer-uml}{timer-uml}{A UML representation of the Timer class}
@@ -2152,7 +2133,7 @@ has two capacitors that are dependent on the target crystal. These are required
 to get the correct oscillation for the external crystal. Also the AREF, VCC,
 and AVCC lines of the MCU have decoupling capacitors. These are used to make
 sure that the base station performs well under a large current spike. When
-designing the board, these capacitors should be placed as close as possible to
+designing the board, these capacitors are be placed as close as possible to
 the MCU to avoid a long high-current path through the ground plane. The
 capacitor on the analog reference pin (AREF) is used to stabilize the reference
 to make ADC conversions more accurate.
@@ -2175,7 +2156,7 @@ is a PWM input to control the LCD's backlight brightness.
 In \autoref{fig:bs-sch-pwr-nrf} we see the 3.3V 3 terminal regulator converting the
 5V VCC line down. Additionally, we see the external RESET pull-up resistor and
 a manual reset push button. The left corner has the pinout for the NRF breakout
-board we will be using.
+board we are using.
 
 % Zoom on the power section and NRF
 \ucfgfx[trim=5.9in 1.3in 1.2in 5.0in,clip,width=0.65\textwidth]
@@ -2183,9 +2164,9 @@ board we will be using.
 
 In \autoref{fig:bs-sch-hc-05} we see the header for the HC-05. We examine this
 further because of the unique electrical characteristics of the HC-05 module.
-The module only accepts 3.3V power and logic. Our MCU will be running at 5V,
+The module only accepts 3.3V power and logic. Our MCU is running at 5V,
 which means we need a 5V to 3.3V logic shifter. To simply implement this, we
-used a resistor voltage divider which will provide the required logic level for
+used a resistor voltage divider which provides the required logic level for
 the TX pin. The RX pin does not need a shifter because 3.3V is still above the
 $V_{IH}$ minimum for the MCU.
 
@@ -2194,7 +2175,7 @@ $V_{IH}$ minimum for the MCU.
 {fig:bs-sch-hc-05}{base-station.pdf}{Base Station HC-05 header}
 
 Finally, in \autoref{fig:bs-sch-isp} we see the standard ICSP header that most
-AVR line microcontrollers use. This pin array will serve as a quick and easy
+AVR line microcontrollers use. This pin array serves as a quick and easy
 way to connect an external programmer to our base station while in the field.
 In this schematic revision, this header can provide power directly to the 3.3V
 regulator and MCU.
@@ -2203,18 +2184,31 @@ regulator and MCU.
 \ucfgfx[trim=1.2in 3.8in 8.2in 4.0in,clip,width=0.4\textwidth]
 {fig:bs-sch-isp}{base-station.pdf}{Base Station ISP header}
 
+\subsubsection{Board Layout}
+After designing the PCB to the layout specification, the front and back images below are the result after sending the Gerbers to OSH park.
+
+\begin{figure}[H]
+\makebox[\linewidth][c] {
+  \includegraphics[width=0.45\linewidth]{board-shots/base-station-front}
+  \includegraphics[width=0.45\linewidth]{board-shots/base-station-back}
+}
+\caption{Base station OSH park PCB layout}
+\label{fig:base-station-pcb}
+\end{figure}
+
 % % % % % % % % % % % % % % % % % % % % %
 
 \subsection{Control Module}
 What can be thought of as the ``arms of WHCS'', the control modules serve as
 the main devices that seed the network with data. This data is specific to the
 control module that is emitting it. The base station is more more complex than
-an individual control module because it needs to be. The control modules should
+an individual control module because it needs to be\footnote{Seriously, it really needs to be. Take our word for it.}
+. The control modules should
 be as lightweight as possible to save cost and keep power usage down. If the
 control modules were too complex, then the entire cost of WHCS would increase
 proportionally to the number of control modules.
 
-\subsubsection{Software Flowchart}
+\subsubsection{Software Flow}
 The general flow for the control modules is much simpler than the base station
 just due to the requirements of the system. There isn't as much that needs to
 be done on each loop iteration. The only main module that the control module
@@ -2503,3 +2497,15 @@ wish. Similarly to the base station the NRF radio transceiver will be
 connected to the board via female pin headers. The NRF comes with a breakout
 option so this will be the easiest way to get it on our board from the
 prototyping phase.
+
+\subsubsection{Board Layout}
+After designing the PCB to the layout specification, the front and back images below are the result after sending the Gerbers to OSH park.
+
+\begin{figure}[H]
+\makebox[\linewidth][c] {
+  \includegraphics[width=0.45\linewidth]{board-shots/control_module_v1_1_front.png}
+  \includegraphics[width=0.45\linewidth]{board-shots/control_module_v1_1_back.png}
+}
+\caption{Control module OSH park PCB layout}
+\label{fig:control-module-pcb}
+\end{figure}

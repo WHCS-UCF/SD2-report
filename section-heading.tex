@@ -1,19 +1,19 @@
-\tikz[baseline,trim left=3.1cm,trim right=3cm,shift={(0cm,0.65ex)}] {
-    \foreach \s/\c in {0cm/FF2A2A,0.4cm/FF6600,0.8cm/FFD42A,1.2cm/2AFF2A} {
-      \definecolor{curColor}{HTML}{\c}
-
-      \foreach \d in {3cm,7cm,11cm,15cm} {
-        % Last iteration?
-        \ifthenelse{\equal{\d}{15cm}}{
-        \draw[ultra thick, curColor]
-        (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0);
-        }{
-        \draw[ultra thick, curColor]
-        (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0) sin (\d+3cm+\s,-1) cos (\d+4cm+\s,0);
-        }
-      };
-    };
-}%
+%\tikz[baseline,trim left=3.1cm,trim right=3cm,shift={(0cm,0.65ex)}] {
+%    \foreach \s/\c in {0cm/FF2A2A,0.4cm/FF6600,0.8cm/FFD42A,1.2cm/2AFF2A} {
+%      \definecolor{curColor}{HTML}{\c}
+%
+%      \foreach \d in {3cm,7cm,11cm,15cm} {
+%        % Last iteration?
+%        \ifthenelse{\equal{\d}{15cm}}{
+%        \draw[ultra thick, curColor]
+%        (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0);
+%        }{
+%        \draw[ultra thick, curColor]
+%        (\d+\s,0) sin (\d+1cm+\s,1) cos (\d+2cm+\s,0) sin (\d+3cm+\s,-1) cos (\d+4cm+\s,0);
+%        }
+%      };
+%    };
+%}%
 
 \tikz[baseline,trim left=3.1cm,trim right=3cm] {
     \fill [white!95!black] (2.5cm,-1ex) rectangle (\textwidth+3.1cm,2.5ex);

@@ -258,20 +258,20 @@ just testing we can simply unsubscribe the test asserting class from the data
 received event.
 
 \subsubsection{LED activation test}
-Activating an LED will be a standard test that we use during prototyping and
+Activating an LED is a standard test that we use during prototyping and
 testing for WHCS. For Android to base station communication testing, activating
 an LED ensures that the base station is able to perform commands based on the
 data exchanged between the Android device and the microcontroller. The LED
 activation test can be performed through BlueTerm or through the raw BlueTooth
-socket that is present in the BlueToothListener class. This will model
+socket that is present in the BlueToothListener class. This models
 situations where the user of WHCS wants to alter the state of the system from
 the Android phone. Toggling the state of an LED is the simplest form of
 physical state change. When we are able to turn our LED on and off we know that
-the Android to base station communication link is fully operational and we will
-be able to control the system from the mobile device.  \autoref{tab:test-led-act}
-shows the way the test will be implemented. The microcontroller will receive
+the Android to base station communication link is fully operational and we
+are able to control the system from the mobile device.  \autoref{tab:test-led-act}
+shows the way the test is implemented. The microcontroller receives
 bytes from the mobile device. Based on the byte that we send the
-microcontroller should perform the required action. The table shows what data
+microcontroller will perform the required action. The table shows what data
 results in the LED on state as well as the LED off state.
 
 \begin{table}[H]

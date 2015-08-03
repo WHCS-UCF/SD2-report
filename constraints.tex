@@ -72,7 +72,6 @@ installations will be standardized and easy to replicate.
 % Section 3.3
 \subsection{Safety and Security}
 \label{sec:safety-sec}
-\todo{0.5 pages}
 
 The safety and security of WHCS is primary constraint of the project. Due to
 the integration with home, especially access control systems, WHCS must not
@@ -108,6 +107,11 @@ problem, its potential impact, what area does it impact, and what we plan to do
 to address it. Finally, we will \emph{anticipate} failures and build in the
 developed solutions directly in to our design. These solutions may be in the
 form of warning labels (Ex. DO NOT EXCEED 12V 10A) and software checks.
+
+Due to project time constraints and priorities, the WHCS network is \emph{not}
+considered secure from remote attack. No cryptography has been used to secure
+the networks. The only access control mechanism lies with the BlueTooth chip
+which requires a weak 4 digit pin.
 
 % Section 3.4
 \subsection{Spectrum Considerations}

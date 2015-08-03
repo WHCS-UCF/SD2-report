@@ -141,7 +141,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1"
      inkscape:cx="406.07851"
-     inkscape:cy="303.80466"
+     inkscape:cy="383.80466"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -193,32 +193,32 @@
        sodipodi:nodetypes="ccc" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m 159.81349,298.69363 172.22157,0 0,-75.19534"
+       d="m 159.81349,298.69363 172.22157,0 0,-108.19534"
        id="path8567"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m 388.68558,188.38063 112.30138,0"
+       d="m 331.59322,188.38063 227.39374,0"
        id="path3344"
        inkscape:connector-type="orthogonal"
        inkscape:connector-curvature="0"
-       inkscape:connection-start="#rect7918"
        inkscape:connection-start-point="d4"
-       inkscape:connection-end="#g3329"
-       inkscape:connection-end-point="d4" />
+       inkscape:connection-end-point="d4"
+       sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m 557.77695,226.11381 -1.50642,175.79138"
+       d="m 558.07932,185.8288 -1.79411,216.07639"
        id="path3346"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
-       inkscape:connection-start="#g3329"
        inkscape:connection-start-point="d4"
        inkscape:connection-end="#g3195"
-       inkscape:connection-end-point="d4" />
+       inkscape:connection-end-point="d4"
+       sodipodi:nodetypes="cc" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m 114.21361,85.30513 0,62.3726"
+       d="m 113.92443,85.30513 0,62.20271"
        id="path4175"
        inkscape:connector-type="orthogonal"
        inkscape:connector-curvature="0"
@@ -372,31 +372,7 @@
          x="137.799"
          id="tspan7626"
          sodipodi:role="line">yes</tspan></text>
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:1.99219215;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect7918"
-       width="114.18472"
-       height="70.570038"
-       x="274.50085"
-       y="153.09561"
-       rx="0"
-       ry="0" />
-    <flowRoot
-       style="font-style:normal;font-weight:normal;font-size:25px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       id="flowRoot7920"
-       xml:space="preserve"
-       transform="matrix(0.70570037,0,0,0.70570037,113.12963,17.228428)"><flowRegion
-         id="flowRegion7922"><rect
-           style="font-size:25px;text-align:center;text-anchor:middle"
-           y="215.36218"
-           x="239"
-           height="67"
-           width="141.75328"
-           id="rect7924" /></flowRegion><flowPara
-         id="flowPara7928"
-         style="font-size:23px">Check</flowPara><flowPara
-         style="font-size:23px"
-         id="flowPara7932">Battery</flowPara></flowRoot>    <g
+    <g
        id="g3195"
        transform="translate(-18.998543,-229.03658)">
       <rect
@@ -454,36 +430,6 @@
            id="flowPara3151">Radio</flowPara><flowPara
            id="flowPara3165"
            style="font-size:23px">Events</flowPara></flowRoot>    </g>
-    <g
-       id="g3329"
-       transform="translate(-90.44364,-582.87822)">
-      <rect
-         style="fill:none;stroke:#000000;stroke-width:1.99219215;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         id="rect3181"
-         width="114.18472"
-         height="70.570038"
-         x="591.4306"
-         y="738.422"
-         rx="0"
-         ry="0" />
-      <flowRoot
-         style="font-style:normal;font-weight:normal;font-size:25px;line-height:125%;font-family:Sans;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-         id="flowRoot3183"
-         xml:space="preserve"
-         transform="matrix(0.70570037,0,0,0.70570037,425.81675,591.24111)"><flowRegion
-           id="flowRegion3185"><rect
-             style="font-size:25px;text-align:center;text-anchor:middle"
-             y="215.36218"
-             x="239"
-             height="91.047829"
-             width="155.78119"
-             id="rect3187" /></flowRegion><flowPara
-           id="flowPara3236"
-           style="font-size:23px">Queue</flowPara><flowPara
-           style="font-size:23px"
-           id="flowPara8821">Battery</flowPara><flowPara
-           style="font-size:23px"
-           id="flowPara8823">Packet</flowPara></flowRoot>    </g>
     <g
        id="g3356"
        transform="translate(-89.878017,64.592387)">
@@ -643,15 +589,14 @@
        transform="translate(-113.0728,-140.63779)" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 183.16926,189.53698 91.33159,-0.71155"
+       d="m 184.05048,188.70802 147.54274,-0.32739"
        id="path8563"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
-       inkscape:connection-start="#path3269"
-       inkscape:connection-end="#rect7918" />
+       inkscape:connection-start="#path3269" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m -43.522755,189.11966 88.406467,0.53724"
+       d="m -43.522755,188.7969 87.107014,0.0369"
        id="path8569"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
@@ -742,7 +687,7 @@
            id="flowPara8711">Packet</flowPara></flowRoot>    </g>
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m 498.89294,435.64528 -136.50523,1.08804"
+       d="m 498.89294,437.64528 -133.14663,1.06127"
        id="path8713"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
@@ -750,7 +695,7 @@
        inkscape:connection-end="#g8639" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m 297.01348,480.1953 0.53347,31.99557"
+       d="m 296.98045,480.21471 0.53316,31.97616"
        id="path8715"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
@@ -758,7 +703,7 @@
        inkscape:connection-end="#g8661" />
     <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.41100001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)"
-       d="m 241.00957,545.85398 -68.9523,0.45664"
+       d="m 241.00957,547.8499 -68.9523,0.45171"
        id="path8717"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="0"
