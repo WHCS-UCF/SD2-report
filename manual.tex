@@ -1,1 +1,164 @@
 % User manual section
+In order to get WHCS operational, a control module, power board, and base station need to be gathered.
+Once these modules are gathered, verify that control module you have contains the required
+circuity for the target role (i.e. if it's slotted to be a temperature sensor, it must have a 
+TMP36 installed.)
+
+\subsection{Wiring the boards}
+Here we will discuss how the boards must be wired in order to use WHCS in a
+home. If WHCS were to be made into a product, installation would be a service
+provided with the product.  Regardless, instruction on how the boards are
+assembled together will be presented below. Every single board in
+WHCS makes use of screw terminals in order to be connected with the rest of the
+system. We will discuss each board individually.
+
+\subsubsection{Power Board}
+The layout of the power board is shown in \autoref{fig:power-board-pcb}. When looking at the
+front side of the board, the bottom left corner is labeled 120VAC followed by a
+H, N, and G. This is where the screw terminal for the AC input is located. H
+represents the “hot” wire. N represents the “neutral” wire. G represents the
+“ground” wire. This screw terminal is where the line from the home will be fed
+into the power board. On the opposite end are the output screw terminals each
+labeled accordingly. The “GND” located at the very top is the DC ground. Using
+wires these screw terminals will be used to power the entire system.
+
+\subsubsection{Control Module}
+The layout of the control module is  shown in \autoref{fig:control-module-pcb}. On the left hand
+side of the front of the board there are three screw terminals inputs labeled
+5V, 3.3V, and GND. These are the screw terminals that are to be used to connect
+the power board to the control module.
+
+At the top on the right hand side are the screw terminals for the AC relay. To
+implement the AC relay you must cut the hot wire going to the application you
+wish to control. The severed ends must be placed into the top and bottom
+terminals in top right hand side (The middle terminal does nothing).
+
+Finally in the bottom of the left hand side of the board you will find a “GND”
+screw terminal. This is to be used to interrupt the connection of a DC device
+you wish to control (such as an electronic strike). The device will connected
+directly to hot line of the power source, its ground connection will however be
+made through the control module. To use the DC relay the ground of your device
+must be connected to the “GND” screw terminals located in the bottom left hand
+side of the board.
+
+\subsubsection{Base Station}
+The base station is simple its layout can be seen in \autoref{fig:base-station-pcb}.  On bottom
+end of the front of the board are three screw terminals inputs labeled 5V,
+3.3V, and GND. These are the screw terminals that are to be used to connect the
+power board to the base station. There are no other connections required for
+the base station.
+
+
+\subsection{Booting up the modules}
+Normal operation of the control modules is visible if the main LED is lit and periodically blinks
+on the reception of a packet from the base station. If you do not see the control modules(s)
+blinking at least every 5 seconds, there could be a connectivity problem.
+
+The base station when booted will display the WHCS main menu. This menu will have a list of
+all possible control modules with their corresponding actions (if any) and a ``Credits'' button.
+
+The name of each module is colored corresponding to its connection status. If the name 
+is colored green, then a PONG packet has been successfully received from the target
+control module in the last 10 seconds. If the name is red, then there appear to be
+connectivity issues. At this point, you should restart the control modules and base station
+and make sure that every NRF is well connected to their respective headers.
+
+\subsection{Interacting with the LCD}
+Just like the WHCS Android app, you are able to interact with the control modules directly
+from the base station LCD. The LCD and Android app should be synced. When a control module
+is turned off on the app, the LCD should update to reflect the new control module state.
+A control modules that toggles AC or DC circuits will have a green or red square next to
+its name. A red square indicates that the control module is off and a green that its on.
+
+On every module except the temperature sensor, you will see a ``Toggle'' button. This button
+is the same as the switch on the Android app and it allows for you to switch the module's
+state. If you hit the toggle button when the control module's name is red, it is unlikely
+that the command will be received. This is noted by the square which should not
+change colors.
+
+At the top next to the WHCS logo, you will see a ``Credits'' button. This button if pressed
+will start a new UI scene to display ASCII representations of the creators of WHCS.
+
+\subsection{Android Application}
+\subsubsection{Obtaining the Application}
+
+The application for WHCS can be obtained from github. It is hosted by the
+WHCS-UCF organization and the repositories name is WHCS-Android. The repository
+can be downloaded to a local computer for uploading to a compatible Android
+device. The project structure for WHCS-Android is built around Android Studio
+so obtaining this IDE is the easiest way to build the Android application and
+prepare it for upload to an Android device. Once the repository is on the local
+computer the project can be imported into Android Studio and then uploaded to
+an Android device through a usb cable.
+
+\subsubsection{Connecting to WHCS}
+
+The Android application connects to WHCS by connecting to the base station. When the user first runs the application they will be prompted to connect to the base station of the local installation of WHCS. They will be able to see devices that they have connected to before in the paired devices section, and they will also be able to search for new Bluetooth devices that are in the surrounding area. For users that have already connected to the base station the best option for connecting would be to refresh the list of paired devices and click on the base station that was connected to previously. For users connecting for the first time the best option would be to press the scan devices button and wait for the base station’s name to show up in the list. Clicking on the base station will connect the Android application to WHCS. This setup only needs to be performed once because the application saves the information of the base station once connected.
+
+\subsubsection{Controlling the Control Modules}
+
+The main view of the WHCS application is the list containing all the control modules that are a part of the system. Any control module that has the ability to be turned on or off will have a toggleable switch to the right of the name of the control module. To toggle the control module simply click on the switch. The switch will reflect the state of the control module within the system. Data collection control modules are not capable of being turned on or off and instead of having a switch they display the value that the sensor is reporting.
+
+\subsubsection{Speech Activation}
+
+Turning on and off control modules can be done through voice. To achieve this, the speech button should be pressed and this will prompt the user with a microphone. The user should say the full name of the control module that they wish to interact with and the state that they wish to put the control module in. For example “kitchen light on” will turn on the kitchen light. For electronic strike modules the words “lock” and “unlock” work for changing the state of the door.
+
+\subsubsection{Changing Individual Control Module Attributes}
+
+By clicking on a control module from the list in the main view the details view
+for that specific control module can be accessed. This will display the state
+of the control module, what type of control module it is, an editable text
+field for the control module’s name, and a check box group of what control
+module groups the control module belongs to. The name of the control module can
+be changed by typing into the editable text field for the control module’s name
+and then clicking the save button at the bottom of the detail viewer. In the
+same way that a control module’s name can be changed, the control module’s
+group associations can be changed. Unchecking or checking check boxes in the
+detail view assigns the control module to groups, and clicking save saves the
+changes.
+
+
+\subsection{Troubleshooting}
+\begin{enumerate}
+\item \textbf{The LCD shows all connected modules as green, but sometimes they go red} \\
+This is normal given the operation of WHCS as there are no guarantees that a PING
+from the base station will reach the control module. Also a PONG from a control module
+may be lost due to the high processing time for WHCS.
+
+\item \textbf{The WHCS Android app is unable to find the HC-05 BlueTooth device.} \\
+Verify that the HC-05 is powered and blinking rapidly (twice a second). If the module
+isn't blinking at all, remove the module from its header and replug it it. If the module
+is blinking slowly, then another client is connected to the HC-05. You must disconnect
+this client by disassociating it from the phone or by unpowering the HC-05.
+
+\item \textbf{Why isn't anything powered?} \\
+Double check all of the connections from the
+wall outlet to each power board and from each power board
+to the base station and control modules.
+
+Use a multimeter to verify that the headers are suppling the required
+voltages. If there are zero volts present, the issue is with the power
+supply. If the voltage is under voltage, then the power supply
+is shorted or there may be a short.
+
+\item \textbf{Why is the base station LED blinking once a second?} \\
+This indicates a critical base station error, specificly that an unassigned
+interrupt vector has been called. The only fix for this is reseting the
+base station, finding the bug in software, and reflashing the board.
+
+\item \textbf{Why isn't the base station LED lighting up?} \\
+Verify the connections to the base station. Make sure it is getting
+5V in and ground as well. Make sure that the LCD display is correctly
+situated in the correct orientation and firmly plugged in. Check
+that the NRF and HC-05 modules are present and connected in the right headers.
+
+If all of the above is okay, use a multimeter to measure the voltage between
+the 5V and ground terminals. If there is a voltage present, then the fault
+lies further up the power trace and possibly with the microcontroller itself.
+
+\item \textbf{Why isn't a control module LED lighting up?} \\
+Verify that nothing is shorted on the control module board. This can be done
+while powered by feeling the board for hot spots. If none are found, unpower
+the board and repower it. Check the NRF module's connect to the header.
+
+\end{enumerate}

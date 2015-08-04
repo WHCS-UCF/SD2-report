@@ -1,11 +1,11 @@
 The large effort required to create a functional, working product, wouldn't
 have been possible without careful planning. The project management of WHCS is
-paramount to our success as a team. We need to be able to estimate our costs,
-discover parts for our design, and make sure we keep on track of our timeline.
-Planning these aspects of our project before hand creates a well defined
-roadmap that all group members can follow. Without such planning, everyone
-would have their own perception of time and responsibility and the project
-would flounder.
+paramount to our success as a team. We needed to be able to estimate our costs,
+discover parts for our design, and make sure we kept on track of our timeline.
+Planning these aspects of our project before hand created a well defined
+roadmap that all group members could follow. Without such planning, everyone
+would have had their own perception of time and responsibility and the project
+would've floundered.
 
 \subsection{Budget}
 To help discover the costs of WHCS before diving straight in to the project, we
@@ -150,47 +150,84 @@ price. This is important to note for auditors and for our future purchasing.
 \end{table}
 
 Naturally making a completely correct budget that covers every possible expense
-would be difficult and time consuming. There will be items and purchases made
+was difficult and time consuming. There will always be items and purchases made
 that are below, above, or not even on the list. With sufficiently complex
 projects this is to be expected, but will not be a problem. The individual
 money offered to support the group will cover any additional, unplanned
 expenses.
 
 In order to keep track of what was reimbursed versus what was purchased by
-group members, all receipts will be kept for record. Any purchases made will be
-documented and a running sum of used funds will be maintained. This will keep
-the purchases within the range of the budget and prevent large, unexpected
+group members, all receipts were kept for the record. Any purchases made were
+documented and a running sum of used funds were maintained. This kept
+our purchases within the range of the budget and prevent large, unexpected
 costs from surprising group members.
 
 \subsection{Parts Acquisition}
-In order to fulfill WHCS's Bill of Materials, we will need to identify
+In order to fulfill WHCS's Bill of Materials, we identified
 manufacturers, retailers, and any other online and offline resources for
 purchasing. Initial research gave the beginning insight in to where to look for
-specific products. This should be considered early on in order to consolidate
-purchases, which will simplify shipping and ultimately save on cost. Some items
-may be special enough to warrant their purchase from a ``one-off'' retailer.
-The electronic strike falls in to this category due to its specialty nature.
+specific products. This was considered early on in order to consolidate
+purchases, which simplified shipping and ultimately saved on cost. Some items
+were special enough to warrant their purchase from a ``one-off'' retailer, such as the
+electronic strike.
 
-For all of our bulk electronic parts, we will be purchasing them from Digikey
-or Mouser, depending on the price. Digikey is familar to us as engineers and
-their interface for purchasing is straight forward. Additionally they ship from
-the United States, which will ensure that we get our parts in a timely manner.
-Shipping parts from China may be cheaper overall, but the cost is higher in the
-time lost to waiting for their arrival. To avoid this debt, purchases from
-overseas will be made a early as possible. That way we will not be blocked in
-our design by waiting for parts.
+For all of our bulk electronic parts, we purchased from Digikey.
+Digikey was familiar to us as engineers and
+their interface for purchasing is straight forward. Additionally they shipped from
+the United States, which ensured that we got our parts in a timely manner.
+Shipping parts from China may have been cheaper overall, but the cost would have returned in
+time lost to waiting for their arrival. To avoid this we didn't purchase
+anything from overseas, except for the NRFs, which we bought very early.
 
 \subsection{Milestones}
-The WHCS project has a limited amount of time to complete its end goal of
-having a working system. When thought of all at once, this seems like an
-insurmountable task. To simplify this large problem, we have broken up the task
-in to smaller, more achievable, milestones. This milestones give us a target
+The WHCS project had a limited amount of time to complete its end goal of
+having a working system. When thought of all at once, this seemed like an
+insurmountable task. To simplify this large problem, broke up the task
+in to smaller, more achievable, milestones. These milestones gave us a target
 window for completion and also the interdependencies between milestones. For
-instance, if the PCB board for the base station is not finished, the next step
-of sending it off for manufactoring will be delayed with every day. This will
-push every dependent milestone back causing a project delay. The gantt chat
-shown in \autoref{fig:gantt-chart} is used to keep our project goals in check
-with the reality that we a final deadline.
+instance, if the PCB board for the base station was not finished, the next step
+of sending it off for manufacturing would have been delayed with every day.
+The gantt chat
+shown in \autoref{fig:gantt-chart} was used to keep our project goals in check
+with the reality that we had a final deadline.
 
 \ucfgfx[scale=0.45]{fig:gantt-chart}{InitialProposal-img005.png}
 {The master gantt chart for the WHCS project}
+
+\subsection{Project Conclusion}
+
+Through extensive research, design, and implementation
+WHCS was realized to meet all requirements set. The
+Android application was architected successfully for simplistic 
+interaction. All use cases were implemented in order
+to provide the optimal experience. The base station was
+fabricated according to specifications. It has proved it is
+capable of managing all state of WHCS and acting as the
+middleman between the user and the home. The individual
+control modules do the tasks that they were created for so
+that the home can be controlled by the push of a button.
+Future work includes extending the number and type of
+control modules supported by WHCS.
+
+\subsection{Final Work Breakdown}
+
+{\bfseries \large Grant}
+\begin{itemize}
+  \item Designed Base Station board
+  \item Wrote code for base station and control modules
+  \item Interfaced with Bluetooth and NRF chips
+\end{itemize}
+
+{\bfseries \large Joseph}
+\begin{itemize}
+  \item Designed power boards
+\item Prototyped AC control
+\item Solely designed and built WHCS display panel and wired base station and control modules to it
+\end{itemize}
+
+{\bfseries \large Jimmy}
+\begin{itemize}
+  \item Designed control module boards
+  \item Prototyped the code for all modules early on
+  \item Completely designed and wrote WHCS Android app
+\end{itemize}
